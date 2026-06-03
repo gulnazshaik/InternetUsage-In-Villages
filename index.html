@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Literacy & Internet Awareness Project - Varigonda</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandPrimary: '#F97316',
+                        brandSecondary: '#0D9488',
+                        brandAccent: '#4F46E5',
+                        brandSuccess: '#10B981',
+                        brandBgWarm: '#FAFAF9',
+                        brandBgLight: '#F5F5F4',
+                    },
+                    fontFamily: {
+                        headings: ['Poppins', 'sans-serif'],
+                        body: ['Inter', 'sans-serif'],
+                        telugu: ['Noto Sans Telugu', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Telugu:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --primary: #F97316;
+            --secondary: #0D9488;
+            --accent: #4F46E5;
+            --success: #10B981;
+        }
+        
+        body {
+            font-family: 'Inter', 'Noto Sans Telugu', sans-serif;
+            background-color: var(--brandBgWarm);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', 'Noto Sans Telugu', sans-serif;
+        }
+
+        /* Language Toggle Transition Effect */
+        .lang-transition {
+            transition: opacity 0.3s ease-in-out;
+        }
+        .lang-fade-out {
+            opacity: 0;
+        }
+
+        /* Scroll Reveal Initialization Classes */
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .reveal-visible {
+            opacity: 1;
+            transform: translate(0);
+        }
+
+        /* Ripple Effect Properties */
+        .btn-ripple {
+            position: relative;
+            overflow: hidden;
+        }
+        .ripple {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple-effect 0.6s linear;
+            pointer-events: none;
+        }
+        @keyframes ripple-effect {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Floating Particles Settings */
+        @keyframes floatParticle {
+            0% { transform: translateY(0px) translateX(0px); opacity: 0.2; }
+            50% { transform: translateY(-60px) translateX(20px); opacity: 0.8; }
+            100% { transform: translateY(-120px) translateX(-10px); opacity: 0; }
+        }
+        .particle {
+            position: absolute;
+            background-color: rgba(13, 148, 136, 0.2);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: floatParticle linear infinite;
+        }
+
+        /* Card Hover Effects */
+        .custom-card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .custom-card-hover:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 24px -10px rgba(79, 70, 229, 0.15);
+        }
+        .custom-card-hover:hover .icon-pulse {
+            transform: scale(1.15);
+        }
+
+        /* Custom Page Loader Background Grid Layout */
+        @keyframes spinMandala {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .mandala-loader {
+            animation: spinMandala 3s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-brandBgWarm text-gray-800 antialiased">
+
+    <div id="page-loader" class="fixed inset-0 z-50 flex flex-col items-center justify-content-center bg-white transition-opacity duration-500">
+        <div class="relative w-24 h-24 mb-4">
+            <svg class="mandala-loader w-full h-full text-brandSecondary" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="50" cy="50" r="40" stroke-dasharray="6 6" />
+                <circle cx="50" cy="50" r="30" stroke-dasharray="10 5" />
+                <circle cx="50" cy="50" r="20" stroke-dasharray="4 2" />
+                <path d="M50 2v96M2 50h96M16 16l68 68M16 84l68-68" stroke-width="1" stroke-dasharray="2 2" />
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center">
+                <span class="text-brandPrimary font-bold text-xl font-headings">NSS</span>
+            </div>
+        </div>
+        <p class="text-gray-600 font-medium tracking-wider animate-pulse font-headings" data-i18n="loader_text">Loading Awareness Initiative...</p>
+    </div>
+
+    <div id="scroll-progress" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-brandPrimary via-brandSecondary to-brandAccent z-50 transition-all duration-100" style="width: 0%;"></div>
+
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-40 bg-white/40 backdrop-blur-sm transition-all duration-300 border-b border-transparent">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center space-x-2">
+                <div class="p-2 bg-gradient-to-br from-brandPrimary to-brandSecondary rounded-xl text-white shadow-md">
+                    <i data-lucide="globe" class="w-6 h-6"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-bold text-lg leading-none font-headings text-gray-900 tracking-tight">Varigonda Digital</span>
+                    <span class="text-xs text-brandSecondary font-medium font-body tracking-wider" data-i18n="nav_subtitle">NSS Community Service</span>
+                </div>
+            </a>
+
+            <div class="hidden lg:flex items-center space-x-8 font-body font-medium text-sm text-gray-700">
+                <a href="#about" class="hover:text-brandPrimary transition-colors" data-i18n="nav_about">About</a>
+                <a href="#timeline" class="hover:text-brandSecondary transition-colors" data-i18n="nav_timeline">Timeline</a>
+                <a href="#resources" class="hover:text-brandAccent transition-colors" data-i18n="nav_resources">Resource Hub</a>
+                <a href="#quiz" class="hover:text-brandPrimary transition-colors" data-i18n="nav_quiz">Safety Quiz</a>
+                <a href="#team" class="hover:text-brandSecondary transition-colors" data-i18n="nav_team">Our Team</a>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <button id="lang-toggle-btn" class="btn-ripple relative flex items-center bg-gray-200/80 rounded-full p-1 w-20 h-10 shadow-inner border border-gray-300/40 focus:outline-none transition-all duration-300">
+                    <div id="lang-toggle-pill" class="absolute top-1 left-1 bg-white shadow-md w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs text-brandAccent transition-all duration-300">EN</div>
+                    <div class="w-full flex justify-between px-2 text-[11px] font-bold select-none text-gray-600">
+                        <span class="pl-1">EN</span>
+                        <span class="pr-1 font-telugu">తె</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <section id="hero" class="relative min-h-screen pt-28 flex flex-col justify-center items-center overflow-hidden bg-gradient-to-b from-brandBgWarm via-white to-brandBgLight">
+        <div id="hero-particles" class="absolute inset-0 z-0 overflow-hidden pointer-events-none"></div>
+
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10 relative">
+            <span class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-semibold bg-orange-100 text-brandPrimary mb-6 border border-orange-200/60 shadow-sm uppercase tracking-widest font-headings" data-i18n="hero_badge">
+                <i data-lucide="award" class="w-3.5 h-3.5 mr-1.5 animate-bounce"></i> Rural Literacy Drive
+            </span>
+            
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-black font-headings text-gray-900 tracking-tight mb-6 min-h-[120px] md:min-h-[160px] flex items-center justify-center" id="typewriter-headline">
+                </h1>
+
+            <p class="text-base sm:text-lg md:text-xl text-gray-600 font-body max-w-3xl mx-auto mb-10 leading-relaxed" data-i18n="hero_subheading">
+                A student-led NSS/community initiative in Varigonda Village, Andhra Pradesh — teaching rural citizens how to safely use the internet for banking, healthcare, education, agriculture, and government services.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
+                <a href="#resources" class="btn-ripple w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 text-white font-semibold rounded-xl bg-gradient-to-r from-brandPrimary to-amber-500 shadow-lg shadow-orange-500/20 hover:shadow-xl hover:shadow-orange-500/30 transition-all duration-300 transform hover:-translate-y-0.5" data-i18n="hero_cta_primary">
+                    Explore Resources <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i>
+                </a>
+                <a href="#quiz" class="btn-ripple w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 text-brandSecondary font-semibold rounded-xl bg-white border-2 border-brandSecondary/80 hover:bg-teal-50/50 transition-all duration-300 transform hover:-translate-y-0.5 shadow-sm" data-i18n="hero_cta_secondary">
+                    Take Safety Quiz <i data-lucide="shield-check" class="w-5 h-5 ml-2"></i>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 w-full max-w-4xl mx-auto text-left">
+                <div class="reveal-up bg-white p-5 rounded-2xl shadow-sm border-l-4 border-brandPrimary custom-card-hover flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="p-2.5 bg-orange-50 rounded-xl text-brandPrimary icon-pulse transition-transform duration-300">
+                            <i data-lucide="map-pin" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-extrabold text-gray-900 tracking-tight font-headings flex items-baseline">
+                            <span class="stat-counter" data-target="1">0</span>
+                        </div>
+                        <p class="text-xs sm:text-sm text-gray-500 font-medium mt-1" data-i18n="metric_1">Village Covered (Varigonda)</p>
+                    </div>
+                </div>
+
+                <div class="reveal-up bg-white p-5 rounded-2xl shadow-sm border-l-4 border-brandSecondary custom-card-hover flex flex-col justify-between" style="transition-delay: 100ms;">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="p-2.5 bg-teal-50 rounded-xl text-brandSecondary icon-pulse transition-transform duration-300">
+                            <i data-lucide="users" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-extrabold text-gray-900 tracking-tight font-headings flex items-baseline">
+                            <span class="stat-counter" data-target="100">0</span><span class="text-brandSecondary text-xl ml-0.5">+</span>
+                        </div>
+                        <p class="text-xs sm:text-sm text-gray-500 font-medium mt-1" data-i18n="metric_2">Villagers Empowered</p>
+                    </div>
+                </div>
+
+                <div class="reveal-up bg-white p-5 rounded-2xl shadow-sm border-l-4 border-brandAccent custom-card-hover flex flex-col justify-between" style="transition-delay: 200ms;">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="p-2.5 bg-indigo-50 rounded-xl text-brandAccent icon-pulse transition-transform duration-300">
+                            <i data-lucide="book-open" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-extrabold text-gray-900 tracking-tight font-headings flex items-baseline">
+                            <span class="stat-counter" data-target="6">0</span><span class="text-brandAccent text-xl ml-0.5">+</span>
+                        </div>
+                        <p class="text-xs sm:text-sm text-gray-500 font-medium mt-1" data-i18n="metric_3">Topics Taught</p>
+                    </div>
+                </div>
+
+                <div class="reveal-up bg-white p-5 rounded-2xl shadow-sm border-l-4 border-brandSuccess custom-card-hover flex flex-col justify-between" style="transition-delay: 300ms;">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="p-2.5 bg-emerald-50 rounded-xl text-brandSuccess icon-pulse transition-transform duration-300">
+                            <i data-lucide="shield-alert" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-extrabold text-gray-900 tracking-tight font-headings flex items-baseline">
+                            <span class="stat-counter" data-target="100">0</span><span class="text-brandSuccess text-sm ml-0.5">%</span>
+                        </div>
+                        <p class="text-xs sm:text-sm text-gray-500 font-medium mt-1" data-i18n="metric_4">Cyber Safety Focus</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-24 bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+                
+                <div class="reveal-left lg:col-span-5 space-y-6">
+                    <span class="text-sm font-bold text-brandSecondary tracking-widest uppercase font-headings" data-i18n="about_tag">Project Mission</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 font-headings tracking-tight" data-i18n="about_heading">What is this project?</h2>
+                    <div class="w-20 h-1.5 bg-brandSecondary rounded-full"></div>
+                    
+                    <p class="text-gray-600 font-body leading-relaxed text-justify" data-i18n="about_p1">
+                        In an era dominated by rapid digital transformation, rural communities often get left behind due to a lack of technical knowledge and exposure. Guided by government visions like Digital India, PM-KISAN, DigiLocker, and Aarogya Setu, this initiative acts as a targeted structural catalyst for rural inclusion.
+                    </p>
+                    <p class="text-gray-600 font-body leading-relaxed text-justify" data-i18n="about_p2">
+                        During our intensive groundwork in Varigonda Village, student volunteers deployed multi-phase diagnostic surveys, hosted general community interactive workshops, and conducted critical one-on-one personal training modules tailored specifically for elderly citizens and women self-help groups (SHGs).
+                    </p>
+                    <p class="text-gray-600 font-body leading-relaxed text-justify" data-i18n="about_p3">
+                        The structural outcome extends far past standard quantitative metrics: it instilled real self-reliance, built impenetrable walls against dynamic cyber fraud operations, and embedded a profound long-term civic engineering mindset within our participating student framework.
+                    </p>
+                </div>
+
+                <div class="reveal-right lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="bg-gradient-to-br from-orange-50 to-white p-6 rounded-2xl border border-orange-100 shadow-sm custom-card-hover border-l-4 border-l-brandPrimary">
+                        <div class="text-3xl mb-4 icon-pulse transition-transform duration-300">🌐</div>
+                        <h3 class="font-bold text-lg text-gray-900 mb-2 font-headings" data-i18n="obj_1_title">Create Internet Awareness</h3>
+                        <p class="text-sm text-gray-600 font-body leading-relaxed" data-i18n="obj_1_desc">Introducing foundational tools of data networks and global digital communications smoothly.</p>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-teal-50 to-white p-6 rounded-2xl border border-teal-100 shadow-sm custom-card-hover border-l-4 border-l-brandSecondary">
+                        <div class="text-3xl mb-4 icon-pulse transition-transform duration-300">🏦</div>
+                        <h3 class="font-bold text-lg text-gray-900 mb-2 font-headings" data-i18n="obj_2_title">Educate on Online Services</h3>
+                        <p class="text-sm text-gray-600 font-body leading-relaxed" data-i18n="obj_2_desc">Simplifying access methods for digital health tracking, agriculture services, and banking apps.</p>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-indigo-50 to-white p-6 rounded-2xl border border-indigo-100 shadow-sm custom-card-hover border-l-4 border-l-brandAccent">
+                        <div class="text-3xl mb-4 icon-pulse transition-transform duration-300">🔒</div>
+                        <h3 class="font-bold text-lg text-gray-900 mb-2 font-headings" data-i18n="obj_3_title">Spread Cyber Safety</h3>
+                        <p class="text-sm text-gray-600 font-body leading-relaxed" data-i18n="obj_3_desc">Training stakeholders to spot fraudulent loops, hidden links, and password phishing tricks.</p>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-emerald-50 to-white p-6 rounded-2xl border border-emerald-100 shadow-sm custom-card-hover border-l-4 border-l-brandSuccess">
+                        <div class="text-3xl mb-4 icon-pulse transition-transform duration-300">💳</div>
+                        <h3 class="font-bold text-lg text-gray-900 mb-2 font-headings" data-i18n="obj_4_title">Digital Payments & EdTech</h3>
+                        <p class="text-sm text-gray-600 font-body leading-relaxed" data-i18n="obj_4_desc">Demonstrating instant UPI tools alongside structural learning environments for rural youths.</p>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-amber-50 to-white p-6 rounded-2xl border border-amber-100 shadow-sm custom-card-hover border-l-4 border-l-amber-500">
+                        <div class="text-3xl mb-4 icon-pulse transition-transform duration-300">🏛️</div>
+                        <h3 class="font-bold text-lg text-gray-900 mb-2 font-headings" data-i18n="obj_5_title">Explain Government Portals</h3>
+                        <p class="text-sm text-gray-600 font-body leading-relaxed" data-i18n="obj_5_desc">Providing actionable roadmaps for utilizing DigiLocker, UMANG apps, and scheme engines directly.</p>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-purple-50 to-white p-6 rounded-2xl border border-purple-100 shadow-sm custom-card-hover border-l-4 border-l-purple-600">
+                        <div class="text-3xl mb-4 icon-pulse transition-transform duration-300">🤝</div>
+                        <h3 class="font-bold text-lg text-gray-900 mb-2 font-headings" data-i18n="obj_6_title">Promote Responsible Use</h3>
+                        <p class="text-sm text-gray-600 font-body leading-relaxed" data-i18n="obj_6_desc">Instilling screen time boundaries, verified cross-checking, and civil community interactions.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="timeline" class="py-24 bg-brandBgLight">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-20 reveal-up">
+                <span class="text-sm font-bold text-brandAccent tracking-widest uppercase font-headings" data-i18n="time_tag">Execution Blueprint</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 font-headings mt-2 tracking-tight" data-i18n="time_heading">Our Journey in the Field</h2>
+                <div class="w-24 h-1.5 bg-brandAccent rounded-full mx-auto mt-4"></div>
+            </div>
+
+            <div class="relative wrap overflow-hidden p-10 h-full">
+                <div class="border-2-2 absolute border-opacity-20 border-gray-400 h-full border" style="left: 50%"></div>
+                
+                <div class="reveal-left mb-12 flex justify-between items-center w-full right-timeline flex-row-reverse lg:flex-row">
+                    <div class="order-1 w-5/12 hidden lg:block"></div>
+                    <div class="z-20 flex items-center order-1 bg-brandPrimary shadow-xl w-12 h-12 rounded-full justify-center text-white font-bold font-headings">
+                        1
+                    </div>
+                    <div class="order-1 bg-white rounded-2xl w-full lg:w-5/12 px-6 py-6 shadow-sm border-l-4 border-brandPrimary custom-card-hover">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <span class="text-xl">📋</span>
+                            <h3 class="font-bold text-gray-900 text-lg font-headings" data-i18n="p1_title">Phase 1 — Diagnosis & Survey</h3>
+                        </div>
+                        <p class="text-sm text-gray-600 font-body leading-relaxed text-justify" data-i18n="p1_desc">
+                            The team conducted door-to-door surveys across Varigonda to understand baseline internet usage. We spoke to farmers, women's SHGs, school students, and elderly residents. Key findings: only 30% owned smartphones; most had never used UPI or government portals.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="reveal-right mb-12 flex justify-between items-center w-full left-timeline flex-row-reverse">
+                    <div class="order-1 w-5/12 hidden lg:block"></div>
+                    <div class="z-20 flex items-center order-1 bg-brandSecondary shadow-xl w-12 h-12 rounded-full justify-center text-white font-bold font-headings">
+                        2
+                    </div>
+                    <div class="order-1 bg-white rounded-2xl w-full lg:w-5/12 px-6 py-6 shadow-sm border-l-4 border-brandSecondary custom-card-hover">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <span class="text-xl">🎤</span>
+                            <h3 class="font-bold text-gray-900 text-lg font-headings" data-i18n="p2_title">Phase 2 — Awareness Sessions</h3>
+                        </div>
+                        <p class="text-sm text-gray-600 font-body leading-relaxed text-justify" data-i18n="p2_desc">
+                            We organized 3 community meetings and 2 school sessions. Topics covered: safe browsing, recognizing online fraud, using DigiLocker, UMANG app navigation, online banking basics, and UPI payment demos. Distributed printed Telugu-language cheat sheets for quick reference.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="reveal-left mb-12 flex justify-between items-center w-full right-timeline flex-row-reverse lg:flex-row">
+                    <div class="order-1 w-5/12 hidden lg:block"></div>
+                    <div class="z-20 flex items-center order-1 bg-brandAccent shadow-xl w-12 h-12 rounded-full justify-center text-white font-bold font-headings">
+                        3
+                    </div>
+                    <div class="order-1 bg-white rounded-2xl w-full lg:w-5/12 px-6 py-6 shadow-sm border-l-4 border-brandAccent custom-card-hover">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <span class="text-xl">📊</span>
+                            <h3 class="font-bold text-gray-900 text-lg font-headings" data-i18n="p3_title">Phase 3 — Execution & Training</h3>
+                        </div>
+                        <p class="text-sm text-gray-600 font-body leading-relaxed text-justify" data-i18n="p3_desc">
+                            One-on-one demo sessions were conducted for 40+ women from local SHGs on using Aarogya Setu, PM-KISAN portal, and Google Pay. Youth volunteers helped senior citizens set up DigiLocker accounts.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="reveal-right mb-12 flex justify-between items-center w-full left-timeline flex-row-reverse">
+                    <div class="order-1 w-5/12 hidden lg:block"></div>
+                    <div class="z-20 flex items-center order-1 bg-brandSuccess shadow-xl w-12 h-12 rounded-full justify-center text-white font-bold font-headings">
+                        4
+                    </div>
+                    <div class="order-1 bg-white rounded-2xl w-full lg:w-5/12 px-6 py-6 shadow-sm border-l-4 border-brandSuccess custom-card-hover">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <span class="text-xl">🌟</span>
+                            <h3 class="font-bold text-gray-900 text-lg font-headings" data-i18n="p4_title">Phase 4 — Impact & Reflection</h3>
+                        </div>
+                        <p class="text-sm text-gray-600 font-body leading-relaxed text-justify" data-i18n="p4_desc">
+                            Post-session surveys showed 78% improvement in confidence using smartphones. The project strengthened teamwork, empathy, and leadership in student volunteers. Plans are underway to expand to 3 neighboring villages.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="resources" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal-up">
+                <span class="text-sm font-bold text-brandPrimary tracking-widest uppercase font-headings" data-i18n="hub_tag">Knowledge Core</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 font-headings mt-2 tracking-tight" data-i18n="hub_heading">Digital Resource Hub</h2>
+                <p class="text-gray-500 font-body mt-2 text-sm sm:text-base" data-i18n="hub_subheading">Click any topic to explore guides built for rural communities</p>
+                <div class="w-24 h-1.5 bg-brandPrimary rounded-full mx-auto mt-4"></div>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-2 sm:gap-4 mb-12 max-w-4xl mx-auto reveal-up">
+                <button onclick="switchTab('hub-safety', this)" class="hub-tab-btn btn-ripple px-5 py-3 font-semibold text-sm rounded-xl border-2 transition-all duration-300 flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-red-500 border-transparent text-white shadow-md">
+                    <i data-lucide="shield-alert" class="w-4 h-4"></i> <span data-i18n="tab_1">Cyber Safety</span>
+                </button>
+                <button onclick="switchTab('hub-payments', this)" class="hub-tab-btn btn-ripple px-5 py-3 font-semibold text-sm rounded-xl border-2 transition-all duration-300 flex items-center space-x-2 bg-white text-gray-600 border-gray-200 hover:bg-gray-50">
+                    <i data-lucide="wallet" class="w-4 h-4"></i> <span data-i18n="tab_2">Digital Payments</span>
+                </button>
+                <button onclick="switchTab('hub-portals', this)" class="hub-tab-btn btn-ripple px-5 py-3 font-semibold text-sm rounded-xl border-2 transition-all duration-300 flex items-center space-x-2 bg-white text-gray-600 border-gray-200 hover:bg-gray-50">
+                    <i data-lucide="landmark" class="w-4 h-4"></i> <span data-i18n="tab_3">Gov Portals</span>
+                </button>
+                <button onclick="switchTab('hub-edu', this)" class="hub-tab-btn btn-ripple px-5 py-3 font-semibold text-sm rounded-xl border-2 transition-all duration-300 flex items-center space-x-2 bg-white text-gray-600 border-gray-200 hover:bg-gray-50">
+                    <i data-lucide="graduation-cap" class="w-4 h-4"></i> <span data-i18n="tab_4">Online Education</span>
+                </button>
+            </div>
+
+            <div id="tab-content-container" class="max-w-5xl mx-auto min-h-[400px]">
+                
+                <div id="hub-safety" class="hub-panel-content reveal-up space-y-8 block">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-gray-50 p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-sm">
+                            <h3 class="font-bold text-xl text-gray-900 mb-6 flex items-center font-headings" data-i18n="h1_rules_title">
+                                <i data-lucide="check-circle" class="text-brandPrimary mr-2.5 w-6 h-6"></i> 5 Golden Rules to Stay Safe Online
+                            </h3>
+                            <ul class="space-y-4 font-body text-sm text-gray-600">
+                                <li class="flex items-start"><span class="bg-orange-100 text-brandPrimary rounded-full h-6 w-6 flex items-center justify-center font-bold mr-3 shrink-0 text-xs">1</span> <span data-i18n="h1_r1">Never reveal passwords, netbanking login keys, or system values to anyone.</span></li>
+                                <li class="flex items-start"><span class="bg-orange-100 text-brandPrimary rounded-full h-6 w-6 flex items-center justify-center font-bold mr-3 shrink-0 text-xs">2</span> <span data-i18n="h1_r2">Always double-check caller claims before verifying banking details or transferring rewards.</span></li>
+                                <li class="flex items-start"><span class="bg-orange-100 text-brandPrimary rounded-full h-6 w-6 flex items-center justify-center font-bold mr-3 shrink-0 text-xs">3</span> <span data-i18n="h1_r3">Verify secure URL indicators (HTTPS) alongside padlocks before utilizing dynamic portals.</span></li>
+                                <li class="flex items-start"><span class="bg-orange-100 text-brandPrimary rounded-full h-6 w-6 flex items-center justify-center font-bold mr-3 shrink-0 text-xs">4</span> <span data-i18n="h1_r4">Avoid installing software applications directly through shared file platforms or social groups.</span></li>
+                                <li class="flex items-start"><span class="bg-orange-100 text-brandPrimary rounded-full h-6 w-6 flex items-center justify-center font-bold mr-3 shrink-0 text-xs">5</span> <span data-i18n="h1_r5">Lock smartphone configurations using biometric verification loops or robust secure patterns.</span></li>
+                            </ul>
+                        </div>
+                        <div class="space-y-6">
+                            <div class="bg-red-50 p-6 rounded-2xl border border-red-200 shadow-sm flex items-start space-x-4">
+                                <div class="p-3 bg-red-100 text-red-600 rounded-xl shrink-0"><i data-lucide="alert-triangle" class="w-6 h-6"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-red-900 mb-1 font-headings" data-i18n="h1_alert_title">OTP Fraud Alert!</h4>
+                                    <p class="text-sm text-red-700 font-body leading-relaxed" data-i18n="h1_alert_desc">Banks will never contact account holders requesting transactional OTP parameters. If someone calls asking for an OTP code to unlock an account or upgrade a card, hang up instantly.</p>
+                                </div>
+                            </div>
+                            <div class="bg-gradient-to-br from-brandPrimary to-red-500 p-6 rounded-2xl text-white shadow-md flex items-center justify-between">
+                                <div class="space-y-1">
+                                    <h4 class="font-bold text-lg font-headings" data-i18n="h1_call_title">Immediate Cyber Response</h4>
+                                    <p class="text-xs text-orange-50 font-body" data-i18n="h1_call_desc">If you discover unexpected losses or systemic identity hacks:</p>
+                                </div>
+                                <div class="text-right">
+                                    <span class="block text-2xl font-black font-headings tracking-wider bg-white/20 px-3 py-1.5 rounded-xl">1930</span>
+                                    <span class="text-[10px] text-white opacity-90 uppercase font-medium tracking-widest block mt-1" data-i18n="h1_call_lbl">National Helpline</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="hub-payments" class="hub-panel-content reveal-up space-y-8 hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200">
+                            <span class="text-2xl block mb-2">📲</span>
+                            <h4 class="font-bold text-gray-900 mb-2 font-headings" data-i18n="h2_s1_t">1. Secure Registration</h4>
+                            <p class="text-sm text-gray-600 font-body leading-relaxed" data-i18n="h2_s1_d">Download Google Pay or PhonePe exclusively via authorized App Stores. Bind the tool using the verified phone card connected directly to your institutional bank setup.</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200">
+                            <span class="text-2xl block mb-2">🔑</span>
+                            <h4 class="font-bold text-gray-900 mb-2 font-headings" data-i18n="h2_s2_t">2. UPI PIN Management</h4>
+                            <p class="text-sm text-gray-600 font-body leading-relaxed" data-i18n="h2_s2_d">Configure a distinct 4 or 6-digit transaction authorization key. Avoid utilizing recognizable parameters like family birthdays or easily guessed consecutive layouts.</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200">
+                            <span class="text-2xl block mb-2">🔍</span>
+                            <h4 class="font-bold text-gray-900 mb-2 font-headings" data-i18n="h2_s3_t">3. Recipient Verification</h4>
+                            <p class="text-sm text-gray-600 font-body leading-relaxed" data-i18n="h2_s3_d">Always crosscheck display titles matching vendor identities prior to executing balance dispatches via public QR scanning modules.</p>
+                        </div>
+                    </div>
+                    <div class="bg-emerald-50 p-6 rounded-2xl border border-emerald-200 text-emerald-900 font-body text-sm">
+                        <div class="flex items-center space-x-2 font-bold mb-2 text-emerald-800 font-headings">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i> <span data-i18n="h2_warn_t">CRITICAL PAYMENT BOUNDARY SAFETY FOUNDATION</span>
+                        </div>
+                        <p data-i18n="h2_warn_d">A UPI PIN is required solely for executing fund transfers out of an account. Receiving transfers into an account never requires a PIN entry. If a transaction demands a PIN for a reward collection, it is a scam.</p>
+                    </div>
+                </div>
+
+                <div id="hub-portals" class="hub-panel-content reveal-up grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+                    <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200 custom-card-hover border-l-4 border-l-brandAccent">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-3xl">📂</span>
+                            <span class="text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 bg-indigo-100 text-brandAccent rounded-md">App / Web</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 font-headings mb-1">DigiLocker</h4>
+                        <p class="text-xs text-gray-500 font-body mb-3" data-i18n="h3_p1_d">Store and share official academic, driving, and identity credentials safely in the cloud.</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200 custom-card-hover border-l-4 border-l-brandAccent">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-3xl">📱</span>
+                            <span class="text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 bg-indigo-100 text-brandAccent rounded-md">Unified App</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 font-headings mb-1">UMANG App</h4>
+                        <p class="text-xs text-gray-500 font-body mb-3" data-i18n="h3_p2_d">Access centralized national public agency options spanning pension records, tax calculations, and employment hubs.</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200 custom-card-hover border-l-4 border-l-brandAccent">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-3xl">🌾</span>
+                            <span class="text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 bg-indigo-100 text-brandAccent rounded-md">Direct Web</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 font-headings mb-1">PM-KISAN Portal</h4>
+                        <p class="text-xs text-gray-500 font-body mb-3" data-i18n="h3_p3_d">Track state agricultural allocations, transaction distribution logs, and enrollment forms transparently.</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200 custom-card-hover border-l-4 border-l-brandAccent">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-3xl">🏥</span>
+                            <span class="text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 bg-indigo-100 text-brandAccent rounded-md">Mobile App</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 font-headings mb-1">Aarogya Setu</h4>
+                        <p class="text-xs text-gray-500 font-body mb-3" data-i18n="h3_p4_d">Review essential civic wellness announcements and access public vaccination management tools.</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200 custom-card-hover border-l-4 border-l-brandAccent">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-3xl">🚜</span>
+                            <span class="text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 bg-indigo-100 text-brandAccent rounded-md">Market Web</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 font-headings mb-1">eNAM (Agri Market)</h4>
+                        <p class="text-xs text-gray-500 font-body mb-3" data-i18n="h3_p5_d">Connect directly with standardized digital trade hubs to review nationwide product valuations and manage sales.</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200 custom-card-hover border-l-4 border-l-brandAccent">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-3xl">🏛️</span>
+                            <span class="text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 bg-indigo-100 text-brandAccent rounded-md">State Portal</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 font-headings mb-1">AP YSR Schemes</h4>
+                        <p class="text-xs text-gray-500 font-body mb-3" data-i18n="h3_p6_d">Review eligibility terms and track local regional benefit allocations across Andhra Pradesh transparently.</p>
+                    </div>
+                </div>
+
+                <div id="hub-edu" class="hub-panel-content reveal-up space-y-6 hidden">
+                    <div class="bg-gradient-to-br from-purple-50 to-indigo-50 p-6 sm:p-8 rounded-2xl border border-purple-100">
+                        <h3 class="font-bold text-xl text-gray-900 mb-4 font-headings" data-i18n="h4_title">Empowering Growth Through Continuous Learning</h3>
+                        <p class="text-sm text-gray-600 font-body leading-relaxed mb-6" data-i18n="h4_desc">Digital literacy opens massive developmental opportunities for all generations. Explore these public and community training modules directly:</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm font-body">
+                            <div class="bg-white p-4 rounded-xl shadow-sm border border-purple-100/50 flex items-start space-x-3">
+                                <span class="text-xl">🎒</span>
+                                <div>
+                                    <h5 class="font-bold text-gray-900 mb-0.5">DIKSHA & SWAYAM</h5>
+                                    <p class="text-xs text-gray-500" data-i18n="h4_r1">Comprehensive national open access curriculum plans customized for school students.</p>
+                                </div>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl shadow-sm border border-purple-100/50 flex items-start space-x-3">
+                                <span class="text-xl">🗣️</span>
+                                <div>
+                                    <h5 class="font-bold text-gray-900 mb-0.5">Khan Academy Telugu</h5>
+                                    <p class="text-xs text-gray-500" data-i18n="h4_r2">Free, world-class localized courses spanning essential STEM subjects.</p>
+                                </div>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl shadow-sm border border-purple-100/50 flex items-start space-x-3">
+                                <span class="text-xl">🖥️</span>
+                                <div>
+                                    <h5 class="font-bold text-gray-900 mb-0.5">PMGDISHA Initiative</h5>
+                                    <p class="text-xs text-gray-500" data-i18n="h4_r3">Targeted national structural certificates to build foundational tech literacy in rural households.</p>
+                                </div>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl shadow-sm border border-purple-100/50 flex items-start space-x-3">
+                                <span class="text-xl">📜</span>
+                                <div>
+                                    <h5 class="font-bold text-gray-900 mb-0.5">NIELIT Skill Training</h5>
+                                    <p class="text-xs text-gray-500" data-i18n="h4_r4">Specialized introductory paths covering office database mechanics and computing fundamentals.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="quiz" class="py-24 bg-brandBgLight overflow-hidden">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 reveal-up">
+                <span class="text-sm font-bold text-brandPrimary tracking-widest uppercase font-headings" data-i18n="quiz_tag">Interactive Evaluation</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 font-headings mt-2 tracking-tight" data-i18n="quiz_heading">Test Your Knowledge 🧠</h2>
+                <p class="text-gray-500 font-body mt-2 text-sm sm:text-base" data-i18n="quiz_subheading">3 real-life scenarios. Make the smart choice!</p>
+                <div class="w-24 h-1.5 bg-brandPrimary rounded-full mx-auto mt-4"></div>
+            </div>
+
+            <div class="reveal-up bg-white rounded-3xl p-6 sm:p-10 shadow-md border border-gray-200/60 relative">
+                
+                <div class="mb-8">
+                    <div class="flex justify-between text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 font-headings">
+                        <span id="quiz-step-lbl">Scenario 1 of 3</span>
+                        <span id="quiz-score-lbl">Score: 0</span>
+                    </div>
+                    <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                        <div id="quiz-progress-bar" class="bg-gradient-to-r from-brandPrimary to-brandSecondary h-full transition-all duration-500" style="width: 33.33%;"></div>
+                    </div>
+                </div>
+
+                <div id="quiz-engine-view">
+                    </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="team" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-20 reveal-up">
+                <span class="text-sm font-bold text-brandSecondary tracking-widest uppercase font-headings" data-i18n="team_tag">The Driving Force</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 font-headings mt-2 tracking-tight" data-i18n="team_heading">Meet the Team</h2>
+                <div class="w-24 h-1.5 bg-brandSecondary rounded-full mx-auto mt-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+                <div class="reveal-up bg-gray-50 p-6 rounded-2xl border border-gray-200 text-center custom-card-hover flex flex-col items-center">
+                    <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center text-white text-xl font-bold font-headings mb-4 shadow-md shadow-orange-500/20">AK</div>
+                    <h4 class="font-bold text-gray-900 font-headings text-base">Anil Kumar</h4>
+                    <span class="inline-block px-3 py-1 bg-orange-100 text-brandPrimary rounded-full text-xs font-semibold tracking-wider font-body mt-2" data-i18n="tm_r1">Team Lead – NSS Volunteer</span>
+                </div>
+
+                <div class="reveal-up bg-gray-50 p-6 rounded-2xl border border-gray-200 text-center custom-card-hover flex flex-col items-center" style="transition-delay: 100ms;">
+                    <div class="w-16 h-16 bg-teal-600 rounded-full flex items-center justify-center text-white text-xl font-bold font-headings mb-4 shadow-md shadow-teal-500/20">PS</div>
+                    <h4 class="font-bold text-gray-900 font-headings text-base">Priya Sharma</h4>
+                    <span class="inline-block px-3 py-1 bg-teal-100 text-brandSecondary rounded-full text-xs font-semibold tracking-wider font-body mt-2" data-i18n="tm_r2">Survey Coordinator</span>
+                </div>
+
+                <div class="reveal-up bg-gray-50 p-6 rounded-2xl border border-gray-200 text-center custom-card-hover flex flex-col items-center" style="transition-delay: 200ms;">
+                    <div class="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center text-white text-xl font-bold font-headings mb-4 shadow-md shadow-indigo-500/20">RT</div>
+                    <h4 class="font-bold text-gray-900 font-headings text-base">Ravi Teja</h4>
+                    <span class="inline-block px-3 py-1 bg-indigo-100 text-brandAccent rounded-full text-xs font-semibold tracking-wider font-body mt-2" data-i18n="tm_r3">Content Creator</span>
+                </div>
+
+                <div class="reveal-up bg-gray-50 p-6 rounded-2xl border border-gray-200 text-center custom-card-hover flex flex-col items-center" style="transition-delay: 300ms;">
+                    <div class="w-16 h-16 bg-emerald-600 rounded-full flex items-center justify-center text-white text-xl font-bold font-headings mb-4 shadow-md shadow-emerald-500/20">SR</div>
+                    <h4 class="font-bold text-gray-900 font-headings text-base">Sneha Reddy</h4>
+                    <span class="inline-block px-3 py-1 bg-emerald-100 text-brandSuccess rounded-full text-xs font-semibold tracking-wider font-body mt-2" data-i18n="tm_r4">Field Reporter</span>
+                </div>
+            </div>
+
+            <div class="reveal-up max-w-4xl mx-auto bg-gradient-to-r from-gray-50 to-brandBgLight p-8 rounded-2xl border border-gray-200 text-center font-body text-sm sm:text-base text-gray-600 leading-relaxed shadow-sm">
+                <p data-i18n="team_ack">
+                    We extend our deepest structural gratitude to the Sarpanch of Varigonda Village, local community administrative coordinators, the administrative faculty management team at our sponsoring academic institution, and the NSS coordination unit who directly provided operational resources, guidance, and support throughout this literacy campaign.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="relative bg-gradient-to-br from-neutral-900 to-neutral-950 text-white pt-16 pb-8 overflow-hidden border-t-4 border-l-0 border-brandPrimary">
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-brandSecondary/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute top-0 left-0 w-96 h-96 bg-brandPrimary/5 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 pb-12 border-b border-white/10 items-center">
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="p-2 bg-brandPrimary rounded-xl text-white">
+                            <i data-lucide="globe" class="w-5 h-5"></i>
+                        </div>
+                        <span class="font-bold text-xl font-headings tracking-tight">Varigonda Awareness Portal</span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-neutral-400 font-body max-w-md leading-relaxed" data-i18n="foot_desc">
+                        This project was conducted as part of NSS/Community Service at our sponsoring college campus, proudly dedicated to empowering the resilient residents of Varigonda.
+                    </p>
+                </div>
+
+                <div class="flex md:justify-end space-x-4">
+                    <a href="#" class="btn-ripple w-11 h-11 bg-white/5 hover:bg-brandPrimary rounded-xl flex items-center justify-center text-white transition-all duration-300 transform hover:-translate-y-1 shadow-sm"><i data-lucide="github" class="w-5 h-5"></i></a>
+                    <a href="#" class="btn-ripple w-11 h-11 bg-white/5 hover:bg-brandSecondary rounded-xl flex items-center justify-center text-white transition-all duration-300 transform hover:-translate-y-1 shadow-sm"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                    <a href="#" class="btn-ripple w-11 h-11 bg-white/5 hover:bg-brandAccent rounded-xl flex items-center justify-center text-white transition-all duration-300 transform hover:-translate-y-1 shadow-sm"><i data-lucide="mail" class="w-5 h-5"></i></a>
+                </div>
+            </div>
+
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 font-body space-y-4 sm:space-y-0">
+                <p>&copy; 2026 Varigonda Digital Literacy Initiative. All Rights Reserved.</p>
+                <div class="flex space-x-6 text-neutral-400">
+                    <a href="#" class="hover:text-white transition-colors" data-i18n="foot_p1">Privacy Protocol</a>
+                    <a href="#" class="hover:text-white transition-colors" data-i18n="foot_p2">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // MASTER BILINGUAL TRANSLATION DICTIONARY
+        const translations = {
+            'en': {
+                'nav_subtitle': 'NSS Community Service',
+                'nav_about': 'About', 'nav_timeline': 'Timeline', 'nav_resources': 'Resource Hub', 'nav_quiz': 'Safety Quiz', 'nav_team': 'Our Team',
+                'loader_text': 'Loading Awareness Initiative...',
+                'hero_badge': 'Rural Literacy Drive',
+                'hero_subheading': 'A student-led NSS/community initiative in Varigonda Village, Andhra Pradesh — teaching rural citizens how to safely use the internet for banking, healthcare, education, agriculture, and government services.',
+                'hero_cta_primary': 'Explore Resources', 'hero_cta_secondary': 'Take Safety Quiz',
+                'metric_1': 'Village Covered (Varigonda)', 'metric_2': 'Villagers Empowered', 'metric_3': 'Topics Taught', 'metric_4': 'Cyber Safety Focus',
+                'about_tag': 'Project Mission', 'about_heading': 'What is this project?',
+                'about_p1': 'In an era dominated by rapid digital transformation, rural communities often get left behind due to a lack of technical knowledge and exposure. Guided by government visions like Digital India, PM-KISAN, DigiLocker, and Aarogya Setu, this initiative acts as a targeted structural catalyst for rural inclusion.',
+                'about_p2': 'During our intensive groundwork in Varigonda Village, student volunteers deployed multi-phase diagnostic surveys, hosted general community interactive workshops, and conducted critical one-on-one personal training modules tailored specifically for elderly citizens and women self-help groups (SHGs).',
+                'about_p3': 'The structural outcome extends far past standard quantitative metrics: it instilled real self-reliance, built impenetrable walls against dynamic cyber fraud operations, and embedded a profound long-term civic engineering mindset within our participating student framework.',
+                'obj_1_title': 'Create Internet Awareness', 'obj_1_desc': 'Introducing foundational tools of data networks and global digital communications smoothly.',
+                'obj_2_title': 'Educate on Online Services', 'obj_2_desc': 'Simplifying access methods for digital health tracking, agriculture services, and banking apps.',
+                'obj_3_title': 'Spread Cyber Safety', 'obj_3_desc': 'Training stakeholders to spot fraudulent loops, hidden links, and password phishing tricks.',
+                'obj_4_title': 'Digital Payments & EdTech', 'obj_4_desc': 'Demonstrating instant UPI tools alongside structural learning environments for rural youths.',
+                'obj_5_title': 'Explain Government Portals', 'obj_5_desc': 'Providing actionable roadmaps for utilizing DigiLocker, UMANG apps, and scheme engines directly.',
+                'obj_6_title': 'Promote Responsible Use', 'obj_6_desc': 'Instilling screen time boundaries, verified cross-checking, and civil community interactions.',
+                'time_tag': 'Execution Blueprint', 'time_heading': 'Our Journey in the Field',
+                'p1_title': 'Phase 1 — Diagnosis & Survey', 'p1_desc': 'The team conducted door-to-door surveys across Varigonda to understand baseline internet usage. We spoke to farmers, women\'s SHGs, school students, and elderly residents. Key findings: only 30% owned smartphones; most had never used UPI or government portals.',
+                'p2_title': 'Phase 2 — Awareness Sessions', 'p2_desc': 'We organized 3 community meetings and 2 school sessions. Topics covered: safe browsing, recognizing online fraud, using DigiLocker, UMANG app navigation, online banking basics, and UPI payment demos. Distributed printed Telugu-language cheat sheets for quick reference.',
+                'p3_title': 'Phase 3 — Execution & Training', 'p3_desc': 'One-on-one demo sessions were conducted for 40+ women from local SHGs on using Aarogya Setu, PM-KISAN portal, and Google Pay. Youth volunteers helped senior citizens set up DigiLocker accounts.',
+                'p4_title': 'Phase 4 — Impact & Reflection', 'p4_desc': 'Post-session surveys showed 78% improvement in confidence using smartphones. The project strengthened teamwork, empathy, and leadership in student volunteers. Plans are underway to expand to 3 neighboring villages.',
+                'hub_tag': 'Knowledge Core', 'hub_heading': 'Digital Resource Hub', 'hub_subheading': 'Click any topic to explore guides built for rural communities',
+                'tab_1': 'Cyber Safety', 'tab_2': 'Digital Payments', 'tab_3': 'Gov Portals', 'tab_4': 'Online Education',
+                'h1_rules_title': '5 Golden Rules to Stay Safe Online',
+                'h1_r1': 'Never reveal passwords, netbanking login keys, or system values to anyone.',
+                'h1_r2': 'Always double-check caller claims before verifying banking details or transferring rewards.',
+                'h1_r3': 'Verify secure URL indicators (HTTPS) alongside padlocks before utilizing dynamic portals.',
+                'h1_r4': 'Avoid installing software applications directly through shared file platforms or social groups.',
+                'h1_r5': 'Lock smartphone configurations using biometric verification loops or robust secure patterns.',
+                'h1_alert_title': 'OTP Fraud Alert!', 'h1_alert_desc': 'Banks will never contact account holders requesting transactional OTP parameters. If someone calls asking for an OTP code to unlock an account or upgrade a card, hang up instantly.',
+                'h1_call_title': 'Immediate Cyber Response', 'h1_call_desc': 'If you discover unexpected losses or systemic identity hacks:', 'h1_call_lbl': 'National Helpline',
+                'h2_s1_t': '1. Secure Registration', 'h2_s1_d': 'Download Google Pay or PhonePe exclusively via authorized App Stores. Bind the tool using the verified phone card connected directly to your institutional bank setup.',
+                'h2_s2_t': '2. UPI PIN Management', 'h2_s2_d': 'Configure a distinct 4 or 6-digit transaction authorization key. Avoid utilizing recognizable parameters like family birthdays or easily guessed consecutive layouts.',
+                'h2_s3_t': '3. Recipient Verification', 'h2_s3_d': 'Always crosscheck display titles matching vendor identities prior to executing balance dispatches via public QR scanning modules.',
+                'h2_warn_t': 'CRITICAL PAYMENT BOUNDARY SAFETY FOUNDATION', 'h2_warn_d': 'A UPI PIN is required solely for executing fund transfers out of an account. Receiving transfers into an account never requires a PIN entry. If a transaction demands a PIN for a reward collection, it is a scam.',
+                'h3_p1_d': 'Store and share official academic, driving, and identity credentials safely in the cloud.',
+                'h3_p2_d': 'Access centralized national public agency options spanning pension records, tax calculations, and employment hubs.',
+                'h3_p3_d': 'Track state agricultural allocations, transaction distribution logs, and enrollment forms transparently.',
+                'h3_p4_d': 'Review essential civic wellness announcements and access public vaccination management tools.',
+                'h3_p5_d': 'Connect directly with standardized digital trade hubs to review nationwide product valuations and manage sales.',
+                'h3_p6_d': 'Review eligibility terms and track local regional benefit allocations across Andhra Pradesh transparently.',
+                'h4_title': 'Empowering Growth Through Continuous Learning', 'h4_desc': 'Digital literacy opens massive developmental opportunities for all generations. Explore these public and community training modules directly:',
+                'h4_r1': 'Comprehensive national open access curriculum plans customized for school students.', 'h4_r2': 'Free, world-class localized courses spanning essential STEM subjects.', 'h4_r3': 'Targeted national structural certificates to build foundational tech literacy in rural households.', 'h4_r4': 'Specialized introductory paths covering office database mechanics and computing fundamentals.',
+                'quiz_tag': 'Interactive Evaluation', 'quiz_heading': 'Test Your Knowledge 🧠', 'quiz_subheading': '3 real-life scenarios. Make the smart choice!',
+                'tm_r1': 'Team Lead – NSS Volunteer', 'tm_r2': 'Survey Coordinator', 'tm_r3': 'Content Creator', 'tm_r4': 'Field Reporter',
+                'team_tag': 'The Driving Force', 'team_heading': 'Meet the Team', 'team_ack': 'We extend our deepest structural gratitude to the Sarpanch of Varigonda Village, local community administrative coordinators, the administrative faculty management team at our sponsoring academic institution, and the NSS coordination unit who directly provided operational resources, guidance, and support throughout this literacy campaign.',
+                'foot_desc': 'This project was conducted as part of NSS/Community Service at our sponsoring college campus, proudly dedicated to empowering the resilient residents of Varigonda.',
+                'foot_p1': 'Privacy Protocol', 'foot_p2': 'Terms of Service'
+            },
+            'te': {
+                'nav_subtitle': 'NSS కమ్యూనిటీ సర్వీస్',
+                'nav_about': 'ప్రాజెక్ట్ గురించి', 'nav_timeline': 'టైమ్‌లైన్', 'nav_resources': 'విజ్ఞాన కేంద్రం', 'nav_quiz': 'సేఫ్టీ క్విజ్', 'nav_team': 'మా బృందం',
+                'loader_text': 'డిజిటల్ అక్షరాస్యత ప్రాజెక్ట్ లోడ్ అవుతోంది...',
+                'hero_badge': 'గ్రామీణ డిజిటల్ అవగాహన',
+                'hero_subheading': 'ఆంధ్రప్రదేశ్ లోని వరిగొండ గ్రామంలో విద్యార్థుల నేతృత్వంలోని NSS/కమ్యూనిటీ చొరవ — బ్యాంకింగ్, ఆరోగ్యం, విద్య, వ్యవసాయం మరియు ప్రభుత్వ సేవల కోసం ఇంటర్నెట్‌ను సురక్షితంగా ఎలా ఉపయోగించాలో గ్రామీణ పౌరులకు నేర్పించడం.',
+                'hero_cta_primary': 'విజ్ఞాన కేంద్రం', 'hero_cta_secondary': 'సేఫ్టీ క్విజ్ ప్లే చేయండి',
+                'metric_1': 'కవర్ చేయబడిన గ్రామం (వరిగొండ)', 'metric_2': 'సాధికారత పొందిన గ్రామస్థులు', 'metric_3': 'బోధించిన అంశాలు', 'metric_4': 'సైబర్ భద్రతపై దృష్టి',
+                'about_tag': 'ప్రాజెక్ట్ లక్ష్యం', 'about_heading': 'ఈ ప్రాజెక్ట్ ఏమిటి?',
+                'about_p1': 'వేగవంతమైన డిజిటల్ పరివర్తన సాగుతున్న ఈ రోజుల్లో, సాంకేతిక పరిజ్ఞానం మరియు అవగాహన లేకపోవడం వల్ల గ్రామీణ ప్రాంతాలు వెనుకబడిపోతున్నాయి. డిజిటల్ ఇండియా, పీఎం-కిసాన్, డిజిలాకర్ మరియు ఆరోగ్య సేతు వంటి ప్రభుత్వ పథకాల ఆధారంగా, ఈ చొరవ గ్రామీణ ప్రాంతాల్లో మార్పు తీసుకురావడానికి ఒక ఉత్ప్రేరకంగా పనిచేస్తుంది.',
+                'about_p2': 'వరిగొండ గ్రామంలో మా బృందం విస్తృతంగా పర్యటించి, ప్రాథమిక సర్వేలు నిర్వహించింది. కమ్యూనిటీ సమావేశాలు ఏర్పాటు చేసి, వృద్ధులకు మరియు మహిళా స్వయం సహాయక సంఘాలకు (SHGs) ప్రత్యేకంగా ఒకరికొకరు వ్యక్తిగత శిక్షణను అందించింది.',
+                'about_p3': 'ఈ ప్రాజెక్ట్ కేవలం అంకెలకు పరిమితం కాకుండా, గ్రామస్థుల్లో నిజమైన ఆత్మవిశ్వాసాన్ని నింపింది. సైబర్ మోసాల పట్ల బలమైన అవగాహన కల్పించడంతో పాటు పాల్గొన్న విద్యార్థి స్వచ్ఛంద సేవకులలో గొప్ప సామాజిక బాధ్యతను పెంపొందించింది.',
+                'obj_1_title': 'ఇంటర్నెట్ అవగాహన కల్పించడం', 'obj_1_desc': 'డేటా నెట్‌వర్క్‌లు మరియు గ్లోబల్ డిజిటల్ కమ్యూనికేషన్స్ యొక్క ప్రాథమికాంశాలను సులభంగా పరిచయం చేయడం.',
+                'obj_2_title': 'ఆన్‌లైన్ సేవలపై అవగాహన', 'obj_2_desc': 'డిజిటల్ హెల్త్ ట్రాకింగ్, వ్యవసాయ సేవలు మరియు బ్యాంకింగ్ యాప్‌ల వినియోగ విధానాలను సరళీకృతం చేయడం.',
+                'obj_3_title': 'సైబర్ భద్రతను వ్యాప్తి చేయడం', 'obj_3_desc': 'మోసపూరిత లింకులు, నకిలీ కాల్స్ మరియు పాస్‌వర్డ్ దొంగతనాల బారిన పడకుండా శిక్షణ ఇవ్వడం.',
+                'obj_4_title': 'డిజిటల్ చెల్లింపులు & ఎడ్‌టెక్', 'obj_4_desc': 'గ్రామీణ యువత కోసం తక్షణ యుపిఐ చెల్లింపులు మరియు ఆన్‌లైన్ విద్యా వేదికలను ప్రదర్శించడం.',
+                'obj_5_title': 'ప్రభుత్వ పోర్టల్‌ల వివరణ', 'obj_5_desc': 'డిజిలాకర్, ఉమాంగ్ యాప్స్ మరియు ప్రభుత్వ పథకాల పోర్టల్‌లను ఉపయోగించడానికి స్పష్టమైన మార్గదర్శకాలను అందించడం.',
+                'obj_6_title': 'బాధ్యతాయుతమైన వినియోగం', 'obj_6_desc': 'స్క్రీన్ సమయ పరిమితులు, నిజానిజాల పరిశీలన మరియు సరైన కమ్యూనిటీ పరస్పర చర్యలను పెంపొందించడం.',
+                'time_tag': 'అమలు ప్రణాళిక', 'time_heading': 'క్షేత్రస్థాయిలో మా ప్రయాణం',
+                'p1_title': 'ఫేజ్ 1 — నిర్ధారణ & సర్వే', 'p1_desc': 'ప్రాథమిక ఇంటర్నెట్ వినియోగాన్ని అర్థం చేసుకోవడానికి మా బృందం వరిగొండ అంతటా ఇంటింటికీ సర్వేలు నిర్వహించింది. మేము రైతులు, మహిళా సంఘాలు, పాఠశాల విద్యార్థులు మరియు వృద్ధులతో మాట్లాడాము. ముఖ్య ఫలితాలు: 30% మందికి మాత్రమే స్మార్ట్‌ఫోన్‌లు ఉన్నాయి; చాలా మంది యూపీఐ లేదా ప్రభుత్వ పోర్టల్‌లను ఎప్పుడూ ఉపయోగించలేదు.',
+                'p2_title': 'ఫేజ్ 2 — అవగాహన సదస్సులు', 'p2_desc': 'మేము 3 కమ్యూనిటీ సమావేశాలు మరియు 2 పాఠశాల సదస్సులు ఏర్పాటు చేసాము. కవర్ చేయబడిన అంశాలు: సురక్షిత బ్రౌజింగ్, ఆన్‌లైన్ మోసాలను గుర్తించడం, డిజిలాకర్ ఉపయోగించడం, ఉమాంగ్ యాప్ నావిగేషన్, ఆన్‌లైన్ బ్యాంకింగ్ బేసిక్స్ మరియు యుపిఐ చెల్లింపుల డెమోలు. త్వరిత సూచన కోసం ముద్రించిన తెలుగు భాషా గైడ్‌లను పంపిణీ చేసాము.',
+                'p3_title': 'ఫేజ్ 3 — అమలు & శిక్షణ', 'p3_desc': 'ఆరోగ్య సేతు, పీఎం-కిసాన్ పోర్టల్ మరియు గూగుల్ పే ఉపయోగించడంపై స్థానిక పొదుపు సంఘాలకు చెందిన 40+ మహిళలకు ఒకరికొకరు ప్రత్యక్ష డెమో సెషన్లు నిర్వహించబడ్డాయి. యువ స్వచ్ఛంద సేవకులు వృద్ధులకు డిజిలాకర్ ఖాతాలను సెటప్ చేయడంలో సహాయపడ్డారు.',
+                'p4_title': 'ఫేజ్ 4 — ప్రభావం & సమీక్ష', 'p4_desc': 'సెషన్ల తర్వాత నిర్వహించిన సర్వేలలో స్మార్ట్‌ఫోన్‌లను ఉపయోగించడంలో 78% ఆత్మవిశ్వాసం పెరిగినట్లు తేలింది. ఈ ప్రాజెక్ట్ విద్యార్థి స్వచ్ఛంద సేవకులలో జట్టుకృషిని, సానుభూతిని మరియు నాయకత్వాన్ని బలోపేతం చేసింది. పొరుగున ఉన్న 3 గ్రామాలకు విస్తరించేందుకు ప్రణాళికలు సిద్ధమవుతున్నాయి.',
+                'hub_tag': 'విజ్ఞాన కేంద్రం', 'hub_heading': 'డిజిటల్ రిసోర్స్ హబ్', 'hub_subheading': 'గ్రామీణ వర్గాల కోసం రూపొందించిన గైడ్‌లను అన్వేషించడానికి ఏదైనా అంశంపై క్లిక్ చేయండి',
+                'tab_1': 'సైబర్ భద్రత', 'tab_2': 'డిజిటల్ చెల్లింపులు', 'tab_3': 'ప్రభుత్వ పోర్టల్స్', 'tab_4': 'ఆన్‌లైన్ విద్య',
+                'h1_rules_title': 'ఆన్‌లైన్‌లో సురక్షితంగా ఉండటానికి 5 సువర్ణ నియమాలు',
+                'h1_r1': 'మీ పాస్‌వర్డ్‌లను, నెట్‌బ్యాంకింగ్ లాగిన్ వివరాలను లేదా పిన్ నంబర్లను ఎవరికీ చెప్పకండి.',
+                'h1_r2': 'బ్యాంకింగ్ వివరాలను ధృవీకరించడానికి లేదా బహుమతులు పంపడానికి ముందు కాలర్ల వివరాలను ఎల్లప్పుడూ రెండుసార్లు తనిఖీ చేయండి.',
+                'h1_r3': 'ప్రభుత్వ అధికారిక పోర్టల్‌లను ఉపయోగించే ముందు సురక్షితమైన URL సూచికలు (HTTPS) మరియు ప్యాడ్‌లాక్ గుర్తును తనిఖీ చేయండి.',
+                'h1_r4': 'పరిచయం లేని సోషల్ గ్రూపులు లేదా లింకుల ద్వారా మొబైల్ అప్లికేషన్లను నేరుగా ఇన్‌స్టాల్ చేయడం నివారించండి.',
+                'h1_r5': 'బయోమెట్రిక్ వెరిఫికేషన్ లేదా బలమైన లాక్ ప్యాటర్న్‌లను ఉపయోగించి మీ స్మార్ట్‌ఫోన్‌ను సురక్షితంగా ఉంచండి.',
+                'h1_alert_title': 'OTP మోసాల పట్ల జాగ్రత్త!', 'h1_alert_desc': 'బ్యాంకులు ఎప్పుడూ ఖాతాదారులను లావాదేవీల OTP వివరాలను అడగవు. మీ ఖాతాను అన్‌లాక్ చేయడానికి లేదా కార్డును అప్‌గ్రేడ్ చేయడానికి OTP కావాలని ఎవరైనా కాల్ చేస్తే, వెంటనే ఫోన్ పెట్టేయండి.',
+                'h1_call_title': 'తక్షణ సైబర్ ప్రతిస్పందన', 'h1_call_desc': 'మీరు ఊహించని నష్టాలను లేదా సైబర్ మోసాలను గుర్తిస్తే వెంటనే కాల్ చేయండి:', 'h1_call_lbl': 'జాతీయ హెల్ప్‌లైన్',
+                'h2_s1_t': '1. సురక్షితమైన రిజిస్ట్రేషన్', 'h2_s1_d': 'గూగుల్ పే లేదా ఫోన్ పే యాప్‌లను కేవలం అధికారిక ప్లే స్టోర్ల ద్వారా మాత్రమే డౌన్‌లోడ్ చేసుకోండి. మీ బ్యాంక్ ఖాతాకు అనుసంధానించబడిన ఫోన్ నంబర్ ద్వారా మాత్రమే రిజిస్టర్ అవ్వండి.',
+                'h2_s2_t': '2. UPI పిన్ నిర్వహణ', 'h2_s2_d': 'ఒక ప్రత్యేకమైన 4 లేదా 6 అంకెల లావాదేవీ పిన్ నంబర్‌ను సెట్ చేయండి. పుట్టిన తేదీలు లేదా సులభంగా ఊహించగలిగే నంబర్లను పిన్‌గా ఉంచవద్దు.',
+                'h2_s3_t': '3. స్వీకర్త ధృవీకరణ', 'h2_s3_d': 'పబ్లిక్ క్యూఆర్ (QR) కోడ్‌లను స్కాన్ చేసి డబ్బు పంపే ముందు, స్క్రీన్‌పై కనిపించే దుకాణం లేదా వ్యక్తి పేరు సరైనదేనా కాదా అని ఎల్లప్పుడూ సరిచూసుకోండి.',
+                'h2_warn_t': 'ముఖ్యమైన యూపీఐ పేమెంట్ నియమం', 'h2_warn_d': 'మీ ఖాతా నుండి డబ్బులు పంపడానికి మాత్రమే UPI పిన్ అవసరం. మీ ఖాతాలోకి డబ్బులు రావడానికి ఎటువంటి పిన్ అవసరం లేదు. ఎవరైనా డబ్బులు పంపుతామని మిమ్మల్ని పిన్ ఎంటర్ చేయమని అడిగితే, అది ఖచ్చితంగా మోసమే.',
+                'h3_p1_d': 'మీ విద్యా ధృవీకరణ పత్రాలు, డ్రైవింగ్ లైసెన్స్ మరియు గుర్తింపు కార్డులను క్లౌడ్‌లో సురక్షితంగా నిల్వ చేయండి.',
+                'h3_p2_d': 'పెన్షన్ రికార్డులు, పన్ను లెక్కలు మరియు ఉపాధి హబ్‌ల వంటి కేంద్ర ప్రభుత్వ సేవలను ఒకే చోట యాక్సెస్ చేయండి.',
+                'h3_p3_d': 'వ్యవసాయ కేటాయింపులు, లావాదేవీల పంపిణీ లాగ్‌లు మరియు నమోదు ఫారమ్‌లను పారదర్శకంగా ట్రాక్ చేయండి.',
+                'h3_p4_d': 'అవసరమైన పౌర ఆరోగ్య ప్రకటనలను సమీక్షించండి మరియు ప్రభుత్వ వ్యాక్సినేషన్ మేనేజ్‌మెంట్ సాధనాలను యాక్సెస్ చేయండి.',
+                'h3_p5_d': 'దేశవ్యాప్త ఉత్పత్తుల ధరలను సమీక్షించడానికి మరియు అమ్మకాలను నిర్వహించడానికి డిజిటల్ మార్కెట్ హబ్‌లతో నేరుగా కనెక్ట్ అవ్వండి.',
+                'h3_p6_d': 'ఆంధ్రప్రదేశ్‌లో అర్హత నిబంధనలను సమీక్షించండి మరియు స్థానిక ప్రాంతీయ ప్రయోజనాల కేటాయింపులను పారదర్శకంగా ట్రాక్ చేయండి.',
+                'h4_title': 'నిరంతర అభ్యాసం ద్వారా సాధికారత', 'h4_desc': 'డిజిటల్ అక్షరాస్యత అన్ని తరాల వారికి అపారమైన అభివృద్ధి అవకాశాలను అందిస్తుంది. ఈ ఉచిత విద్యా వేదికలను అన్వేషించండి:',
+                'h4_r1': 'పాఠశాల విద్యార్థుల కోసం రూపొందించిన సమగ్ర జాతీయ విద్యా ప్రణాళికలు.', 'h4_r2': 'ముఖ్యమైన సైన్స్, మ్యాథ్స్ అంశాలను కవర్ చేసే ఉచిత, ప్రపంచ స్థాయి తెలుగు కోర్సులు.', 'h4_r3': 'గ్రామీణ గృహాలలో ప్రాథమిక సాంకేతిక అక్షరాస్యతను పెంపొందించడానికి ఉద్దేశించిన జాతీయ ధృవీకరణ పత్రాలు.', 'h4_r4': 'కంప్యూటర్ బేసిక్స్ మరియు ఆఫీస్ అప్లికేషన్లను కవర్ చేసే ప్రత్యేక శిక్షణా కార్యక్రమాలు.',
+                'quiz_tag': 'పరస్పర మూల్యాంకనం', 'quiz_heading': 'మీ జ్ఞానాన్ని పరీక్షించుకోండి 🧠', 'quiz_subheading': '3 నిజ జీవిత పరిస్థితులు. తెలివైన నిర్ణయం తీసుకోండి!',
+                'tm_r1': 'టీమ్ లీడ్ – NSS వాలంటీర్', 'tm_r2': 'సర్వే కోఆర్డినేటర్', 'tm_r3': 'కంటెంట్ క్రియేటర్', 'tm_r4': 'ఫీల్డ్ రిపోర్టర్',
+                'team_tag': 'ప్రధాన చోదక శక్తి', 'team_heading': 'మా బృందాన్ని కలవండి', 'team_ack': 'వరిగొండ గ్రామ సర్పంచ్ గారికి, స్థానిక కమ్యూనిటీ నిర్వాహకులకు, మా విద్యా సంస్థ యాజమాన్యానికి మరియు ఈ అక్షరాస్యత ప్రచారంలో నిరంతరం సహకరించిన NSS బృందానికి మా హృదయపూర్వక కృతజ్ఞతలు.',
+                'foot_desc': 'ఈ ప్రాజెక్ట్ మా కళాశాల క్యాంపస్‌లో NSS/కమ్యూనిటీ సర్వీస్‌లో భాగంగా నిర్వహించబడింది, వరిగొండ నివాసితుల సాధికారతకు ఇది అంకితం చేయబడింది.',
+                'foot_p1': 'ప్రైవసీ పాలసీ', 'foot_p2': 'నిబంధనలు మరియు షరతులు'
+            }
+        };
+
+        // TYPEWRITER STRING CONFIGURATION SELECTION
+        const typewriterStrings = {
+            'en': [
+                "Empowering Villages with Digital Knowledge",
+                "Bridging the Digital Divide, One Village at a Time",
+                "Fostering Cyber Safety Across Rural Boundaries"
+            ],
+            'te': [
+                "గ్రామాలకు డిజిటల్ అక్షరాస్యత",
+                "డిజిటల్ విజ్ఞానంతో గ్రామాలకు సాధికారత",
+                "గ్రామీణ ప్రాంతాలలో సైబర్ భద్రతపై అవగాహన"
+            ]
+        };
+
+        // QUIZ SCENARIOS MASTER DATA MATRIX ENGINE
+        const quizScenarios = {
+            'en': [
+                {
+                    id: 1,
+                    context: "You receive an urgent phone call from an unknown mobile number. The speaker claims to be the senior manager of your bank's local branch. He states your account is scheduled for immediate suspension due to verification errors unless you immediately read aloud the 6-digit OTP code sent to your phone screen.",
+                    options: [
+                        { text: "Read the OTP aloud to save your account status immediately.", correct: false },
+                        { text: "Hang up, ignore the request, and visit your local branch to verify.", correct: true },
+                        { text: "Ask the caller for their ID card and then give the OTP.", correct: false },
+                        { text: "Reply with a fake OTP to test if they are real.", correct: false }
+                    ],
+                    explanation: "Correct decision! Banks will absolutely never phone account owners requesting standard verification OTP security strings. Terminating suspicious conversations and engaging directly with physical branches prevents financial breaches completely."
+                },
+                {
+                    id: 2,
+                    context: "An unexpected forwarding message arrives inside a community WhatsApp chat channel. The post displays an official government emblem and promises an instant direct cash subsidy bonus of ₹5,000 for local rural farmers under a special scheme. It commands users to click a non-standard link to download an external file named 'subsidy_installer.apk'.",
+                    options: [
+                        { text: "Download and install the APK immediately to claim the benefit.", correct: false },
+                        { text: "Forward the message to your friends so they can benefit too.", correct: false },
+                        { text: "Delete the message and verify schemes on the official PM-KISAN web domain.", correct: true },
+                        { text: "Click the link just to read the terms without downloading.", correct: false }
+                    ],
+                    explanation: "Brilliant choice! Downloading external Android application packages (.apk files) via unverified message links frequently installs tracking malware engineered to siphon device passwords and personal banking information."
+                },
+                {
+                    id: 3,
+                    context: "While waiting at a public bus station, you see an open, free public Wi-Fi network named 'FREE_STATION_INTERNET' with no password required. You need to quickly check your bank account balance to ensure your agricultural payment arrived.",
+                    options: [
+                        { text: "Connect immediately and log into your netbanking application.", correct: false },
+                        { text: "Use your secure personal mobile data connection instead.", correct: true },
+                        { text: "Ask a stranger if the Wi-Fi network is safe to use.", correct: false },
+                        { text: "Connect to the Wi-Fi but use an incognito browser tab.", correct: false }
+                    ],
+                    explanation: "Exactly! Unencrypted open public Wi-Fi networks are highly vulnerable targets where cyber criminals can easily intercept data transmissions, capturing login credentials and personal passwords."
+                }
+            ],
+            'te': [
+                {
+                    id: 1,
+                    context: "మీకు ఒక తెలియని నంబర్ నుండి అత్యవసర ఫోన్ కాల్ వస్తుంది. మాట్లాడే వ్యక్తి మీ బ్యాంక్ బ్రాంచ్ మేనేజర్ అని చెప్పుకుంటాడు. మీ ఖాతా వివరాల వెరిఫికేషన్ లో తప్పులు ఉన్నాయని, మీ మొబైల్ కు వచ్చిన 6 అంకెల OTP ని వెంటనే చెబితే తప్ప మీ ఖాతా నిలిపివేయబడుతుందని అతను హెచ్చరిస్తాడు.",
+                    options: [
+                        { text: "ఖాతా బ్లాక్ కాకుండా కాపాడుకోవడానికి వెంటనే OTP చెప్పేయండి.", correct: false },
+                        { text: "ఫోన్ పెట్టేసి, వివరాలు సరిచూసుకోవడానికి మీ స్థానిక బ్యాంకును సందర్శించండి.", correct: true },
+                        { text: "కాలర్ ఐడీ కార్డ్ అడిగి నిర్ధారించుకున్నాక OTP చెప్పండి.", correct: false },
+                        { text: "అతను నిజమైన వాడో కాదో పరీక్షించడానికి తప్పుడు OTP చెప్పండి.", correct: false }
+                    ],
+                    explanation: "సరైన నిర్ణయం! బ్యాంకులు ఎప్పుడూ ఫోన్ కాల్స్ ద్వారా ఖాతాదారుల వ్యక్తిగత వివరాలను లేదా లావాదేవీల OTP నంబర్లను అడగవు. ఇటువంటి మోసపూరిత కాల్స్ ను కట్ చేసి నేరుగా బ్యాంకుకు వెళ్లడం సురక్షితం."
+                },
+                {
+                    id: 2,
+                    context: "మీ వాట్సాప్ గ్రూప్‌లో ఒక మెసేజ్ వస్తుంది. అందులో ప్రభుత్వ అధికారిక చిహ్నంతో ఒక లింక్ ఉంటుంది. ప్రత్యేక పథకం కింద రైతులకు వెంటనే ₹5,000 నగదు సబ్సిడీ లభిస్తుందని అందులో ఉంది. ఆ లాభం పొందడానికి 'subsidy_installer.apk' అనే ఫైల్‌ను డౌన్‌లోడ్ చేయమని కోరుతుంది.",
+                    options: [
+                        { text: "సబ్సిడీ పొందడానికి వెంటనే ఆ APK ఫైల్‌ను డౌన్‌లోడ్ చేసి ఇన్‌స్టాల్ చేయండి.", correct: false },
+                        { text: "మీ స్నేహితులు కూడా లబ్ధి పొందేలా ఈ మెసేజ్‌ను అందరికీ ఫార్వార్డ్ చేయండి.", correct: false },
+                        { text: "మెసేజ్‌ను డిలీట్ చేసి, అధికారిక పీఎం-కిసాన్ వెబ్‌సైట్‌లో పథకం వివరాలు తనిఖీ చేయండి.", correct: true },
+                        { text: "డౌన్‌లోడ్ చేయకుండా కేవలం నిబంధనలను చదవడానికి లింక్‌పై క్లిక్ చేయండి.", correct: false }
+                    ],
+                    explanation: "అద్భుతమైన ఎంపిక! తెలియని వెబ్‌సైట్‌లు లేదా వాట్సాప్ లింక్‌ల ద్వారా APK ఫైల్‌లను డౌన్‌లోడ్ చేయడం వల్ల మీ ఫోన్‌లో డేటాను దొంగిలించే వైరస్‌లు వచ్చే ప్రమాదం ఉంది."
+                },
+                {
+                    id: 3,
+                    context: "మీరు బస్టాండ్‌లో వేచి ఉన్నప్పుడు, పాస్‌వర్డ్ లేని 'FREE_STATION_INTERNET' అనే ఉచిత పబ్లిక్ వై-ఫై నెట్‌వర్క్ కనిపించింది. మీ వ్యవసాయ సబ్సిడీ డబ్బులు పడ్డాయో లేదో తెలుసుకోవడానికి మీ బ్యాంక్ బ్యాలెన్స్ తనిఖీ చేయాల్సి ఉంది.",
+                    options: [
+                        { text: "వెంటనే కనెక్ట్ అయ్యి మీ నెట్ బ్యాంకింగ్ యాప్ ఓపెన్ చేసి బ్యాలెన్స్ చూడండి.", correct: false },
+                        { text: "పబ్లిక్ వై-ఫై కాకుండా మీ స్వంత మొబైల్ డేటాను మాత్రమే ఉపయోగించండి.", correct: true },
+                        { text: "ఆ వై-ఫై సురక్షితమేనా అని పక్కన ఉన్న ఎవరినైనా అడగండి.", correct: false },
+                        { text: "వై-ఫైకి కనెక్ట్ అవ్వండి కానీ ఇన్‌కాగ్నిటో బ్రౌజర్ ట్యాబ్‌ను ఉపయోగించండి.", correct: false }
+                    ],
+                    explanation: "ఖచ్చితంగా సరైనది! పాస్‌వర్డ్ లేని ఉచిత పబ్లిక్ వై-ఫై నెట్‌వర్క్‌లు సురక్షితం కావు. వాటిని ఉపయోగించి బ్యాంక్ ఖాతాల లాగిన్ వివరాలను తనిఖీ చేయడం వల్ల మీ పాస్‌వర్డ్‌లు దొంగిలించబడే ప్రమాదం ఉంది."
+                }
+            ]
+        };
+
+        // GLOBAL APPLICATION ENGINE STATE
+        let currentLang = localStorage.getItem('selectedLang') || 'en';
+        let typewriterIdx = 0;
+        let charIdx = 0;
+        let isDeleting = false;
+        let typewriterTimer = null;
+        let quizCurrentStep = 0;
+        let quizScore = 0;
+
+        // INITIALIZATION DISPATCHER ON DOM READINESS
+        document.addEventListener('DOMContentLoaded', () => {
+            // Trigger Lucide Icons Vector Rendering Engine Injection
+            lucide.createIcons();
+            
+            // Build Dynamic Visual Floating Background Dots In Hero
+            generateHeroParticles();
+
+            // Set Up State Engine Sync Based On Persistent Language Configurations
+            syncLanguageToggleUI();
+            applyLanguageTranslations();
+
+            // Fire Global Scroll Depth Tracking and Layout Visibility Observers
+            setupScrollObservers();
+
+            // Initialize Page Loader Fadeout Phase
+            setTimeout(() => {
+                const loader = document.getElementById('page-loader');
+                if(loader) {
+                    loader.classList.add('opacity-0');
+                    setTimeout(() => loader.remove(), 500);
+                }
+            }, 1500);
+
+            // Hook Event Listener Interactions
+            document.getElementById('lang-toggle-btn').addEventListener('click', toggleLanguageState);
+            setupRippleEffects();
+        });
+
+        // HERO PARTICLE GENERATION ENGINE
+        function generateHeroParticles() {
+            const container = document.getElementById('hero-particles');
+            if(!container) return;
+            const count = 30;
+            for(let i=0; i<count; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                const size = Math.random() * 8 + 4;
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                const delay = Math.random() * 8;
+                const duration = Math.random() * 12 + 6;
+
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${left}%`;
+                particle.style.top = `${top}%`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+
+                container.appendChild(particle);
+            }
+        }
+
+        // BILINGUAL COMPONENT HANDLING MECHANICS
+        function toggleLanguageState() {
+            currentLang = currentLang === 'en' ? 'te' : 'en';
+            localStorage.setItem('selectedLang', currentLang);
+
+            // Wrap implementation inside layout fadeout transitions
+            document.body.classList.add('lang-fade-out', 'lang-transition');
+            
+            setTimeout(() => {
+                syncLanguageToggleUI();
+                applyLanguageTranslations();
+                document.body.classList.remove('lang-fade-out');
+            }, 300);
+        }
+
+        function syncLanguageToggleUI() {
+            const pill = document.getElementById('lang-toggle-pill');
+            if(currentLang === 'te') {
+                pill.style.transform = 'translateX(40px)';
+                pill.textContent = 'తె';
+                document.documentElement.lang = 'te';
+            } else {
+                pill.style.transform = 'translateX(0px)';
+                pill.textContent = 'EN';
+                document.documentElement.lang = 'en';
+            }
+        }
+
+        function applyLanguageTranslations() {
+            // 1. Process Core Static DOM Translatable Nodes
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if(translations[currentLang] && translations[currentLang][key]) {
+                    el.textContent = translations[currentLang][key];
+                }
+            });
+
+            // 2. Clear and Force Restart Typewriter Mechanics
+            if(typewriterTimer) clearTimeout(typewriterTimer);
+            typewriterIdx = 0;
+            charIdx = 0;
+            isDeleting = false;
+            executeTypewriterLoop();
+
+            // 3. Reset and Rebuild Interactive Quiz Evaluation Panel Content
+            quizCurrentStep = 0;
+            quizScore = 0;
+            renderQuizScenarioCard();
+        }
+
+        // TYPEWRITER ENGINE LOOP
+        function executeTypewriterLoop() {
+            const headlineNode = document.getElementById('typewriter-headline');
+            if(!headlineNode) return;
+
+            const activeStrings = typewriterStrings[currentLang];
+            const currentFullStr = activeStrings[typewriterIdx];
+
+            if(isDeleting) {
+                headlineNode.textContent = currentFullStr.substring(0, charIdx - 1);
+                charIdx--;
+            } else {
+                headlineNode.textContent = currentFullStr.substring(0, charIdx + 1);
+                charIdx++;
+            }
+
+            // Typography pacing controllers
+            let typeSpeed = isDeleting ? 30 : 60;
+
+            if(!isDeleting && charIdx === currentFullStr.length) {
+                // Pause at complete string state boundary before reversing entry sequence
+                typeSpeed = 2500;
+                isDeleting = true;
+            } else if(isDeleting && charIdx === 0) {
+                isDeleting = false;
+                typewriterIdx = (typewriterIdx + 1) % activeStrings.length;
+                typeSpeed = 400;
+            }
+
+            typewriterTimer = setTimeout(executeTypewriterLoop, typeSpeed);
+        }
+
+        // SCROLL REVEAL & GLASSMORPHISM INTERSECTION WATCHERS
+        function setupScrollObservers() {
+            // Scroll depth linear progression tracking node calculations
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                const scrolled = (winScroll / height) * 100;
+                document.getElementById('scroll-progress').style.width = scrolled + '%';
+
+                // Navbar scroll aesthetic adaptation transforms
+                const nav = document.getElementById('navbar');
+                if(window.scrollY > 20) {
+                    nav.classList.remove('bg-white/40', 'border-transparent');
+                    nav.classList.add('bg-white/80', 'backdrop-blur-md', 'shadow-md', 'border-gray-200/50');
+                } else {
+                    nav.classList.remove('bg-white/80', 'backdrop-blur-md', 'shadow-md', 'border-gray-200/50');
+                    nav.classList.add('bg-white/40', 'backdrop-blur-sm', 'border-transparent');
+                }
+            });
+
+            // Intersection Observer configuration settings for CSS Animation reveals
+            const revealOptions = { threshold: 0.15, rootMargin: '0px 0px -40px 0px' };
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) {
+                        entry.target.classList.add('reveal-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, revealOptions);
+
+            document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right').forEach(el => revealObserver.observe(el));
+
+            // Numerical Counter Core Analytics Animation Trigger Pipeline
+            const counterObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) {
+                        animateMetricCounter(entry.target);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            document.querySelectorAll('.stat-counter').forEach(counter => counterObserver.observe(counter));
+        }
+
+        function animateMetricCounter(element) {
+            const target = parseInt(element.getAttribute('data-target'), 10);
+            const duration = 2000; // Synchronized run length allocation parameters
+            const startTime = performance.now();
+
+            function updateCounterValue(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Ease-out quad curve calculation formulas
+                const easeProgress = progress * (2 - progress);
+                const currentValue = Math.floor(easeProgress * target);
+                
+                element.textContent = currentValue;
+
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounterValue);
+                } else {
+                    element.textContent = target;
+                }
+            }
+            requestAnimationFrame(updateCounterValue);
+        }
+
+        // KNOWLEDGE HUB TAB NAVIGATION LOGIC INTERACTION MODULES
+        function switchTab(targetId, buttonEl) {
+            // Hide all tab panels completely inside block
+            document.querySelectorAll('.hub-panel-content').forEach(panel => {
+                panel.classList.add('hidden');
+                panel.classList.remove('block');
+            });
+
+            // Display target panel context structures
+            const activePanel = document.getElementById(targetId);
+            activePanel.classList.remove('hidden');
+            activePanel.classList.add('block');
+
+            // Reset selection style indicators across tab buttons array
+            document.querySelectorAll('.hub-tab-btn').forEach(btn => {
+                btn.className = "hub-tab-btn btn-ripple px-5 py-3 font-semibold text-sm rounded-xl border-2 transition-all duration-300 flex items-center space-x-2 bg-white text-gray-600 border-gray-200 hover:bg-gray-50";
+            });
+
+            // Inject highlighted theme parameters based on context arrays
+            let themeClass = "from-orange-500 to-red-500 text-white border-transparent shadow-md bg-gradient-to-r";
+            if(targetId === 'hub-payments') themeClass = "from-teal-500 to-emerald-600 text-white border-transparent shadow-md bg-gradient-to-r";
+            if(targetId === 'hub-portals') themeClass = "from-indigo-500 to-brandAccent text-white border-transparent shadow-md bg-gradient-to-r";
+            if(targetId === 'hub-edu') themeClass = "from-purple-500 to-indigo-600 text-white border-transparent shadow-md bg-gradient-to-r";
+
+            buttonEl.className = `hub-tab-btn btn-ripple px-5 py-3 font-semibold text-sm rounded-xl border-2 transition-all duration-300 flex items-center space-x-2 ${themeClass}`;
+        }
+
+        // QUIZ SYSTEM RENDER LOGIC MANAGEMENT FRAMEWORK
+        function renderQuizScenarioCard() {
+            const engineView = document.getElementById('quiz-engine-view');
+            if(!engineView) return;
+
+            const activeScenarios = quizScenarios[currentLang];
+            
+            // Sync step tracking indicators
+            document.getElementById('quiz-score-lbl').textContent = `${currentLang === 'te' ? 'స్కోరు' : 'Score'}: ${quizScore}`;
+            
+            if(quizCurrentStep >= activeScenarios.length) {
+                // Execute terminal scoring results summary dashboard card assembly module
+                renderQuizResultsDashboard(engineView, activeScenarios.length);
+                return;
+            }
+
+            document.getElementById('quiz-step-lbl').textContent = currentLang === 'te' ? `సందర్భం ${quizCurrentStep + 1} / 3` : `Scenario ${quizCurrentStep + 1} of 3`;
+            document.getElementById('quiz-progress-bar').style.width = `${((quizCurrentStep + 1) / activeScenarios.length) * 100}%`;
+
+            const data = activeScenarios[quizCurrentStep];
+
+            let optionsHtml = '';
+            data.options.forEach((opt, idx) => {
+                optionsHtml += `
+                    <button onclick="evaluateQuizChoice(this, ${opt.correct}, ${idx})" class="quiz-opt-node w-full text-left p-4 rounded-xl border-2 border-gray-200 font-body text-sm font-medium hover:border-brandSecondary hover:bg-teal-50/20 transition-all duration-200 flex items-center justify-between group focus:outline-none bg-white">
+                        <span>${opt.text}</span>
+                        <div class="w-5 h-5 rounded-full border border-gray-300 flex items-center justify-center shrink-0 ml-3 group-hover:border-brandSecondary transition-colors"><div class="w-2.5 h-2.5 rounded-full bg-transparent"></div></div>
+                    </button>
+                `;
+            });
+
+            engineView.innerHTML = `
+                <div class="space-y-6">
+                    <div class="p-5 bg-gradient-to-r from-teal-50/60 to-indigo-50/40 rounded-2xl border border-gray-100">
+                        <p class="font-body text-gray-700 text-sm sm:text-base leading-relaxed text-justify">${data.context}</p>
+                    </div>
+                    <div class="grid grid-cols-1 gap-3" id="quiz-options-box">
+                        ${optionsHtml}
+                    </div>
+                    <div id="quiz-feedback-box" class="hidden p-5 rounded-2xl border text-sm font-body leading-relaxed text-justify animate-fadeIn"></div>
+                    <div class="flex justify-end hidden" id="quiz-action-box">
+                        <button onclick="advanceQuizStep()" class="btn-ripple px-6 py-3 font-semibold text-white bg-gradient-to-r from-brandPrimary to-orange-500 rounded-xl shadow-md flex items-center justify-center text-sm">
+                            ${currentLang === 'te' ? 'తదుపరి ప్రశ్న' : 'Next Scenario'} <i data-lucide="chevron-right" class="w-4 h-4 ml-1.5"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        function evaluateQuizChoice(selectedButton, isCorrect, chosenIdx) {
+            // Disable all options processing to secure answers loop parameters
+            document.querySelectorAll('.quiz-opt-node').forEach(btn => {
+                btn.disabled = true;
+                btn.className = "quiz-opt-node w-full text-left p-4 rounded-xl border-2 border-gray-100 bg-gray-50 text-gray-400 font-body text-sm font-medium flex items-center justify-between focus:outline-none pointer-events-none";
+            });
+
+            const currentData = quizScenarios[currentLang][quizCurrentStep];
+            if(isCorrect) quizScore++;
+            
+            // Re-render context indicator scores instantly
+            document.getElementById('quiz-score-lbl').textContent = `${currentLang === 'te' ? 'స్కోరు' : 'Score'}: ${quizScore}`;
+
+            // Highlight choice colors
+            if(isCorrect) {
+                selectedButton.className = "quiz-opt-node w-full text-left p-4 rounded-xl border-2 border-brandSuccess bg-emerald-50 text-emerald-900 font-body text-sm font-bold flex items-center justify-between focus:outline-none pointer-events-none";
+                selectedButton.innerHTML = `<span>${currentData.options[chosenIdx].text}</span> <div class="w-5 h-5 rounded-full bg-brandSuccess flex items-center justify-center text-white shrink-0 ml-3"><i data-lucide="check" class="w-3 h-3"></i></div>`;
+            } else {
+                selectedButton.className = "quiz-opt-node w-full text-left p-4 rounded-xl border-2 border-red-500 bg-red-50 text-red-900 font-body text-sm font-bold flex items-center justify-between focus:outline-none pointer-events-none";
+                selectedButton.innerHTML = `<span>${currentData.options[chosenIdx].text}</span> <div class="w-5 h-5 rounded-full bg-red-500 flex items-center justify-center text-white shrink-0 ml-3"><i data-lucide="x" class="w-3 h-3"></i></div>`;
+                
+                // Highlight the correct answer
+                const correctIdx = currentData.options.findIndex(o => o.correct);
+                const correctBtn = document.getElementById('quiz-options-box').children[correctIdx];
+                correctBtn.className = "quiz-opt-node w-full text-left p-4 rounded-xl border-2 border-brandSuccess bg-emerald-50 text-emerald-900 font-body text-sm font-bold flex items-center justify-between focus:outline-none pointer-events-none";
+            }
+
+            // Expose explanation box interface fields
+            const feedbackBox = document.getElementById('quiz-feedback-box');
+            feedbackBox.className = `p-5 rounded-2xl border text-sm font-body leading-relaxed text-justify ${isCorrect ? 'bg-emerald-50/50 border-brandSuccess text-emerald-950' : 'bg-orange-50/50 border-orange-200 text-gray-700'}`;
+            feedbackBox.textContent = currentData.explanation;
+            feedbackBox.classList.remove('hidden');
+
+            // Expose structural control trigger navigation buttons
+            document.getElementById('quiz-action-box').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function advanceQuizStep() {
+            quizCurrentStep++;
+            renderQuizScenarioCard();
+        }
+
+        function renderQuizResultsDashboard(containerNode, totalQuestions) {
+            document.getElementById('quiz-step-lbl').textContent = currentLang === 'te' ? "పూర్తయింది" : "Evaluation Complete";
+            document.getElementById('quiz-progress-bar').style.width = "100%";
+
+            let heading = "";
+            let description = "";
+            let medal = "";
+
+            if(quizScore === totalQuestions) {
+                medal = "🏆";
+                heading = currentLang === 'te' ? "సైబర్ భద్రతా ఛాంపియన్!" : "Cyber Safety Champion!";
+                description = currentLang === 'te' ? "మీరు ఆన్‌లైన్ మోసాల పట్ల పూర్తి అవగాహన కలిగి ఉన్నారు. మీ గ్రామాన్ని సురక్షితంగా ఉంచడానికి మీరు సిద్ధంగా ఉన్నారు." : "You processed flawless risk classifications across all scenario parameters! You possess full readiness to protect village stakeholders against digital vulnerabilities.";
+            } else if (quizScore >= 2) {
+                medal = "🥈";
+                heading = currentLang === 'te' ? "చాలా మంచి ప్రయత్నం!" : "Great effort!";
+                description = currentLang === 'te' ? "మీకు మంచి అవగాహన ఉంది. సైబర్ నియమాలను పూర్తిగా తెలుసుకోవడానికి పైన ఉన్న మా విజ్ఞాన కేంద్రాన్ని సందర్శించండి." : "You demonstrated rock solid foundational comprehension metrics. Review our integrated knowledge core resource hub blocks to eliminate residual risk exposure tracks entirely.";
+            } else {
+                medal = "📚";
+                heading = currentLang === 'te' ? "మరింత నేర్చుకోండి!" : "Keep learning!";
+                description = currentLang === 'te' ? "సైబర్ మోసాల పట్ల మరింత జాగ్రత్తగా ఉండాలి. సురక్షితంగా ఉండటానికి దయచేసి మా విజ్ఞాన కేంద్రంలోని గైడ్‌లను చదవండి." : "Substantial configuration safety spaces require refinement. Immerse yourself inside our complete resource core structures above to secure your operational devices safely.";
+            }
+
+            containerNode.innerHTML = `
+                <div class="text-center py-8 space-y-6 animate-fadeIn">
+                    <span class="text-6xl block transform animate-bounce">${medal}</span>
+                    <h3 class="text-2xl font-extrabold font-headings text-gray-900">${heading}</h3>
+                    <p class="text-sm font-body text-gray-500 max-w-md mx-auto leading-relaxed">${description}</p>
+                    <div class="inline-block bg-gray-50 px-6 py-3 border border-gray-200 rounded-2xl font-headings font-bold text-lg text-gray-700">
+                        ${currentLang === 'te' ? 'తుది స్కోరు' : 'Final Metric Score'}: <span class="text-brandPrimary text-xl">${quizScore}</span> / ${totalQuestions}
+                    </div>
+                    <div>
+                        <button onclick="resetQuizState()" class="btn-ripple inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-brandSecondary bg-teal-50 border-2 border-brandSecondary rounded-xl hover:bg-teal-100/50 transition-colors">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4 mr-2"></i> ${currentLang === 'te' ? 'క్విజ్ పునఃప్రారంభించండి' : 'Retake Quiz'}
+                        </button>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        function resetQuizState() {
+            quizCurrentStep = 0;
+            quizScore = 0;
+            renderQuizScenarioCard();
+        }
+
+        // GLOBAL BUTTON CLICK RIPPLE INJECTION MECHANICS
+        function setupRippleEffects() {
+            document.addEventListener('click', function (e) {
+                const target = e.target.closest('.btn-ripple');
+                if (!target) return;
+
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                
+                const rect = target.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                
+                ripple.style.width = ripple.style.height = `${size}px`;
+                ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
+                ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
+
+                target.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+        }
+    </script>
+</body>
+</html>
