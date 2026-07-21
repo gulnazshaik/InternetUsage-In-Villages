@@ -1,680 +1,335 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Internet Usage in Villages - Digital Literacy Project</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        saffron: {
-                            50: '#fff7ed',
-                            100: '#ffedd5',
-                            500: '#F97316',
-                            600: '#EA580C',
-                        },
-                        vibrantTeal: {
-                            50: '#f0fdfa',
-                            100: '#ccfbf1',
-                            600: '#0D9488',
-                            700: '#0F766E',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        .glassmorphism {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#051629" />
+  <title>RuralNet AI — Village Digital Awareness Center</title>
+  <style>
+    /* RuralNet is deliberately dependency-free: this file works offline too. */
+    :root {
+      --bg:#020b18; --bg2:#06172a; --surface:rgba(8,31,52,.78); --surface-solid:#09213a;
+      --line:rgba(80,232,219,.18); --line-strong:rgba(80,232,219,.45); --text:#edfaff;
+      --muted:#9ab9c9; --teal:#22e0c7; --cyan:#49d9ff; --blue:#4f8cff; --purple:#9c7bff;
+      --green:#38e38c; --orange:#ffad55; --red:#ff6773; --shadow:0 20px 50px rgba(0,0,0,.26);
+      --radius:18px; --font:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --display:"Arial Rounded MT Bold", Inter, ui-sans-serif, system-ui, sans-serif;
+    }
+    body.light-mode {
+      --bg:#edf7fb; --bg2:#dff1fb; --surface:rgba(255,255,255,.78); --surface-solid:#ffffff;
+      --line:rgba(0,109,129,.17); --line-strong:rgba(0,109,129,.4); --text:#08243b; --muted:#49687d;
+      --teal:#007f75; --cyan:#086acf; --blue:#255fc0; --purple:#6545ca; --green:#087d48; --orange:#a84d00; --red:#c92e41;
+      --shadow:0 20px 45px rgba(35,83,110,.14);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0; min-width:320px; background:var(--bg); color:var(--text); font-family:var(--font); overflow-x:hidden; transition:background .3s,color .3s;}
+    button,select,input{font:inherit} button{color:inherit} button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid rgba(73,217,255,.55);outline-offset:3px}
+    .bg-grid{position:fixed;inset:0;z-index:-3;pointer-events:none;background-image:linear-gradient(rgba(60,226,211,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(60,226,211,.045) 1px,transparent 1px);background-size:62px 62px;mask-image:linear-gradient(#000,transparent 85%)}
+    .orb{position:fixed;pointer-events:none;z-index:-2;border-radius:50%;filter:blur(12px);opacity:.32;animation:drift 13s ease-in-out infinite alternate}.orb.one{width:370px;height:370px;top:80px;left:-120px;background:#0ba796}.orb.two{width:320px;height:320px;right:-100px;top:34%;background:#354ec6;animation-delay:-7s}.orb.three{width:240px;height:240px;bottom:0;left:35%;background:#7b3fb4;animation-delay:-3s}@keyframes drift{to{transform:translate(42px,30px) scale(1.13)}}
+    .navbar{height:78px;position:sticky;top:0;z-index:100;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(18px);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 max(18px,calc((100vw - 1260px)/2));gap:18px}
+    .brand{border:0;background:transparent;padding:0;display:flex;align-items:center;gap:10px;cursor:pointer;font-family:var(--display);font-weight:900;color:var(--text);letter-spacing:.7px;white-space:nowrap;font-size:1.04rem}.brand-mark{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,var(--teal),var(--cyan));color:#03202a;box-shadow:0 0 22px rgba(34,224,199,.35)}.brand em{font-style:normal;color:var(--teal)}
+    .nav-links{display:flex;align-items:center;gap:4px;margin-left:auto}.nav-btn{border:1px solid transparent;background:transparent;color:var(--muted);padding:9px 12px;border-radius:10px;cursor:pointer;font-size:.84rem;font-weight:700;transition:.2s}.nav-btn:hover,.nav-btn.active{background:rgba(34,224,199,.09);border-color:var(--line);color:var(--teal)}.nav-btn.guide-nav{display:inline-block}
+    .controls{display:flex;align-items:center;gap:8px}.language{color:var(--teal);background:rgba(34,224,199,.08);border:1px solid var(--line);border-radius:10px;padding:8px;cursor:pointer;font-size:.79rem;font-weight:700;max-width:148px}.theme-btn,.mobile-menu{width:38px;height:38px;border:1px solid var(--line);border-radius:10px;background:rgba(34,224,199,.08);color:var(--teal);cursor:pointer;font-size:1rem}.mobile-menu{display:none}
+    .page{display:none;min-height:calc(100vh - 78px);animation:page-in .45s ease both}.page.active{display:block}@keyframes page-in{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:translateY(0)}}
+    .wrap{width:min(1160px,calc(100% - 36px));margin:auto}.section{padding:66px 0;position:relative}.section.tight{padding-top:15px}.section-title{text-align:center;margin:0 auto 35px;max-width:780px}.eyebrow{color:var(--teal);font-size:.72rem;letter-spacing:1.7px;text-transform:uppercase;font-weight:850;margin:0 0 11px}.section-title h2{font-family:var(--display);font-size:clamp(1.75rem,3.5vw,2.65rem);line-height:1.12;margin:0 0 12px}.section-title h2 span{color:var(--teal)}.section-title p{color:var(--muted);line-height:1.7;margin:0}
+    .hero{padding:66px 0 30px}.hero-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:35px;align-items:center}.live-pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:rgba(34,224,199,.08);border-radius:99px;padding:8px 12px;color:var(--teal);font-size:.74rem;font-weight:800;letter-spacing:.7px}.pulse-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(56,227,140,.6);animation:pulse 1.8s infinite}@keyframes pulse{70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
+    h1{font-family:var(--display);font-size:clamp(2.35rem,5.6vw,4.6rem);line-height:1.02;letter-spacing:-1.6px;margin:18px 0}.gradient-text{background:linear-gradient(100deg,var(--teal),var(--cyan),var(--purple));background-clip:text;-webkit-background-clip:text;color:transparent}.hero-copy{color:var(--muted);font-size:1.06rem;line-height:1.78;max-width:660px;margin:0}.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin:26px 0}.primary-btn,.ghost-btn,.small-btn{border:none;border-radius:11px;font-weight:850;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;justify-content:center;gap:9px}.primary-btn{padding:13px 18px;color:#02232b;background:linear-gradient(135deg,var(--teal),var(--cyan));box-shadow:0 9px 24px rgba(34,224,199,.19)}.primary-btn:hover{transform:translateY(-2px);box-shadow:0 13px 30px rgba(34,224,199,.3)}.ghost-btn{padding:12px 17px;color:var(--text);background:var(--surface);border:1px solid var(--line)}.ghost-btn:hover,.small-btn:hover{border-color:var(--line-strong);transform:translateY(-2px)}.trust-row{display:flex;flex-wrap:wrap;gap:10px}.trust{color:var(--muted);font-size:.78rem;border-left:2px solid var(--teal);padding-left:8px}
+    .hero-card{background:linear-gradient(145deg,rgba(34,224,199,.15),rgba(65,97,208,.12));border:1px solid var(--line-strong);padding:25px;border-radius:24px;box-shadow:var(--shadow);overflow:hidden;position:relative;isolation:isolate}.hero-card:after{content:"";position:absolute;width:160px;height:160px;right:-58px;top:-54px;border-radius:50%;background:var(--teal);opacity:.18;filter:blur(25px);z-index:-1}.signal-art{height:130px;display:flex;align-items:end;justify-content:center;gap:13px;margin:5px 0 16px}.signal-bar{width:20px;border-radius:9px 9px 2px 2px;background:linear-gradient(to top,var(--teal),var(--cyan));box-shadow:0 0 18px rgba(34,224,199,.3);animation:rise 1.5s ease-in-out infinite alternate}.signal-bar:nth-child(1){height:30px;animation-delay:.2s}.signal-bar:nth-child(2){height:56px;animation-delay:.5s}.signal-bar:nth-child(3){height:82px;animation-delay:.1s}.signal-bar:nth-child(4){height:110px;animation-delay:.4s}@keyframes rise{to{transform:scaleY(.72);filter:brightness(1.3)}}.hero-card h3{font-family:var(--display);margin:0 0 10px;font-size:1.25rem}.hero-card p{line-height:1.65;color:var(--muted);margin:0}.micro-status{margin-top:18px;border-top:1px dashed var(--line);padding-top:14px;color:var(--teal);font-size:.76rem;font-weight:700}
+    .summary{border:1px dashed var(--line-strong);background:linear-gradient(120deg,rgba(34,224,199,.06),transparent 50%),var(--surface);border-radius:var(--radius);padding:30px;box-shadow:var(--shadow)}.summary-label{font-size:.69rem;font-weight:850;letter-spacing:1.2px;color:var(--purple);border:1px solid color-mix(in srgb,var(--purple) 65%,transparent);background:rgba(156,123,255,.1);padding:5px 8px;border-radius:6px;display:inline-block}.summary h3{font-family:var(--display);font-size:1.45rem;margin:13px 0 9px;color:var(--cyan)}.summary>p{line-height:1.75;color:var(--muted);margin:0 0 23px}.subhead{font-family:var(--display);font-size:1.05rem;margin:0 0 6px}.subcopy{color:var(--muted);font-size:.88rem;margin:0 0 17px}
+    .objective-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.objective{position:relative;text-align:left;min-height:188px;padding:20px;border:1px solid var(--line);background:rgba(255,255,255,.018);border-radius:14px;color:var(--text);cursor:pointer;overflow:hidden;transition:.25s}.objective:before{content:"";width:130px;height:130px;border-radius:50%;background:var(--card-color,var(--teal));filter:blur(36px);opacity:0;position:absolute;right:-55px;top:-50px;transition:.25s}.objective:hover{transform:translateY(-5px);border-color:var(--card-color,var(--teal));background:rgba(34,224,199,.075);box-shadow:0 12px 26px rgba(0,0,0,.14)}.objective:hover:before{opacity:.22}.objective-icon{font-size:1.55rem;display:block;margin-bottom:12px}.objective h4{font-family:var(--display);font-size:.96rem;line-height:1.28;margin:0 0 9px;position:relative}.objective p{font-size:.84rem;line-height:1.55;color:var(--muted);margin:0;position:relative}.arrow{position:absolute;right:15px;bottom:15px;color:var(--cyan);font-size:1.05rem;transition:.2s}.objective:hover .arrow{transform:translateX(4px)}
+    .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px}.stat{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:20px;text-align:center}.stat b{display:block;font-family:var(--display);font-size:1.72rem;color:var(--cyan);margin-bottom:5px}.stat span{font-size:.7rem;line-height:1.3;letter-spacing:.45px;text-transform:uppercase;color:var(--muted);font-weight:750}
+    .feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.feature{min-height:186px;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:25px;cursor:pointer;color:var(--text);position:relative;overflow:hidden;transition:.25s}.feature:hover{border-color:var(--teal);transform:translateY(-4px);box-shadow:var(--shadow)}.feature-icon{font-size:2rem;margin:7px 0 13px}.badge{position:absolute;top:15px;right:15px;border:1px solid var(--line-strong);color:var(--cyan);background:rgba(73,217,255,.07);border-radius:99px;font-size:.64rem;padding:5px 8px;font-weight:850;letter-spacing:.55px}.feature h3{font-family:var(--display);margin:0 0 8px;font-size:1.1rem}.feature p{margin:0;color:var(--muted);line-height:1.65;font-size:.9rem}
+    .terminal{width:min(900px,100%);margin:auto;background:#010b19;border:1px solid color-mix(in srgb,var(--purple) 65%,transparent);border-radius:16px;overflow:hidden;box-shadow:0 15px 38px rgba(69,39,140,.2)}.terminal-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;background:rgba(156,123,255,.1);border-bottom:1px solid rgba(156,123,255,.22);font-size:.71rem;color:var(--purple);font-weight:800;letter-spacing:.7px}.dots{display:flex;gap:5px}.dots i{display:block;width:9px;height:9px;border-radius:50%;background:var(--red)}.dots i:nth-child(2){background:var(--orange)}.dots i:nth-child(3){background:var(--green)}.terminal-body{padding:21px}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:17px}.chip{border:1px solid rgba(73,217,255,.25);color:var(--cyan);background:rgba(73,217,255,.06);border-radius:7px;padding:6px 10px;font-family:ui-monospace,monospace;font-size:.78rem;cursor:pointer;transition:.2s}.chip:hover{border-color:var(--cyan);background:rgba(73,217,255,.15)}.term-entry{display:flex;gap:10px;align-items:center;color:var(--purple);font:bold .76rem ui-monospace,monospace;margin-bottom:16px}.term-entry input{flex:1;min-width:0;color:var(--cyan);background:transparent;border:0;border-bottom:1px solid rgba(73,217,255,.3);padding:6px;outline:none}.term-result{min-height:87px;background:rgba(0,0,0,.35);border:1px dashed rgba(156,123,255,.34);border-radius:9px;padding:16px;color:#a5bfce;white-space:pre-line;line-height:1.65;font: .8rem/1.65 ui-monospace,SFMono-Regular,Menlo,monospace}
+    .faq-list{display:grid;gap:11px;width:min(900px,100%);margin:auto}.faq{border:1px solid var(--line);background:var(--surface);border-radius:12px;overflow:hidden}.faq-q{width:100%;border:0;background:transparent;color:var(--text);text-align:left;padding:18px 20px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:20px;font-weight:800}.faq-q .chev{color:var(--cyan);transition:.25s}.faq.open .chev{transform:rotate(180deg)}.faq-a{max-height:0;overflow:hidden;color:var(--muted);line-height:1.7;font-size:.91rem;transition:max-height .35s ease}.faq.open .faq-a{max-height:180px}.faq-a p{margin:0;padding:0 20px 19px}
+    /* Problems page */
+    .problem-list{display:grid;gap:17px}.problem{display:grid;grid-template-columns:1fr 1fr;gap:25px;padding:24px;background:var(--surface);border:1px solid var(--line);border-radius:16px;transition:.2s}.problem:hover{border-color:var(--line-strong);transform:translateY(-2px)}.problem-side{padding-right:24px;border-right:1px dashed rgba(255,103,115,.27)}.incident{font:800 .7rem ui-monospace,monospace;color:var(--orange);letter-spacing:.5px;text-transform:uppercase}.problem h3{font-family:var(--display);font-size:1.08rem;margin:9px 0 10px}.problem p{color:var(--muted);line-height:1.65;font-size:.9rem;margin:0}.solution h3{color:var(--green)}.solution ul{margin:0;padding:0;list-style:none}.solution li{position:relative;padding-left:22px;margin:8px 0;line-height:1.5;font-size:.88rem}.solution li:before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:900}.return-row{text-align:center;margin-top:32px}
+    /* New Learning Trail */
+    .learn-hero{padding:52px 0 17px}.learn-progress{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:25px;padding:14px 17px;border-radius:13px;border:1px solid var(--line);background:var(--surface)}.learn-progress p{margin:0;color:var(--muted);font-size:.84rem}.learn-progress b{color:var(--teal)}.progress-track{height:8px;flex:1;max-width:340px;background:rgba(255,255,255,.09);border-radius:99px;overflow:hidden}.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--cyan));border-radius:inherit;transition:width .5s cubic-bezier(.2,.9,.2,1)}
+    .path-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin:28px 0}.path-card{position:relative;padding:17px 14px;text-align:left;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:14px;cursor:pointer;transition:.23s;overflow:hidden}.path-card:hover,.path-card.active{transform:translateY(-4px);border-color:var(--module-color,var(--teal));box-shadow:0 11px 22px rgba(0,0,0,.13)}.path-card.active{background:linear-gradient(135deg,color-mix(in srgb,var(--module-color,var(--teal)) 12%,var(--surface)),var(--surface))}.path-number{color:var(--module-color,var(--teal));font:bold .66rem ui-monospace,monospace}.path-card .path-icon{display:block;font-size:1.55rem;margin:9px 0}.path-card b{display:block;font-family:var(--display);font-size:.92rem;line-height:1.22}.path-card .tick{display:none;position:absolute;right:10px;top:9px;color:var(--green);font-size:.9rem}.path-card.done .tick{display:block}
+    .lesson{background:var(--surface);border:1px solid var(--line-strong);border-radius:22px;padding:clamp(20px,4vw,38px);box-shadow:var(--shadow);position:relative;overflow:hidden}.lesson:before{content:"";position:absolute;width:340px;height:340px;border-radius:50%;background:var(--module-color,var(--teal));opacity:.065;filter:blur(35px);right:-150px;top:-180px;pointer-events:none}.lesson-top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;position:relative}.lesson-tag{font-size:.7rem;text-transform:uppercase;letter-spacing:1.1px;color:var(--module-color,var(--teal));font-weight:900;margin:0 0 7px}.lesson h2{font-family:var(--display);font-size:clamp(1.45rem,3vw,2.25rem);margin:0}.lesson-icon{font-size:3rem;filter:drop-shadow(0 4px 10px rgba(0,0,0,.2))}.lesson-hook{font-size:1.03rem;color:var(--text);font-weight:700;line-height:1.6;max-width:800px;margin:18px 0 23px;position:relative}.lesson-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:20px;position:relative}.steps{display:grid;gap:12px}.step{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start}.step-no{width:30px;height:30px;display:grid;place-items:center;border-radius:10px;background:color-mix(in srgb,var(--module-color,var(--teal)) 18%,transparent);color:var(--module-color,var(--teal));font:bold .8rem ui-monospace,monospace}.step h4{margin:3px 0 4px;font-size:.93rem}.step p{color:var(--muted);line-height:1.55;margin:0;font-size:.87rem}.insight{border:1px solid var(--line);background:rgba(0,0,0,.13);border-radius:14px;padding:17px;height:fit-content}.insight h3{font-family:var(--display);font-size:.94rem;color:var(--orange);margin:0 0 8px}.insight p{margin:0;color:var(--muted);font-size:.86rem;line-height:1.65}.quiz{margin-top:25px;border-top:1px dashed var(--line);padding-top:21px;position:relative}.quiz h3{font-family:var(--display);font-size:1rem;margin:0 0 5px}.quiz>p{margin:0 0 12px;color:var(--muted);font-size:.89rem}.quiz-options{display:flex;flex-wrap:wrap;gap:9px}.quiz-option{background:transparent;border:1px solid var(--line);color:var(--text);border-radius:9px;padding:9px 11px;font-size:.82rem;cursor:pointer;transition:.2s}.quiz-option:hover{border-color:var(--module-color,var(--teal));background:rgba(34,224,199,.06)}.quiz-option.correct{border-color:var(--green);color:var(--green)}.quiz-option.wrong{border-color:var(--red);color:var(--red)}.quiz-feedback{min-height:20px;margin:11px 0 0;font-size:.84rem;font-weight:750;line-height:1.5}.lesson-next{margin-top:20px;display:flex;justify-content:flex-end}.small-btn{border:1px solid var(--line);background:rgba(34,224,199,.08);color:var(--teal);padding:10px 13px;font-size:.82rem}
+    /* Detailed service shelves inside the Learning Trail */
+    .resource-shelf{margin:24px 0 0;position:relative;border-top:1px dashed var(--line);padding-top:21px}.resource-shelf>h3{font-family:var(--display);font-size:1rem;margin:0 0 13px}.resource-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}.resource-card{background:rgba(255,255,255,.025);border:1px solid var(--line);border-radius:12px;padding:14px;transition:.2s}.resource-card:hover{transform:translateY(-2px);border-color:var(--module-color,var(--teal))}.resource-card b{display:block;color:var(--module-color,var(--teal));font-size:.86rem;margin-bottom:5px}.resource-card p{font-size:.82rem;line-height:1.55;color:var(--muted);margin:0}.resource-card code{display:inline-block;margin-top:7px;font:700 .7rem ui-monospace,monospace;color:var(--cyan);word-break:break-all}.service-note{margin-top:14px;padding:12px 14px;border-left:3px solid var(--module-color,var(--teal));background:rgba(0,0,0,.12);color:var(--muted);font-size:.82rem;line-height:1.55}.service-note b{color:var(--text)}
+    /* Digital Skills Hub: the home cards open these Do & Don't guides */
+    .hub-intro{max-width:840px;margin:0 auto 18px;text-align:center}.hub-intro h1{font-family:var(--display);font-size:clamp(1.7rem,3.7vw,2.7rem);margin:0 0 10px;letter-spacing:-.8px}.hub-intro h1 span{color:var(--teal)}.hub-intro p{color:var(--muted);line-height:1.65;margin:0}.skill-switcher{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:24px 0 19px}.skill-switch{position:relative;text-align:left;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;padding:12px 36px 12px 13px;cursor:pointer;transition:.2s;font-size:.79rem;font-weight:800;line-height:1.25}.skill-switch:hover,.skill-switch.active{border-color:var(--switch-color,var(--teal));background:color-mix(in srgb,var(--switch-color,var(--teal)) 10%,var(--surface));transform:translateY(-2px)}.skill-switch .skill-switch-icon{margin-right:7px}.skill-switch .skill-done{position:absolute;right:12px;color:var(--switch-color,var(--teal));font-size:.9rem}
+    /* Guide page */
+    .guide-head{padding:55px 0 17px}.guide-banner{background:linear-gradient(135deg,rgba(73,217,255,.11),rgba(156,123,255,.08));border:1px solid var(--line);border-radius:18px;padding:27px;text-align:center}.guide-icon{font-size:2.7rem;margin-bottom:10px}.guide-banner h1,.guide-banner h2{font-family:var(--display);font-size:clamp(1.65rem,3.4vw,2.55rem);letter-spacing:-.8px;margin:0 0 9px}.guide-banner p{max-width:740px;margin:auto;color:var(--muted);line-height:1.65}.do-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}.do-card{border-radius:17px;padding:25px}.do-card.good{background:rgba(56,227,140,.045);border:1px solid rgba(56,227,140,.28)}.do-card.bad{background:rgba(255,103,115,.04);border:1px solid rgba(255,103,115,.28)}.do-card h2{font-family:var(--display);font-size:1.2rem;margin:0 0 18px}.good h2{color:var(--green)}.bad h2{color:var(--red)}.do-card ul{list-style:none;margin:0;padding:0}.do-card li{display:flex;gap:10px;margin:0 0 15px;line-height:1.58;font-size:.9rem}.good li:first-letter{color:var(--green)}.check{color:var(--green)}.cross{color:var(--red)}
+    /* Modal */
+    .modal{display:none;position:fixed;z-index:200;inset:0;padding:18px;background:rgba(1,10,22,.76);backdrop-filter:blur(9px);align-items:center;justify-content:center}.modal.active{display:flex}.modal-window{position:relative;width:min(680px,100%);max-height:90vh;overflow:auto;background:var(--bg2);border:1px solid var(--teal);box-shadow:var(--shadow);border-radius:18px;padding:28px}.close{position:absolute;right:14px;top:11px;border:0;background:transparent;color:var(--muted);font-size:1.35rem;cursor:pointer}.modal h2{font-family:var(--display);margin:0 25px 9px 0}.modal>p{color:var(--muted);line-height:1.6;font-size:.9rem;margin:0}.simulator{margin-top:19px;padding:17px;border-radius:12px;border:1px solid rgba(34,224,199,.27);background:#020d1c}.phone-bar{display:flex;justify-content:space-between;gap:10px;background:rgba(34,224,199,.09);color:var(--teal);padding:8px 10px;border-radius:6px;font:700 .68rem ui-monospace,monospace}.sim-message{margin:14px 0;padding:15px;border:1px solid rgba(255,255,255,.12);border-radius:8px;color:#effaff;background:rgba(255,255,255,.04);line-height:1.58;font:.8rem/1.58 ui-monospace,monospace}.sim-actions{display:flex;gap:10px}.report,.verify{flex:1;border:0;border-radius:8px;padding:11px;cursor:pointer;font-weight:850}.report{background:var(--red);color:white}.verify{background:var(--orange);color:#2d1902}.sim-output{margin-top:15px;border-left:3px solid var(--purple);background:rgba(0,0,0,.35);min-height:57px;padding:11px;color:#afc5d1;border-radius:5px;font:.76rem/1.55 ui-monospace,monospace}.sim-nav{margin-top:14px;display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}.sim-nav button{border:1px solid rgba(73,217,255,.3);background:rgba(73,217,255,.08);color:var(--cyan);border-radius:7px;padding:8px 9px;cursor:pointer;font-size:.73rem;font-weight:800}.sim-nav button:last-child{text-align:right}.sim-nav button:hover:not(:disabled){border-color:var(--cyan);background:rgba(73,217,255,.16)}.sim-nav button:disabled{opacity:.35;cursor:not-allowed}.sim-counter{color:var(--muted);font:.68rem ui-monospace,monospace;white-space:nowrap;text-align:center}
+    footer{border-top:1px solid var(--line);padding:28px 18px;text-align:center;color:var(--muted);font:.7rem ui-monospace,monospace;letter-spacing:.3px}
+    @media(max-width:900px){.skill-switcher{grid-template-columns:repeat(2,1fr)}.nav-links{position:absolute;top:77px;left:0;right:0;padding:10px 18px;background:var(--bg2);border-bottom:1px solid var(--line);display:none;flex-wrap:wrap}.nav-links.open{display:flex}.mobile-menu{display:block}.nav-btn{flex:1;min-width:max-content}.hero-grid,.lesson-grid{grid-template-columns:1fr}.hero-card{max-width:530px}.objective-grid{grid-template-columns:repeat(2,1fr)}.path-grid{grid-template-columns:repeat(2,1fr)}.problem{grid-template-columns:1fr;gap:20px}.problem-side{border-right:0;border-bottom:1px dashed rgba(255,103,115,.27);padding:0 0 20px}.do-grid{grid-template-columns:1fr}.navbar{padding:0 18px}.nav-links{margin-left:0}.controls{margin-left:auto}.learn-progress{flex-wrap:wrap}.progress-track{order:3;min-width:100%;max-width:none}.theme-btn{display:none}}
+    @media(max-width:570px){.skill-switcher{grid-template-columns:1fr}.sim-nav{grid-template-columns:1fr 1fr}.sim-counter{grid-column:1 / -1;grid-row:1}.sim-nav button{grid-row:2}.resource-grid{grid-template-columns:1fr}.brand{font-size:.91rem}.brand-mark{width:30px;height:30px}.language{max-width:115px;font-size:.69rem}.hero{padding-top:40px}.section{padding:45px 0}.objective-grid,.feature-grid,.stat-grid{grid-template-columns:1fr}.summary,.lesson,.modal-window{padding:20px}.hero-actions .primary-btn,.hero-actions .ghost-btn{width:100%}.terminal-body{padding:15px}.term-entry{align-items:flex-start;flex-direction:column;gap:5px}.term-entry input{width:100%}.phone-bar{font-size:.58rem}.sim-actions{flex-direction:column}.lesson-top{gap:8px}.lesson-icon{font-size:2.2rem}.path-grid{gap:10px}.path-card{padding:13px 11px}.path-card b{font-size:.83rem}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+  </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans transition-colors duration-300">
-
-    <!-- GLOBAL STICKY NAVIGATION BAR -->
-    <nav class="glassmorphism sticky top-0 z-50 border-b border-gray-200 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <!-- Project Title Logo -->
-                <div onclick="navigateToHome()" class="flex-shrink-0 flex items-center space-x-2 cursor-pointer">
-                    <div class="bg-vibrantTeal-600 text-white p-2 rounded-lg shadow-md">
-                        <i class="fas fa-wifi text-lg"></i>
-                    </div>
-                    <span class="text-sm md:text-base font-bold bg-gradient-to-r from-vibrantTeal-700 to-saffron-600 bg-clip-text text-transparent uppercase tracking-wider lang-en">
-                        Rural Digital Initiative
-                    </span>
-                    <span class="text-sm md:text-base font-bold bg-gradient-to-r from-vibrantTeal-700 to-saffron-600 bg-clip-text text-transparent uppercase tracking-wider lang-te hidden">
-                        గ్రామీణ డిజిటల్ ప్లాట్‌ఫార్మ్
-                    </span>
-                </div>
-
-                <!-- Desktop Navigation Links -->
-                <div id="navLinks" class="hidden md:flex space-x-6 font-medium text-gray-600">
-                    <a href="#home" onclick="navigateToHome()" class="hover:text-vibrantTeal-600 transition-colors py-2"><span class="lang-en">Home</span><span class="lang-te hidden">హోమ్</span></a>
-                    <a href="#objectives" onclick="navigateToHome()" class="hover:text-vibrantTeal-600 transition-colors py-2"><span class="lang-en">Objectives</span><span class="lang-te hidden">లక్ష్యాలు</span></a>
-                    <a href="#resources" onclick="navigateToHome()" class="hover:text-vibrantTeal-600 transition-colors py-2"><span class="lang-en">Resource Hub</span><span class="lang-te hidden">వనరులు</span></a>
-                    <a href="#quiz" onclick="navigateToHome()" class="hover:text-vibrantTeal-600 transition-colors py-2"><span class="lang-en">Safety Quiz</span><span class="lang-te hidden">రక్షణ క్విజ్</span></a>
-                </div>
-
-                <!-- Language Toggle Pill Switcher -->
-                <div class="flex items-center space-x-4">
-                    <button id="langToggleBtn" onclick="toggleLanguage()" class="relative inline-flex h-9 w-24 items-center justify-center rounded-full bg-gradient-to-r from-vibrantTeal-600 to-saffron-500 p-1 font-bold text-white shadow-md hover:opacity-95 transition-all focus:outline-none">
-                        <span id="langLabel" class="text-xs tracking-wider uppercase">English</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- MAIN LANDING VIEW CONTEXT CONTAINER -->
-    <div id="mainLandingView">
-        
-        <!-- HERO SECTION -->
-        <header id="home" class="relative overflow-hidden bg-gradient-to-br from-vibrantTeal-50/60 via-white to-saffron-50/50 pt-12 pb-20 border-b border-gray-100">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-semibold bg-saffron-50 text-saffron-600 border border-saffron-200 uppercase tracking-widest mb-6 shadow-sm">
-                    <i class="fas fa-graduation-cap mr-2"></i> Community Service Project
-                </span>
-                
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 tracking-tight leading-tight max-w-4xl mx-auto">
-                    <span class="lang-en">Bridging the Digital Divide: <span class="bg-gradient-to-r from-vibrantTeal-600 to-saffron-500 bg-clip-text text-transparent">Internet Usage in Villages</span></span>
-                    <span class="lang-te hidden">డిజిటల్ విభజనను తొలగించడం: <span class="bg-gradient-to-r from-vibrantTeal-600 to-saffron-500 bg-clip-text text-transparent">గ్రామాలలో ఇంటర్నెట్ వినియోగం</span></span>
-                </h1>
-                
-                <p class="mt-6 text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                    <span class="lang-en">An initiative dedicated to empowering rural communities with digital literacy, online services, and cyber safety awareness.</span>
-                    <span class="lang-te hidden">గ్రామీణ ప్రాంతాల వారికి డిజిటల్ అక్షరాస్యత, ఆన్‌లైన్ సేవలు, మరియు సైబర్ భద్రతపై అవగాహన కల్పించే ఒక ప్రత్యేక కార్యక్రమం.</span>
-                </p>
-
-                <div class="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4">
-                    <a href="#resources" class="w-full sm:w-auto px-8 py-4 bg-vibrantTeal-600 hover:bg-vibrantTeal-700 text-white font-bold rounded-xl shadow-lg transform hover:-translate-y-0.5 transition-all text-center">
-                        <span class="lang-en"><i class="fas fa-book-open mr-2"></i> Explore Resource Hub</span>
-                        <span class="lang-te hidden"><i class="fas fa-book-open mr-2"></i> వనరుల కేంద్రాన్ని చూడండి</span>
-                    </a>
-                    <a href="#quiz" class="w-full sm:w-auto px-8 py-4 bg-white hover:bg-gray-50 text-gray-800 font-bold rounded-xl border border-gray-200 shadow-md transform hover:-translate-y-0.5 transition-all text-center">
-                        <span class="lang-en"><i class="fas fa-shield-alt mr-2 text-saffron-500"></i> Take Safety Quiz</span>
-                        <span class="lang-te hidden"><i class="fas fa-shield-alt mr-2 text-saffron-500"></i> భద్రతా క్విజ్ ఆడండి</span>
-                    </a>
-                </div>
-
-                <!-- BALANCED 4-COLUMN IMPACT GRID -->
-                <div class="mt-20 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-                    <div class="bg-white p-6 rounded-2xl shadow-md border border-gray-100 text-center">
-                        <div class="w-11 h-11 bg-vibrantTeal-50 text-vibrantTeal-600 rounded-xl flex items-center justify-center mx-auto mb-3"><i class="fas fa-layer-group text-lg"></i></div>
-                        <p class="text-3xl font-extrabold text-gray-900">6+</p>
-                        <p class="text-xs font-bold text-gray-400 mt-1 uppercase tracking-wider"><span class="lang-en">Core Topics Taught</span><span class="lang-te hidden">ప్రధాన పాఠ్యాంశాలు</span></p>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl shadow-md border border-gray-100 text-center">
-                        <div class="w-11 h-11 bg-saffron-50 text-saffron-500 rounded-xl flex items-center justify-center mx-auto mb-3"><i class="fas fa-user-shield text-lg"></i></div>
-                        <p class="text-3xl font-extrabold text-gray-900 text-vibrantTeal-600">100%</p>
-                        <p class="text-xs font-bold text-gray-400 mt-1 uppercase tracking-wider"><span class="lang-en">Safe Usage Focus</span><span class="lang-te hidden">సురక్షిత వినియోగం</span></p>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl shadow-md border border-gray-100 text-center">
-                        <div class="w-11 h-11 bg-vibrantTeal-50 text-vibrantTeal-600 rounded-xl flex items-center justify-center mx-auto mb-3"><i class="fas fa-cubes text-lg"></i></div>
-                        <p class="text-3xl font-extrabold text-gray-900">4+</p>
-                        <p class="text-xs font-bold text-gray-400 mt-1 uppercase tracking-wider"><span class="lang-en">Interactive Modules</span><span class="lang-te hidden">ఇంటరాక్టివ్ మాడ్యూల్స్</span></p>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl shadow-md border border-gray-100 text-center">
-                        <div class="w-11 h-11 bg-saffron-50 text-saffron-500 rounded-xl flex items-center justify-center mx-auto mb-3"><i class="fas fa-language text-lg"></i></div>
-                        <p class="text-3xl font-extrabold text-gray-900">2</p>
-                        <p class="text-xs font-bold text-gray-400 mt-1 uppercase tracking-wider"><span class="lang-en">Languages Supported</span><span class="lang-te hidden">అందుబాటులో ఉన్న భాషలు</span></p>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- ABOUT & OBJECTIVES SECTION WITH ROUTING LINKS -->
-        <section id="objectives" class="py-20 bg-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center max-w-3xl mx-auto mb-16">
-                    <h2 class="text-3xl font-black text-gray-900 sm:text-4xl">
-                        <span class="lang-en">Project Core Objectives</span>
-                        <span class="lang-te hidden">కార్యక్రమం యొక్క ముఖ్య ఉద్దేశాలు</span>
-                    </h2>
-                    <p class="mt-4 text-sm sm:text-base text-gray-500">
-                        <span class="lang-en">Click on any card below to open its dedicated resource panel containing detailed explanations, practical tools, and critical validation metrics.</span>
-                        <span class="lang-te hidden">వివరణాత్మక వివరణలు, ఉపయోగకరమైన చిట్కాలు తెలుసుకోవడానికి కింద ఉన్న ఏదైనా కార్డ్‌పై క్లిక్ చేయండి.</span>
-                    </p>
-                </div>
-
-                <!-- Objectives Grid Configured to Route Separately -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                    <!-- Objective 1 -->
-                    <div onclick="openRoute('awareness')" class="group cursor-pointer p-8 bg-gradient-to-br from-white to-gray-50 rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl hover:border-orange-300 transition-all duration-300">
-                        <div class="w-12 h-12 rounded-xl bg-orange-500 text-white flex items-center justify-center mb-6 shadow-md"><i class="fas fa-bullhorn text-lg"></i></div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center justify-between">
-                            <span><span class="lang-en">Create Internet Awareness</span><span class="lang-te hidden">ఇంటర్నెట్ అవగాహన</span></span>
-                            <i class="fas fa-arrow-right text-sm text-gray-300 group-hover:text-orange-500 transition-colors"></i>
-                        </h3>
-                        <p class="text-gray-600 text-sm leading-relaxed"><span class="lang-en">Introducing essential internet fundamentals, structural data configurations, and everyday utility setups cleanly tailored for first-generation rural dynamic device operators.</span><span class="lang-te hidden">మొదటి సారి ఇంటర్నెట్ వాడుతున్న గ్రామీణ వినియోగదారులకు ప్రాథమికాంశాలు మరియు డేటా వినియోగంపై స్పష్టమైన అవగాహన కల్పించడం.</span></p>
-                    </div>
-
-                    <!-- Objective 2 -->
-                    <div onclick="openRoute('services')" class="group cursor-pointer p-8 bg-gradient-to-br from-white to-gray-50 rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl hover:border-teal-300 transition-all duration-300">
-                        <div class="w-12 h-12 rounded-xl bg-teal-600 text-white flex items-center justify-center mb-6 shadow-md"><i class="fas fa-laptop-house text-lg"></i></div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center justify-between">
-                            <span><span class="lang-en">Educate on Online Services</span><span class="lang-te hidden">ఆన్‌లైన్ సేవల శిక్షణ</span></span>
-                            <i class="fas fa-arrow-right text-sm text-gray-300 group-hover:text-teal-600 transition-colors"></i>
-                        </h3>
-                        <p class="text-gray-600 text-sm leading-relaxed"><span class="lang-en">Providing clear structural walk-throughs for digital bill utilities, local travel bookings, and community-relevant interactive applications.</span><span class="lang-te hidden">కరెంటు బిల్లుల చెల్లింపు, బస్సు/రైలు టికెట్ల బుకింగ్ మరియు विभिन्न నిత్య జీవిత అవసరాల ఆన్‌లైన్ అప్లికేషన్లపై శిక్షణ ఇవ్వడం.</span></p>
-                    </div>
-
-                    <!-- Objective 3 -->
-                    <div onclick="openRoute('safety')" class="group cursor-pointer p-8 bg-gradient-to-br from-white to-gray-50 rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl hover:border-red-300 transition-all duration-300">
-                        <div class="w-12 h-12 rounded-xl bg-red-500 text-white flex items-center justify-center mb-6 shadow-md"><i class="fas fa-shield-virus text-lg"></i></div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center justify-between">
-                            <span><span class="lang-en">Spread Cyber Safety Awareness</span><span class="lang-te hidden">సైబర్ భద్రత వ్యాప్తి</span></span>
-                            <i class="fas fa-arrow-right text-sm text-gray-300 group-hover:text-red-500 transition-colors"></i>
-                        </h3>
-                        <p class="text-gray-600 text-sm leading-relaxed"><span class="lang-en">Demystifying common malicious online attacks, malicious software traps, malicious spoofing calls, and secure handling protocols for personal identity numbers.</span><span class="lang-te hidden">ఆన్‌లైన్ మోసాలు, నకిలీ ఫోన్ కాల్స్ మరియు వ్యక్తిగత వివరాల దొంగతనం నుండి ఎలా సురక్షితంగా ఉండాలో వివరించడం.</span></p>
-                    </div>
-
-                    <!-- Objective 4 -->
-                    <div onclick="openRoute('payments')" class="group cursor-pointer p-8 bg-gradient-to-br from-white to-gray-50 rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl hover:border-blue-300 transition-all duration-300">
-                        <div class="w-12 h-12 rounded-xl bg-blue-500 text-white flex items-center justify-center mb-6 shadow-md"><i class="fas fa-hand-holding-usd text-lg"></i></div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center justify-between">
-                            <span><span class="lang-en">Encourage Digital Payments & EdTech</span><span class="lang-te hidden">డిజిటల్ చెల్లింపులు & విద్య</span></span>
-                            <i class="fas fa-arrow-right text-sm text-gray-300 group-hover:text-blue-500 transition-colors"></i>
-                        </h3>
-                        <p class="text-gray-600 text-sm leading-relaxed"><span class="lang-en">Promoting seamless cashless transactions via unified standard portals and providing students with accessible, remote learning infrastructures.</span><span class="lang-te hidden">యూపీఐ ద్వారా నగదు రహిత చెల్లింపులను ప్రోత్సహించడం మరియు గ్రామీణ విద్యార్థులకు ఆన్‌లైన్ విద్యా వనరులను పరిచయం చేయడం.</span></p>
-                    </div>
-
-                    <!-- Objective 5 -->
-                    <div onclick="openRoute('portals')" class="group cursor-pointer p-8 bg-gradient-to-br from-white to-gray-50 rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl hover:border-purple-300 transition-all duration-300">
-                        <div class="w-12 h-12 rounded-xl bg-purple-500 text-white flex items-center justify-center mb-6 shadow-md"><i class="fas fa-landmark text-lg"></i></div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center justify-between">
-                            <span><span class="lang-en">Explain Government Portals</span><span class="lang-te hidden">ప్రభుత్వ పోర్టల్స్ వివరణ</span></span>
-                            <i class="fas fa-arrow-right text-sm text-gray-300 group-hover:text-purple-500 transition-colors"></i>
-                        </h3>
-                        <p class="text-gray-600 text-sm leading-relaxed"><span class="lang-en">Guiding localized populations through active interactive frameworks for land database accounts, rural dynamic agricultural subsidies, and healthcare schemas.</span><span class="lang-te hidden">భూమి రికార్డులు, వ్యవసాయ రాయితీలు మరియు ప్రభుత్వ ఆరోగ్య పథకాలకు సంబంధించిన అధికారిక వెబ్‌సైట్లను ఉపయోగించే విధానం తెలపడం.</span></p>
-                    </div>
-
-                    <!-- Objective 6 -->
-                    <div onclick="openRoute('responsible')" class="group cursor-pointer p-8 bg-gradient-to-br from-white to-gray-50 rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl hover:border-emerald-300 transition-all duration-300">
-                        <div class="w-12 h-12 rounded-xl bg-emerald-500 text-white flex items-center justify-center mb-6 shadow-md"><i class="fas fa-user-check text-lg"></i></div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center justify-between">
-                            <span><span class="lang-en">Promote Responsible Internet Use</span><span class="lang-te hidden">బాధ్యతాయుతమైన వినియోగం</span></span>
-                            <i class="fas fa-arrow-right text-sm text-gray-300 group-hover:text-emerald-500 transition-colors"></i>
-                        </h3>
-                        <p class="text-gray-600 text-sm leading-relaxed"><span class="lang-en">Cultivating digital parameters focused on verifying incoming information streams before distribution to successfully reduce misinformative tracking patterns.</span><span class="lang-te hidden">సోషల్ మీడియాలో వచ్చే తప్పుడు వార్తలను నమ్మకుండా, సమాచారాన్ని సరిచూసుకునే బాధ్యతాయుతమైన పద్ధతులను అలరింపజేయడం.</span></p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- EXPANDED DIGITAL RESOURCE HUB -->
-        <section id="resources" class="py-20 bg-gray-50 border-t border-b border-gray-100">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center max-w-3xl mx-auto mb-16">
-                    <h2 class="text-3xl font-black text-gray-900 sm:text-4xl">
-                        <span class="lang-en">Expanded Digital Resource Hub</span>
-                        <span class="lang-te hidden">విస్తరించిన డిజిటల్ వనరుల కేంద్రం</span>
-                    </h2>
-                    <p class="mt-4 text-sm text-gray-500">
-                        <span class="lang-en">Detailed, actionable data guidelines engineered to help rural operators run online utilities confidently without third-party exploitation.</span>
-                        <span class="lang-te hidden">గ్రామీణ వినియోగదారులు ఇతరులపై ఆధారపడకుండా ఆన్‌లైన్ సేవలను ఉపయోగించుకోవడానికి అవసరమైన పూర్తి సమాచారం.</span>
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <!-- Resource 1: Cyber Safety Detailed Panel -->
-                    <div class="bg-white p-8 rounded-3xl border border-gray-200 shadow-sm">
-                        <div class="flex items-center space-x-4 mb-6">
-                            <div class="w-12 h-12 rounded-xl bg-red-100 text-red-600 flex items-center justify-center"><i class="fas fa-user-shield text-xl"></i></div>
-                            <h3 class="text-2xl font-extrabold text-gray-900"><span class="lang-en">🔒 Cyber Safety Deep-Dive</span><span class="lang-te hidden">🔒 సైబర్ భద్రత సూత్రాలు</span></h3>
-                        </div>
-                        <p class="text-sm text-gray-600 mb-4 leading-relaxed">
-                            <span class="lang-en">Cybercriminals frequently exploit psychological pressure via fear-inducing calls claiming your SIM card, electricity connection, or bank locker will face instantaneous suspension. Real entities never issue aggressive operational ultimatums over telephone lines.</span>
-                            <span class="lang-te hidden">బ్యాంకు ఖాతా లేదా సిమ్ కార్డు నిలిపివేయబడుతుందనే బెదిరింపు ఫోన్ కాల్స్ వస్తే భయపడకండి. ప్రభుత్వ సంస్థలు గానీ, బ్యాంకులు గానీ ఫోన్ ద్వారా అత్యవసరంగా ఓటీపీలు అడగవు.</span>
-                        </p>
-                        <div class="bg-red-50 p-4 rounded-xl border border-red-100 space-y-2 text-xs sm:text-sm">
-                            <p class="font-bold text-red-800"><i class="fas fa-info-circle mr-2"></i> Critical Shield Actions:</p>
-                            <p class="text-gray-700">1. <strong class="text-gray-900">National Cyber Helpline:</strong> Immediately report financial loss to <span class="bg-red-200 px-1.5 font-bold text-red-900 rounded">1930</span> within 1 hour.</p>
-                            <p class="text-gray-700">2. <strong class="text-gray-900">URL Checks:</strong> Verify that websites match domain extensions exactly (e.g., look for <code class="bg-white px-1 border rounded">.gov.in</code> instead of deceptive <code class="bg-white px-1 border rounded">.xyz</code> alternatives).</p>
-                        </div>
-                    </div>
-
-                    <!-- Resource 2: Digital Payments System Framework -->
-                    <div class="bg-white p-8 rounded-3xl border border-gray-200 shadow-sm">
-                        <div class="flex items-center space-x-4 mb-6">
-                            <div class="w-12 h-12 rounded-xl bg-teal-100 text-vibrantTeal-600 flex items-center justify-center"><i class="fas fa-wallet text-xl"></i></div>
-                            <h3 class="text-2xl font-extrabold text-gray-900"><span class="lang-en">💸 UPI Ecosystem Management</span><span class="lang-te hidden">💸 సురక్షిత డిజిటల్ చెల్లింపులు</span></h3>
-                        </div>
-                        <p class="text-sm text-gray-600 mb-4 leading-relaxed">
-                            <span class="lang-en">Unified Payments Interface (UPI) systems run on structural dual-key principles. Your 4-digit or 6-digit cryptographic security PIN operates uniquely as a cash extraction key; entering it means money is moving outwards.</span>
-                            <span class="lang-te hidden">యూపీఐ (UPI) ద్వారా లావాదేవీలు చేసేటప్పుడు పిన్ (PIN) నంబర్ అనేది కేవలం డబ్బులు పంపడానికి మాత్రమే ఉపయోగపడుతుంది. ఎవరి దగ్గరైనా డబ్బులు తీసుకోవడానికి పిన్ ఎంటర్ చేయాల్సిన అవసరం లేదు.</span>
-                        </p>
-                        <div class="bg-teal-50 p-4 rounded-xl border border-vibrantTeal-100 space-y-2 text-xs sm:text-sm">
-                            <p class="font-bold text-vibrantTeal-800"><i class="fas fa-check-shield mr-2"></i> Cashless Protocols:</p>
-                            <p class="text-gray-700">1. <strong class="text-gray-900">Implicit Check:</strong> Ensure dynamic confirmation sounds match your receipt transaction amount perfectly.</p>
-                            <p class="text-gray-700">2. <strong class="text-gray-900">Failed Routes:</strong> If a payment fails but cash is deducted, do not panic. The banking ledger safely reconciles it within 3-5 working days via automated banking channels.</p>
-                        </div>
-                    </div>
-
-                    <!-- Resource 3: Central & State Government Services -->
-                    <div class="bg-white p-8 rounded-3xl border border-gray-200 shadow-sm">
-                        <div class="flex items-center space-x-4 mb-6">
-                            <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center"><i class="fas fa-server text-xl"></i></div>
-                            <h3 class="text-2xl font-extrabold text-gray-900"><span class="lang-en">🏛️ E-Governance Subsidies & Records</span><span class="lang-te hidden">🏛️ ప్రభుత్వ ఈ-సేవల వినియోగం</span></h3>
-                        </div>
-                        <p class="text-sm text-gray-600 mb-4 leading-relaxed">
-                            <span class="lang-en">Access legitimate public welfare distribution routes directly without middleman brokerage systems. Government platforms offer transparent tracking infrastructure for agricultural components and digital registries.</span>
-                            <span class="lang-te hidden">ప్రభుత్వ పథకాలు, భూమి రికార్డులు (మీభూమి), మరియు రేషన్ కార్డు వివరాలను మధ్యవర్తుల ప్రమేయం లేకుండా ఆన్‌లైన్ ద్వారా మీరే స్వయంగా తనిఖీ చేసుకోవచ్చు.</span>
-                        </p>
-                        <div class="bg-purple-50 p-4 rounded-xl border border-purple-100 space-y-2 text-xs sm:text-sm">
-                            <p class="font-bold text-purple-800"><i class="fas fa-link mr-2"></i> Verified Portals Reference:</p>
-                            <div class="grid grid-cols-2 gap-2 text-xs">
-                                <div class="p-2 bg-white rounded border"><strong>DigiLocker:</strong> Digital identity storage</div>
-                                <div class="p-2 bg-white rounded border"><strong>MeeSeva:</strong> State portal infrastructure</div>
-                                <div class="p-2 bg-white rounded border"><strong>PM-Kisan:</strong> Farmer subsidy check</div>
-                                <div class="p-2 bg-white rounded border"><strong>AB-PMJAY:</strong> Free healthcare tracking</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Resource 4: Remote Learning Framework -->
-                    <div class="bg-white p-8 rounded-3xl border border-gray-200 shadow-sm">
-                        <div class="flex items-center space-x-4 mb-6">
-                            <div class="w-12 h-12 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center"><i class="fas fa-graduation-cap text-xl"></i></div>
-                            <h3 class="text-2xl font-extrabold text-gray-900"><span class="lang-en">📚 Rural EdTech Architectures</span><span class="lang-te hidden">📚 ఉచిత ఆన్‌లైన్ విద్యా వనరులు</span></h3>
-                        </div>
-                        <p class="text-sm text-gray-600 mb-4 leading-relaxed">
-                            <span class="lang-en">High-quality remote learning ecosystems help rural youth bridge spatial training deficits. Students can access national syllabus channels, mock evaluation portals, and targeted career orientation resources entirely for free.</span>
-                            <span class="lang-te hidden">గ్రామీణ విద్యార్థులు మరియు యువత పెద్ద నగరాలకు వెళ్లకుండానే ఇంటర్నెట్ ద్వారా ఉచితంగా వివిధ పోటీ పరీక్షలకు, పాఠశాల విద్యకు సంబంధించిన పాఠాలను నేర్చుకోవచ్చు.</span>
-                        </p>
-                        <div class="bg-orange-50 p-4 rounded-xl border border-orange-100 space-y-2 text-xs sm:text-sm">
-                            <p class="font-bold text-orange-800"><i class="fas fa-user-clock mr-2"></i> Growth Repositories:</p>
-                            <p class="text-gray-700">• <strong class="text-gray-900">DIKSHA App:</strong> Centralized digital textbooks and interactive audio-visual guides.</p>
-                            <p class="text-gray-700">• <strong class="text-gray-900">SWAYAM / NPTEL:</strong> Free college certification pathways from top tier national institutions.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- INTERACTIVE CYBER SAFETY QUIZ SECTION -->
-        <section id="quiz" class="py-20 bg-white">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center max-w-3xl mx-auto mb-16">
-                    <span class="text-xs font-bold bg-vibrantTeal-600 text-white px-4 py-1.5 rounded-full uppercase tracking-widest"><i class="fas fa-gamepad mr-2"></i> Interactive Test</span>
-                    <h2 class="text-3xl font-black text-gray-900 sm:text-4xl mt-4">
-                        <span class="lang-en">Interactive Cyber Safety Quiz</span>
-                        <span class="lang-te hidden">సైబర్ భద్రత ఇంటరాక్టివ్ క్విజ్</span>
-                    </h2>
-                </div>
-
-                <!-- Quiz Questions -->
-                <div class="space-y-8">
-                    <!-- Q1 -->
-                    <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-md border border-gray-100 question-block" data-q-id="1">
-                        <div class="flex items-start space-x-3 sm:space-x-4">
-                            <span class="w-8 h-8 rounded-full bg-saffron-500 text-white flex items-center justify-center font-bold text-sm mt-1 flex-shrink-0">1</span>
-                            <h3 class="text-lg font-bold text-gray-900">
-                                <span class="lang-en">Someone calls pretending to be a bank manager asking for your bank OTP to update your account details. What do you do?</span>
-                                <span class="lang-te hidden">ఎవరైనా ఫోన్ చేసి బ్యాంక్ మేనేజర్ అని పరిచయం చేసుకొని, మీ ఖాతా బ్లాక్ కాకుండా అప్‌డేట్ చేయడానికి ఓటీపీ (OTP) అడిగితే ఏం చేస్తారు?</span>
-                            </h3>
-                        </div>
-                        <div class="mt-6 grid grid-cols-1 gap-3 sm:pl-12">
-                            <button onclick="checkAnswer(this)" data-correct="false" class="w-full text-left px-5 py-4 border border-gray-200 rounded-xl hover:bg-gray-50 text-sm sm:text-base transition-all focus:outline-none">
-                                <span class="lang-en">Option A: Give them the OTP immediately so your account doesn't get blocked.</span>
-                                <span class="lang-te hidden">ఆప్షన్ A: ఖాతా బ్లాక్ అవ్వకుండా ఉండటానికి వెంటనే వారికి ఓటీపీ నంబర్ చెప్పేస్తాను.</span>
-                            </button>
-                            <button onclick="checkAnswer(this)" data-correct="true" class="w-full text-left px-5 py-4 border border-gray-200 rounded-xl hover:bg-gray-50 text-sm sm:text-base transition-all focus:outline-none">
-                                <span class="lang-en">Option B: Never share the OTP. Hang up the call immediately and report the fraud.</span>
-                                <span class="lang-te hidden">ఆప్షన్ B: ఓటీపీ ఎవరికీ చెప్పకూడదు. ఫోన్ వెంటనే కట్ చేసి, ఆ నంబర్‌పై ఫిర్యాదు చేస్తాను.</span>
-                            </button>
-                        </div>
-                        <div class="feedback-box mt-4 sm:ml-12 p-4 rounded-xl hidden transition-all">
-                            <p class="font-bold text-sm sm:text-base mb-1 feedback-title"></p>
-                            <p class="text-xs sm:text-sm feedback-text"></p>
-                        </div>
-                    </div>
-
-                    <!-- Q2 -->
-                    <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-md border border-gray-100 question-block" data-q-id="2">
-                        <div class="flex items-start space-x-3 sm:space-x-4">
-                            <span class="w-8 h-8 rounded-full bg-saffron-500 text-white flex items-center justify-center font-bold text-sm mt-1 flex-shrink-0">2</span>
-                            <h3 class="text-lg font-bold text-gray-900">
-                                <span class="lang-en">You receive an SMS stating you have won a lottery of ₹1 Lakh, containing a link to claim your cash. What is the safest action?</span>
-                                <span class="lang-te hidden">మీ మొబైల్‌కు ₹1 లక్ష లాటరీ గెలుచుకున్నట్లు ఒక ఎస్ఎమ్エス (SMS) వచ్చి, కింద ఒక లింక్ ఉంటే మీరు ఏం చేస్తారు?</span>
-                            </h3>
-                        </div>
-                        <div class="mt-6 grid grid-cols-1 gap-3 sm:pl-12">
-                            <button onclick="checkAnswer(this)" data-correct="false" class="w-full text-left px-5 py-4 border border-gray-200 rounded-xl hover:bg-gray-50 text-sm sm:text-base transition-all focus:outline-none">
-                                <span class="lang-en">Option A: Click the link immediately and fill in your details.</span>
-                                <span class="lang-te hidden">ఆప్షన్ A: వెంటనే లింక్ ఓపెన్ చేసి, నా బ్యాంక్ వివరాలన్నీ ఇచ్చి డబ్బులు తీసుకుంటాను.</span>
-                            </button>
-                            <button onclick="checkAnswer(this)" data-correct="true" class="w-full text-left px-5 py-4 border border-gray-200 rounded-xl hover:bg-gray-50 text-sm sm:text-base transition-all focus:outline-none">
-                                <span class="lang-en">Option B: Ignore and delete the message; it is a phishing scam.</span>
-                                <span class="lang-te hidden">ఆప్ชั่น B: ఆ మెసేజ్‌ను పూర్తిగా నిర్లక్ష్యం చేసి డిలీట్ చేస్తాను, అది ఒక మోసపూరిత లింక్.</span>
-                            </button>
-                        </div>
-                        <div class="feedback-box mt-4 sm:ml-12 p-4 rounded-xl hidden transition-all">
-                            <p class="font-bold text-sm sm:text-base mb-1 feedback-title"></p>
-                            <p class="text-xs sm:text-sm feedback-text"></p>
-                        </div>
-                    </div>
-
-                    <!-- Q3 -->
-                    <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-md border border-gray-100 question-block" data-q-id="3">
-                        <div class="flex items-start space-x-3 sm:space-x-4">
-                            <span class="w-8 h-8 rounded-full bg-saffron-500 text-white flex items-center justify-center font-bold text-sm mt-1 flex-shrink-0">3</span>
-                            <h3 class="text-lg font-bold text-gray-900">
-                                <span class="lang-en">When setting up an online payment pin or password, which of the following is the most secure?</span>
-                                <span class="lang-te hidden">ఆన్‌లైన్ చెల్లింపుల కోసం ఉపయోగించే యూపీఐ (UPI) సీక్రెట్ పిన్ లేదా పాస్‌వర్డ్ ఎలాంటిది పెట్టుకుంటే సురక్షితం?</span>
-                            </h3>
-                        </div>
-                        <div class="mt-6 grid grid-cols-1 gap-3 sm:pl-12">
-                            <button onclick="checkAnswer(this)" data-correct="false" class="w-full text-left px-5 py-4 border border-gray-200 rounded-xl hover:bg-gray-50 text-sm sm:text-base transition-all focus:outline-none">
-                                <span class="lang-en">Option A: Using your birth year or '1234' so it's easy to remember.</span>
-                                <span class="lang-te hidden">ఆప్షన్ A: సులభంగా గుర్తుండటానికి నా పుట్టిన సంవత్సరం లేదా '1234' లాంటివి పెట్టుకుంటాను.</span>
-                            </button>
-                            <button onclick="checkAnswer(this)" data-correct="true" class="w-full text-left px-5 py-4 border border-gray-200 rounded-xl hover:bg-gray-50 text-sm sm:text-base transition-all focus:outline-none">
-                                <span class="lang-en">Option B: A unique combination of numbers/characters that you never share with anyone.</span>
-                                <span class="lang-te hidden">ఆప్షన్ B: ఇతరులు ఊహించలేని ఒక ప్రత్యేకమైన నంబర్ సెట్ చేసి, దానిని ఎవరికీ చెప్పకుండా దాచుకుంటాను.</span>
-                            </button>
-                        </div>
-                        <div class="feedback-box mt-4 sm:ml-12 p-4 rounded-xl hidden transition-all">
-                            <p class="font-bold text-sm sm:text-base mb-1 feedback-title"></p>
-                            <p class="text-xs sm:text-sm feedback-text"></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+<body>
+  <div class="bg-grid"></div><div class="orb one"></div><div class="orb two"></div><div class="orb three"></div>
+  <nav class="navbar" aria-label="Primary navigation">
+    <button class="brand" onclick="showPage('home')" aria-label="RuralNet home"><span class="brand-mark">⌁</span>RURALNET <em>CENTER</em></button>
+    <div class="nav-links" id="navLinks">
+      <button class="nav-btn active" data-page="home" onclick="showPage('home')" id="navHome">1. Home</button>
+      <button class="nav-btn" data-page="problems" onclick="showPage('problems')" id="navProblems">2. Problems &amp; Solutions</button>
+      <button class="nav-btn" data-page="learn" onclick="showPage('learn')" id="navLearn">3. Learn &amp; Practice</button>
+      <button class="nav-btn guide-nav" data-page="guide" onclick="showPage('guide')" id="navGuide">4. Safety Guide</button>
     </div>
-
-    <!-- DYNAMIC ROUTE VIEW CONTAINER (DEDICATED PANEL VIEW FOR CHOSEN OBJECTIVES) -->
-    <div id="dynamicRouteView" class="hidden max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <!-- Structural Back Button Row -->
-        <button onclick="navigateToHome()" class="inline-flex items-center text-vibrantTeal-600 hover:text-vibrantTeal-700 font-bold mb-8 group focus:outline-none">
-            <i class="fas fa-arrow-left mr-2 transform group-hover:-translate-x-1 transition-transform"></i>
-            <span class="lang-en">Back to Main Dashboard</span>
-            <span class="lang-te hidden">ముఖ్య పేజీకి తిరిగి వెళ్ళండి</span>
-        </button>
-
-        <!-- Dynamic Content Structural Injections Area -->
-        <div id="dynamicPageContent" class="bg-white rounded-3xl border border-gray-200 shadow-xl overflow-hidden p-6 sm:p-10">
-            <!-- Programmatically Injected via JS Framework Engine -->
-        </div>
+    <div class="controls">
+      <select class="language" id="languageSelect" onchange="setLanguage(this.value)" aria-label="Choose language">
+        <option value="en">🌐 EN · English</option><option value="hi">🌐 HI · हिन्दी</option><option value="te">🌐 TE · తెలుగు</option>
+      </select>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeButton" aria-label="Toggle colour theme">☾</button>
+      <button class="mobile-menu" onclick="toggleMenu()" aria-label="Open menu">☰</button>
     </div>
+  </nav>
 
-    <!-- GLOBAL FOOTER COMPONENT -->
-    <footer class="bg-gray-900 text-white pt-16 pb-12 border-t-4 border-vibrantTeal-600">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 pb-12 border-b border-gray-800">
-                <div class="lg:col-span-2 space-y-4">
-                    <h3 class="text-2xl font-extrabold tracking-wider bg-gradient-to-r from-teal-400 to-orange-400 bg-clip-text text-transparent">
-                        <span class="lang-en">DIGITAL LITERACY CAMPAIGN</span>
-                        <span class="lang-te hidden">డిజిటల్ అక్షరాస్యత ప్రచారం</span>
-                    </h3>
-                    <p class="text-gray-400 text-sm sm:text-base leading-relaxed max-w-2xl">
-                        <span class="lang-en">This community service project effectively enabled rural citizens to handle digital lifelines autonomously. By replacing transactional fears with structural clarity, the deployment built strong technical values while accelerating social responsibility across the student team.</span>
-                        <span class="lang-te hidden">ఈ సామాజిక సేవా ప్రాజెక్ట్ గ్రామీణ ప్రజలకు డిజిటల్ సేవలపై పూర్తి అవగాహన కల్పించింది. నిత్య జీవితంలో ఎదురయ్యే ఆన్‌లైన్ సవాళ్లను ఎలా ఎదుర్కోవాలో నేర్పడంతో పాటు, విద్యార్థులలో సేవా భావాన్ని పెంపొందించింది.</span>
-                    </p>
-                </div>
-                <div class="space-y-4">
-                    <h4 class="text-sm font-bold text-gray-300 uppercase tracking-widest"><span class="lang-en">Quick Links</span><span class="lang-te hidden">లింకులు</span></h4>
-                    <div class="grid grid-cols-2 gap-2 text-sm text-gray-400">
-                        <a href="#home" onclick="navigateToHome()" class="hover:text-white transition-colors">Home / హోమ్</a>
-                        <a href="#objectives" onclick="navigateToHome()" class="hover:text-white transition-colors">Objectives / లక్ష్యాలు</a>
-                        <a href="#resources" onclick="navigateToHome()" class="hover:text-white transition-colors">Resources / వనరులు</a>
-                        <a href="#quiz" onclick="navigateToHome()" class="hover:text-white transition-colors">Quiz / క్విజ్</a>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-gray-500">
-                <p>&copy; 2026 Community Service Initiative. Built for Rural Empowerment.</p>
-                <div class="flex space-x-4 text-lg">
-                    <a href="#" class="hover:text-orange-400 transition-colors"><i class="fab fa-github"></i></a>
-                    <a href="#" class="hover:text-teal-400 transition-colors"><i class="fab fa-linkedin"></i></a>
-                    <a href="#" class="hover:text-orange-400 transition-colors"><i class="fas fa-globe"></i></a>
-                </div>
-            </div>
+  <main>
+    <section id="page-home" class="page active">
+      <div class="wrap hero"><div class="hero-grid">
+        <div>
+          <div class="live-pill"><i class="pulse-dot"></i><span id="heroPill">VILLAGE DIGITAL AWARENESS</span></div>
+          <h1 id="heroTitle">Internet use in villages,<br><span class="gradient-text">made safe and simple.</span></h1>
+          <p class="hero-copy" id="heroCopy"></p>
+          <div class="hero-actions"><button class="primary-btn" onclick="showPage('learn')" id="heroLearn">Start learning trail <span>→</span></button><button class="ghost-btn" onclick="openSafetyModal()" id="heroSafety">Try safety simulator <span>⌁</span></button></div>
+          <div class="trust-row" id="trustRow"></div>
         </div>
-    </footer>
+        <aside class="hero-card"><div class="signal-art"><i class="signal-bar"></i><i class="signal-bar"></i><i class="signal-bar"></i><i class="signal-bar"></i></div><h3 id="signalTitle"></h3><p id="signalCopy"></p><div class="micro-status" id="signalStatus"></div></aside>
+      </div></div>
+      <div class="section tight"><div class="wrap">
+        <div class="summary"><span class="summary-label" id="projectBadge"></span><h3 id="projectTitle"></h3><p id="projectCopy"></p><h4 class="subhead" id="goalsTitle"></h4><p class="subcopy" id="goalsCopy"></p><div class="objective-grid" id="objectiveGrid"></div></div>
+        <div class="stat-grid" id="statGrid"></div>
+      </div></div>
+      <div class="section"><div class="wrap"><div class="feature-grid">
+        <button class="feature" onclick="openSafetyModal()"><span class="badge" id="safetyBadge"></span><div class="feature-icon">🛡️</div><h3 id="safetyCardTitle"></h3><p id="safetyCardCopy"></p></button>
+        <button class="feature" onclick="showPage('problems')"><span class="badge" id="problemBadge"></span><div class="feature-icon">🧭</div><h3 id="problemCardTitle"></h3><p id="problemCardCopy"></p></button>
+      </div></div></div>
+      <div class="section tight"><div class="wrap"><div class="section-title"><p class="eyebrow" id="glossEyebrow"></p><h2 id="glossTitle"></h2><p id="glossCopy"></p></div><div class="terminal"><div class="terminal-top"><span class="dots"><i></i><i></i><i></i></span><span id="terminalLabel"></span><span>⌘</span></div><div class="terminal-body"><div class="chips" id="termChips"></div><label class="term-entry"><span id="termPrompt"></span><input id="termInput" type="text" autocomplete="off" onkeydown="termKey(event)" /></label><div class="term-result" id="termResult"></div></div></div></div></div>
+      <div class="section"><div class="wrap"><div class="section-title"><p class="eyebrow" id="faqEyebrow"></p><h2 id="faqTitle"></h2><p id="faqCopy"></p></div><div class="faq-list" id="faqList"></div><div class="return-row"><button class="primary-btn" onclick="showPage('problems')" id="toProblems"></button></div></div></div>
+    </section>
 
-    <!-- SYSTEM ROUTING & DATA ENGINE CORE SCRIPT -->
-    <script>
-        let currentLang = 'en';
+    <section id="page-problems" class="page"><div class="section"><div class="wrap"><div class="section-title"><p class="eyebrow" id="problemsEyebrow"></p><h2 id="problemsTitle"></h2><p id="problemsCopy"></p></div><div class="problem-list" id="problemList"></div><div class="return-row"><button class="ghost-btn" onclick="showPage('home')" id="returnHome"></button></div></div></div></section>
 
-        // STATIC REPOSITORY CONTAINING DEEP DATA FOR THE 6 SUB-PAGES
-        const routeRepository = {
-            awareness: {
-                icon: "fa-bullhorn text-orange-500 bg-orange-50",
-                titleEn: "Create Internet Awareness",
-                titleTe: "ఇంటర్నెట్ అవగాహన కల్పించడం",
-                descEn: "Introducing essential internet fundamentals, data tracking layouts, and simple operations tailored completely for rural networks.",
-                descTe: "మొదటి సారి ఇంటర్నెట్ వాడుతున్న గ్రామీణ వినియోగదారులకు డేటా వినియోగం, ఇంటర్నెట్ ప్రాథమికాంశాలపై శిక్షణ.",
-                dosEn: ["Monitor data settings daily to prevent unexpected balance expirations.", "Keep phone operating systems updated to stay patched against known performance flaws."],
-                dosTe: ["డేటా ప్లాన్ ముగిసిపోకుండా ఉండటానికి మొబైల్ డేటా సెట్టింగ్స్ క్రమం తప్పకుండా చూసుకోండి.", "ఫోన్ సాఫ్ట్‌వేర్ ఎప్పటికప్పుడు అప్‌డేట్ చేసుకోండి."],
-                dontsEn: ["Do not leave background synchronizations running on basic cellular connections.", "Avoid connecting to random open public wireless networks without encryption profiles."],
-                dontsTe: ["అవసరం లేనప్పుడు బ్యాక్‌గ్రౌండ్ యాప్ డేటాను ఆన్ చేసి ఉంచవద్దు.", "రక్షణ లేని బహిరంగ పబ్లిక్ వైఫై (Wi-Fi) నెట్‌వర్క్‌లను వాడకండి."]
-            },
-            services: {
-                icon: "fa-laptop-house text-teal-600 bg-teal-50",
-                titleEn: "Educate on Online Services",
-                titleTe: "ఆన్‌లైన్ సేవల శిక్షణ",
-                descEn: "Providing structural walkthroughs for handling household utility bills, processing regional bus/rail transport tickets, and submitting village forms.",
-                descTe: "కరెంటు బిల్లుల చెల్లింపు, బస్సు లేదా రైలు టిక్కెట్ల బుకింగ్ మరియు వివిధ నిత్య జీవిత అవసరాల అప్లికేషన్లపై సమగ్ర అవగాహన.",
-                dosEn: ["Save downloaded PDF receipt confirmations for every single online bill payment.", "Always double check matching PNR numbers directly on official transport boards."],
-                dosTe: ["ఆన్‌లైన్ బిల్లు చెల్లించిన తర్వాత వచ్చే పిడిఎఫ్ (PDF) రశీదును భద్రపరుచుకోండి.", "రైలు ప్రయాణానికి ముందు పీఎన్ఆర్ (PNR) నంబర్ స్టేటస్ సరిచూసుకోండి."],
-                dontsEn: ["Never let unfamiliar internet center workers process private logins without supervision.", "Do not refresh payment processing browser links while a transaction wheel is turning."],
-                dontsTe: ["ఇంటర్నెట్ సెంటర్లలో లాగిన్ వివరాలు ఇతరులకు కనిపించకుండా జాగ్రత్తపడండి.", "డబ్బులు కట్ అవుతున్నప్పుడు బ్రౌజర్ పేజీని రిఫ్రెష్ (Refresh) చేయవద్దు."]
-            },
-            safety: {
-                icon: "fa-shield-virus text-red-500 bg-red-50",
-                titleEn: "Spread Cyber Safety Awareness",
-                titleTe: "సైబర్ భద్రత అవగాహన",
-                descEn: "Demystifying malicious social engineering traps, data phishing frameworks, spoofed bank calls, and secure deployment strategies for identity access vectors.",
-                descTe: "ఆన్‌లైన్ మోసపూరిత కాల్స్, నకిలీ ఎస్ఎమ్ఎస్ మరియు వ్యక్తిగత వివరాల దొంగతనం నుండి ఎలా సురక్షితంగా ఉండాలో వివరించడం.",
-                dosEn: ["Instantly block unknown aggressive numbers claiming suspension of your phone parameters.", "Memorize and leverage the National Cyber Crime Portal helpline directly at 1930."],
-                dosTe: ["ఖాతా బ్లాక్ అవుతుందని బెదిరించే తెలియని నంబర్లను వెంటనే బ్లాక్ చేయండి.", "సైబర్ మోసానికి గురైతే వెంటనే '1930' హెల్ప్‌లైన్ నంబర్‌కు ఫిర్యాదు చేయండి."],
-                dontsEn: ["Never input private dynamic OTP authorization tokens to unsanctioned phone callers.", "Do not click on random software installation links distributed inside private group chats."],
-                dontsTe: ["ఫోన్ లో వచ్చే ఓటీపీ (OTP) నంబర్లను ఎట్టి పరిస్థితుల్లోనూ ఎవరికీ చెప్పకండి.", "వాట్సాప్ లేదా ఇతర గ్రూపులలో వచ్చే అనుమానాస్పద యాప్ లింకులను క్లిక్ చేయకండి."]
-            },
-            payments: {
-                icon: "fa-hand-holding-usd text-blue-500 bg-blue-50",
-                titleEn: "Encourage Digital Payments & EdTech",
-                titleTe: "డిజిటల్ చెల్లింపులు & విద్యా వనరులు",
-                descEn: "Promoting seamless peer-to-peer cashless routing loops while training school students on utilizing open digital content repositories.",
-                descTe: "సురక్షితమైన నగదు రహిత లావాదేవీల నిర్వహణ మరియు విద్యార్థుల కోసం ఆన్‌లైన్ చదువుల పోర్టల్స్ పరిచయం.",
-                dosEn: ["Verify the visible vendor legal identity name inside the UI view screen before pressing send.", "Set low automated daily merchant transaction caps on your banking applications."],
-                dosTe: ["క్యూఆర్ (QR) కోడ్ స్కాన్ చేశాక అవతలి వ్యక్తి పేరు స్క్రీన్ పై సరిచూసుకున్నాకే పిన్ ఎంటర్ చేయండి.", "మీ బ్యాంక్ యాప్‌లో రోజువారీ లావాదేవీల పరిమితిని తక్కువగా సెట్ చేసుకోండి."],
-                dontsEn: ["Do not type your secret financial code digits when simple incoming fund requests arrive.", "Never share or write down your numeric payment access code on paper shields near your device."],
-                dontsTe: ["డబ్బులు మీ ఖాతాలోకి రావడానికి (Receive) మీ రహస్య యూపీఐ పిన్ ఎంటర్ చేయాల్సిన అవసరం లేదు.", "మీ పిన్ నంబర్లను ఎక్కడా రాసి పెట్టకండి, ఎవరికీ చూపించకండి."]
-            },
-            portals: {
-                icon: "fa-landmark text-purple-500 bg-purple-50",
-                titleEn: "Explain Government Portals",
-                titleTe: "ప్రభుత్వ డిజిటల్ పోర్టల్స్ వివరణ",
-                descEn: "Guiding native agricultural populations through direct interactive checking loops for local registry records and welfare subsidy systems.",
-                descTe: "భూమి రికార్డులు, వ్యవసాయ రాయితీలు మరియు ప్రభుత్వ ఆరోగ్య పథకాల అధికారిక వెబ్‌సైట్ల వినియోగం.",
-                dosEn: ["Ensure you check for official central root signatures ending with .gov.in extensions.", "Utilize DigiLocker integrations to securely link identity metrics without physical copy loss."],
-                dosTe: ["వెబ్‌సైట్ చివర కచ్చితంగా '.gov.in' ఉందో లేదో చూసి మాత్రమే సమాచారాన్ని నమ్మండి.", "మీ ధృవీకరణ పత్రాల కోసం సురక్షితమైన 'డిజిలాకర్' (DigiLocker) అప్లికేషన్ ఉపయోగించండి."],
-                dontsEn: ["Never pay premium surcharge processing fees to illegal middleman networks for public records.", "Do not leave private tracking profiles logged into public kiosks after logging out."],
-                dontsTe: ["ఉచితంగా లభించే ప్రభుత్వ ఫారాల కోసం దళారులకు డబ్బులు ఇచ్చి మోసపోకండి.", "మీ సేవ కేంద్రాలలో పని పూర్తయ్యాక మీ ఖాతా లాగ్ అవుట్ (Log out) అయ్యిందో లేదో చూసుకోండి."]
-            },
-            responsible: {
-                icon: "fa-user-check text-emerald-500 bg-emerald-50",
-                titleEn: "Promote Responsible Internet Use",
-                titleTe: "బాధ్యతాయుతమైన ఇంటర్నెట్ వినియోగం",
-                descEn: "Cultivating digital verification rules focused on cross-referencing information before cascading text streams to curb misinformation.",
-                descTe: "సోషల్ మీడియాలో వచ్చే సమాచారాన్ని ఇతరులకు షేర్ చేసే ముందు అది నిజమో కాదో సరిచూసుకునే పద్ధతులు.",
-                dosEn: ["Cross reference sensational media text alerts with certified government PIB fact check channels.", "Report malicious misinformation pools straight to communication board monitors."],
-                dosTe: ["వాట్సాప్ మెసేజ్‌లలో వచ్చే విషయాలను అధికారిక వార్తా సంస్థల ద్వారా సరిచూసుకోండి.", "సమాజంలో గొడవలు రేపే తప్పుడు పోస్టులను చూసినప్పుడు పోలీసులకు లేదా సైబర్ గ్రూపులకు తెలపండి."],
-                dontsEn: ["Do not blindly forward alarming medical treatment procedures or panic-inducing text messages.", "Avoid sharing private personal pictures or contact matrices of third party targets in public forums."],
-                dontsTe: ["నిజానిజాలు తెలియకుండా వైద్య చిట్కాలు లేదా భయభ్రాంతులకు గురిచేసే మెసేజ్‌లను ఫార్వార్డ్ చేయకండి.", "ఇతరుల వ్యక్తిగత ఫోన్ నంబర్లను లేదా ఫోటోలను వారి అనుమతి లేకుండా గ్రూపులలో షేర్ చేయకండి."]
-            }
-        };
+    <section id="page-learn" class="page"><div class="wrap learn-hero"><div class="section-title"><p class="eyebrow" id="learnEyebrow"></p><h2 id="learnTitle"></h2><p id="learnCopy"></p></div><div class="learn-progress"><p id="progressMessage"></p><div class="progress-track" aria-label="Learning progress"><div class="progress-fill" id="progressFill"></div></div><b id="progressNumber"></b></div></div><div class="section tight"><div class="wrap"><div class="path-grid" id="pathGrid"></div><article class="lesson" id="lessonBox"></article></div></div></section>
 
-        // RUNTIME VIEW SWITCH ROUTING LOGIC
-        function openRoute(routeKey) {
-            const data = routeRepository[routeKey];
-            if (!data) return;
+    <section id="page-guide" class="page"><div class="wrap guide-head">
+      <header class="hub-intro"><p class="eyebrow" id="skillHubEyebrow"></p><h1 id="skillHubTitle"></h1><p id="skillHubCopy"></p></header>
+      <div class="skill-switcher" id="skillSwitcher" aria-label="Digital skills topics"></div>
+      <div class="guide-banner"><div class="guide-icon" id="guideIcon"></div><h2 id="guideTitle"></h2><p id="guideCopy"></p></div>
+      <div class="do-grid"><article class="do-card good"><h2 id="doTitle"></h2><ul id="doList"></ul></article><article class="do-card bad"><h2 id="dontTitle"></h2><ul id="dontList"></ul></article></div>
+      <div class="return-row"><button class="primary-btn" onclick="showPage('home')" id="guideBack"></button></div>
+    </div></section>
+  </main>
 
-            const mainView = document.getElementById('mainLandingView');
-            const routeView = document.getElementById('dynamicRouteView');
-            const contentArea = document.getElementById('dynamicPageContent');
+  <div class="modal" id="safetyModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" onclick="modalBackdrop(event)"><div class="modal-window"><button class="close" aria-label="Close" onclick="closeSafetyModal()">×</button><h2 id="modalTitle"></h2><p id="modalCopy"></p><div class="simulator"><div class="phone-bar"><span>✉ <span id="messageContainer"></span></span><span id="simLive"></span></div><div class="sim-message" id="simMessage"></div><div class="sim-actions"><button class="report" onclick="chooseScenario('report')" id="reportBtn"></button><button class="verify" onclick="chooseScenario('verify')" id="verifyBtn"></button></div><div class="sim-output" id="simOutput"></div><div class="sim-nav"><button id="simPrev" onclick="changeScenario(-1)"></button><span class="sim-counter" id="simCounter"></span><button id="simNext" onclick="changeScenario(1)"></button></div></div></div></div>
+  <footer id="footerText"></footer>
 
-            // Construct structural presentation elements inside target template area
-            contentArea.innerHTML = `
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-gray-100 pb-8 mb-8 gap-4">
-                    <div class="flex items-center space-x-4">
-                        <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-inner ${data.icon}">
-                            <i class="fas ${data.icon.split(' ')[0]}"></i>
-                        </div>
-                        <div>
-                            <h1 class="text-2xl sm:text-3xl font-black text-gray-900">
-                                <span class="lang-en">${data.titleEn}</span>
-                                <span class="lang-te hidden">${data.titleTe}</span>
-                            </h1>
-                            <p class="text-sm text-gray-500 mt-1">Core Training Module Deep Dive</p>
-                        </div>
-                    </div>
-                </div>
+  <script>
+    /* All text lives in this one file so the learning centre remains fully translatable offline. */
+    const icons = ['📶','💬','🛡️','💳','🏛️','🌱'];
+    const colours = ['#49d9ff','#9c7bff','#38e38c','#ffad55','#49d9ff','#38e38c'];
+    const moduleIcons = ['📚','🏛️','🩺','🌾'];
+    const moduleColours = ['#9c7bff','#49d9ff','#ff6673','#38e38c'];
 
-                <div class="space-y-8">
-                    <div>
-                        <h3 class="text-xs font-bold uppercase tracking-widest text-vibrantTeal-700 bg-vibrantTeal-50 inline-block px-3 py-1 rounded-md mb-3">Module Context</h3>
-                        <p class="text-base sm:text-lg text-gray-700 leading-relaxed">
-                            <span class="lang-en">${data.descEn}</span>
-                            <span class="lang-te hidden">${data.descTe}</span>
-                        </p>
-                    </div>
+    const DATA = {
+      en: {
+        nav:['1. Home','2. Problems & Solutions','3. Learn & Practice','4. Safety Guide'],
+        heroPill:'VILLAGE DIGITAL AWARENESS', heroTitle:'Internet use in villages,<br><span class="gradient-text">made safe and simple.</span>', heroCopy:'A friendly learning centre for families to use online services with confidence, spot scams early, and turn a phone into a helpful everyday tool.', heroLearn:'Start learning trail', heroSafety:'Try safety simulator', trust:['✓ Simple language','✓ Learn at your own pace','✓ Works best with family'], signalTitle:'Every safe click builds confidence.', signalCopy:'Learn one small action today—from checking an address to saving a health record—and make your next online task easier.', signalStatus:'● READY FOR YOUR NEXT SMART STEP',
+        projectBadge:'PROJECT SUMMARY & PROFILE', projectTitle:'About our village digital literacy project', projectCopy:'Smartphones are common, but online tools can still feel confusing or risky. RuralNet turns useful daily tasks—learning, communication, banking, healthcare, farming and government services—into clear, safe steps that everyone can practise.', goalsTitle:'◎ Project objectives — tap a card for practical do’s & don’ts', goalsCopy:'Choose any topic to open a short safety guide. Each guide has actions you can use today.',
+        objectives:[['Internet & digital basics','Turn on data wisely, browse confidently, and keep your phone healthy.'],['Online services & communication','Use useful apps and messages without giving away private information.'],['Cyber safety awareness','Recognise scams, fake prizes, unsafe calls and harmful links.'],['Payments & online education','Use UPI carefully and find trustworthy learning resources.'],['Government online services','Check applications, benefits and documents through verified channels.'],['Responsible technology use','Share thoughtfully, check facts, and keep a healthy screen routine.']],
+        stats:[['100%','Community surveys completed'],['450+','Villagers mentored'],['12','Awareness sessions held'],['4','Practical learning missions']], safetyBadge:'LIVE SIMULATOR',safetyCardTitle:'Interactive cyber safety screen',safetyCardCopy:'Practise deciding what to do when an urgent-looking message appears. It is a safe simulation—no real links are opened.',problemBadge:'HELP WORKSPACE',problemCardTitle:'Problems & solutions hub',problemCardCopy:'See frequent village internet challenges placed side by side with calm, practical recovery steps.',
+        glossEyebrow:'NO JARGON ZONE',glossTitle:'Simple language <span>glossary terminal</span>',glossCopy:'Tap a word, or type it and press Enter. Difficult online words are explained with everyday examples.',terminalLabel:'DICTIONARY DECODER v3.0',termPrompt:'›› ENTER A WORD:',termDefault:'›› SYSTEM READY. PICK A WORD ABOVE OR TYPE OTP, PHISHING, HTTPS, CLOUD, OR SPAM.',termUnknown:'›› Unknown word. Please choose OTP, Phishing, HTTPS, Cloud, or Spam.',terms:{OTP:'›› OTP = One-Time Password. Think of it as a key that works for one door, one time only. Never read that key to anyone—not even a caller claiming to be from a bank.',Phishing:'›› PHISHING = a fake bait message. Like bait on a hook, it tries to make you reveal a PIN, password or personal detail. Stop, check, and report it.',HTTPS:'›› HTTPS = a protected website connection. The padlock and https help protect information in transit—but still check that the website name itself is genuine.',Cloud:'›› CLOUD = an online storage locker. It lets you keep a copy of photos or documents on secure internet servers so you can reach them from another device.',Spam:'›› SPAM = unwanted or misleading messages. Treat it like unwanted leaflets: do not respond, do not open unknown links, and delete or report it.'},
+        faqEyebrow:'QUICK ANSWERS',faqTitle:'Common village <span>internet questions</span>',faqCopy:'Open a question for a clear, everyday answer.',faqs:[['How can I check whether an online link really belongs to the government?','Do not trust a search result or message just because it looks official. Start from a department’s verified app or official contact, inspect the full address carefully, and avoid sponsored search advertisements. If unsure, ask at an authorised service centre before entering any details.'],['What if my payment app freezes after I send money?','Do not repeatedly tap “Pay” or start a second payment. Wait, check your transaction history and save the reference number. Contact the bank or payment app through its official support channel if the status does not update. Never share your UPI PIN or OTP while asking for help.'],['Is an easy PIN like 1234 safe if I might forget a hard one?','No. Avoid obvious PINs such as 1234, 0000, birth dates or the same code for every account. Use a different, hard-to-guess PIN for payment apps, enable phone screen lock or biometrics, and never write PINs where others can see them.']], toProblems:'View problems & solutions  →',
+        problemsEyebrow:'CALM FIXES FOR REAL MOMENTS',problemsTitle:'Village internet <span>problems & solutions hub</span>',problemsCopy:'A quick side-by-side guide for common situations. When something feels urgent, slow down first—then use these steps.',returnHome:'← Return to home',mitigation:'Simple mitigation steps',inc:'Incident',problems:[
+          ['Fake website links in search results','Someone looking for ration, land or benefit information may click a copycat website or a paid advertisement. It can collect personal details.',['Use the official department app, bookmarked address, or an authorised service centre to begin.','Read the full web address, not only the page logo or first search result.','Never enter Aadhaar, bank or OTP details when a page feels unfamiliar.']],
+          ['Threatening messages about electricity or pumps','A message says a connection will be stopped within an hour unless you pay or open a link. Fear and urgency are common scam tools.',['Do not open the link or call the number in the message.','Check the bill or account only through the official provider app, website or local office.','Keep a screenshot and report suspicious messages instead of forwarding them.']],
+          ['Payment pending when the network is weak','A payment screen spins, money may appear debited, and the shopkeeper has not received it.',['Do not make a second payment until the first status is clear.','Check the transaction history and note the UTR/reference number.','Use official bank/app support if needed; never give your PIN or OTP to “support”.']],
+          ['A broker gives an uncertain printed receipt','An unauthorised person offers to submit forms for a high fee and hands over a receipt that may not be from a real system.',['Use authorised centres and ask for the official fee before service.','Verify the application number yourself on the official portal or with the department.','Do not share copied identity documents or account PINs with a broker.']],
+          ['The same easy PIN is used everywhere','A simple or reused password gives one thief a path into several accounts.',['Keep payment, email and social accounts separate.','Use a strong unique passphrase or PIN and enable biometric lock where appropriate.','Never save passwords on a shared computer; log out fully after use.']]
+        ],
+        learnEyebrow:'NEW · LEARN & PRACTICE',learnTitle:'Your everyday <span>digital learning trail</span>',learnCopy:'Four short missions turn online services into habits. Read one, answer a quick check, then unlock your progress. There is no hurry—understanding matters more than speed.',progressMessage:'Missions completed',moduleLabel:'MISSION',stepsLabel:'Try these safe steps',smartSignal:'Smart signal',quickCheck:'Quick check',answerFeedbackGood:'Great choice! This mission is marked complete. Keep building your safe digital habits.',answerFeedbackTry:'Not quite. Read the steps once more and choose the safest action.',nextMission:'Next mission →',
+        modules:[
+          {title:'Online education',hook:'A phone can become a small classroom when you choose the right source and build a simple study routine.',steps:[['Start with a trusted source','Ask a teacher, school or recognised education provider for the correct app, class link or channel.'],['Protect the learner profile','Use a parent/guardian-approved account. Do not post a child’s photo, address, school ID or class link publicly.'],['Make learning stick','Save useful lessons for offline viewing when possible. Set a short daily time and discuss one new idea with family.']],signal:'A real learning service explains who provides it, what it costs (if anything), and how to get help. Be careful with “guaranteed job” or “instant certificate” ads.',question:'A message promises a paid certificate today if you send money to a personal number. What is safest?',options:['Pay quickly before the offer ends','Ask your teacher / use the official institution contact','Forward it to friends'],correct:1},
+          {title:'Government services',hook:'Government services can save travel and time—but begin with a verified route, not an urgent message or an advertisement.',steps:[['Begin from a verified source','Use an official department app, its verified website, or an authorised service centre. Type the address or use a trusted bookmark instead of message links.'],['Keep a small record','After submitting an application, save the reference number, date and receipt. It helps you check progress later.'],['Finish safely','Log out after using a shared computer. Keep documents in DigiLocker or another secure personal location rather than public chats.']],signal:'A genuine office will not ask for your OTP, UPI PIN or remote-screen access to “release” a benefit. When unsure, verify through the department’s public contact number.',question:'What should you do before entering personal details for a scheme?',options:['Open the first sponsored search result','Verify the service through an official app, office or known public contact','Send your documents to any helpful-looking chat account'],correct:1},
+          {title:'Digital healthcare',hook:'Online health tools can help you find reliable information and appointments—while your private health details still deserve care.',steps:[['Use recognised health services','For appointments, teleconsultation or records, choose a known hospital, government health service, or provider recommended by a qualified professional.'],['Share only what is needed','Health records, prescriptions and IDs are private. Send them only through a verified clinic channel and never to a random caller or social-media account.'],['Know when to seek direct care','For emergencies, severe symptoms or medical doubt, contact local emergency/health services or visit a qualified clinician. An internet message is not a diagnosis.']],signal:'No honest service can diagnose every problem from one forwarded message. Avoid miracle-cure videos, unverified medicine sellers, and requests for payment before a clear consultation.',question:'A stranger asks you to send a prescription photo over chat to “unlock free medicine.” What is safest?',options:['Send it; the offer sounds helpful','Verify through your clinic or local health centre first','Post it in a public group to ask'],correct:1},
+          {title:'Smart agriculture',hook:'Weather, prices and farming advice are most useful when you compare trusted sources with local conditions and expert guidance.',steps:[['Check source and date','Use government agriculture channels, agricultural universities, recognised market information, or local extension workers. Check when an update was published.'],['Compare before acting','Do not change seed, pesticide or fertiliser use because of one video. Compare advice with local officers and instructions on the product label.'],['Keep farm information private','Share field photos only when needed with a trusted adviser. Do not send bank details, land documents or OTPs to people offering surprise grants.']],signal:'Good farming guidance states crop, season, location and limits. “Double yield in one day” or “pay now for a subsidy” messages are warning signs.',question:'Which message deserves the most caution?',options:['A dated advisory confirmed by a local agriculture officer','A “guaranteed huge yield” post asking for an advance payment','A market price checked on a recognised source'],correct:1}
+        ],
+        guides:[
+          {title:'Internet & digital basics',sub:'Small habits that help your phone, data and privacy stay healthy.',dos:['Turn off mobile data or hotspot when you are not using it.','Install device and app updates from the official store.','Keep some free storage and remove old, unnecessary files.','Use a screen lock and keep Bluetooth off when not needed.'],donts:['Do not install apps sent as unknown files or links.','Do not share your hotspot without a password.','Do not ignore a phone that is overheating or behaving strangely.','Do not let strangers change important phone settings.']},
+          {title:'Online services & communication',sub:'Use messages, calls and online accounts without losing control of your information.',dos:['Confirm a contact through another known channel before trusting an urgent request.','Use privacy settings and keep official group contacts saved.','Check a doctor, seller or service provider through a trusted source.','Pause before forwarding a message.'],donts:['Do not send medical reports, identity documents or land papers to unknown chats.','Do not join reward groups that require payment or personal details.','Do not answer repeated calls from unknown international numbers.','Do not download unknown attachments.']},
+          {title:'Cyber safety awareness',sub:'Defences against urgent calls, fake prizes and messages that try to frighten you.',dos:['Stop and verify if anyone demands money, an OTP or immediate action.','Block and report suspicious numbers and messages.','Use a SIM PIN and a strong phone screen lock.','Contact the bank through an official number if you fear fraud.'],donts:['Never tell anyone your OTP, UPI PIN, card PIN or password.','Do not open shortened or unfamiliar links from messages.','Do not install screen-sharing or remote-control apps for a caller.','Do not use open Wi‑Fi for banking or private documents.']},
+          {title:'Payments & online education',sub:'Safe transfers and trustworthy learning are both built on careful verification.',dos:['Check the recipient name before approving a payment.','Check transaction history when a payment is pending.','Use trusted education sources recommended by teachers or institutions.','Set separate secure locks for payment apps.'],donts:['Never enter a UPI PIN to receive money.','Do not pay for courses from unverified social-media adverts.','Do not share your screen while banking.','Do not allow children to make payments without guidance.']},
+          {title:'Government online services',sub:'A safer way to check benefits, documents and application status.',dos:['Start from a verified official app, contact or authorised service centre.','Keep application numbers and receipts safely.','Log out of shared computers completely.','Use a secure document wallet such as DigiLocker where available.'],donts:['Do not pay an unauthorised broker who promises a faster result.','Do not trust sponsored search ads without verification.','Do not save bank passwords on a public computer.','Do not post land papers or application numbers in public groups.']},
+          {title:'Responsible technology use',sub:'Build a useful, kind and balanced digital routine for the whole community.',dos:['Check important news with trusted local and official sources before sharing.','Set aside phone-free time for family, work, rest and farming.','Report hateful, abusive or scam content.','Use the internet for learning, services and constructive ideas.'],donts:['Do not forward rumours about safety, health or community conflict.','Do not use abusive language online.','Do not share someone’s photo or video without permission.','Do not believe miracle health or crop claims without trusted advice.']}
+        ],
+        modalTitle:'Threat simulation module',modalCopy:'Read the sample message. Pick the safest next step. The message is only a learning example; no link can be opened here.',messageContainer:'MESSAGE CHECK',simLive:'[PRACTICE MODE]',reportBtn:'🚨 REPORT AS SCAM',verifyBtn:'✓ VERIFY THROUGH OFFICIAL APP',simWait:'›› Waiting for your decision. Look for urgency, strange links, prize claims, or requests for a secret code.',winReport:'›› Good decision. This looks like a scam. Save evidence, block/report the sender, and verify with the real service independently.',badReport:'›› Careful: reporting every message without checking can hide real information. A safer habit is to verify through the official app or contact—not the message link.',winVerify:'›› Good decision. Do not use the message link; open the official provider app or type a known address yourself to verify.',badVerify:'›› Danger signal found. Do not follow this message. It uses fear or a fake reward to rush you.',scenarios:[
+          {text:'ALERT: Your subsidy account closes in 30 minutes. Pay the “verification fee” through this short link now.',safe:false},
+          {text:'NOTICE: A rural network update is available. For details, open your mobile provider’s official app or contact its customer care number from your bill.',safe:true},
+          {text:'CONGRATULATIONS! You won ₹50,000. Send a processing charge and OTP immediately to receive the prize.',safe:false}
+        ],footer:'© 2026 RURALNET SAFETY CENTER · A VILLAGE DIGITAL AWARENESS INITIATIVE'
+      },
+      hi: {
+        nav:['1. होम','2. समस्या व समाधान','3. सीखें व अभ्यास करें','4. सुरक्षा गाइड'],
+        heroPill:'ग्रामीण डिजिटल जागरूकता',heroTitle:'गांवों में इंटरनेट का उपयोग,<br><span class="gradient-text">सुरक्षित और आसान।</span>',heroCopy:'परिवारों के लिए एक सरल लर्निंग सेंटर—ऑनलाइन सेवाओं को भरोसे से इस्तेमाल करें, धोखाधड़ी जल्दी पहचानें और फोन को रोज़ का उपयोगी साधन बनाएं।',heroLearn:'सीखने की यात्रा शुरू करें',heroSafety:'सुरक्षा सिम्युलेटर आज़माएं',trust:['✓ सरल भाषा','✓ अपनी गति से सीखें','✓ परिवार के साथ सीखें'],signalTitle:'हर सुरक्षित क्लिक भरोसा बढ़ाता है।',signalCopy:'आज एक छोटा कदम सीखें—जैसे पता जांचना या स्वास्थ्य रिकॉर्ड सुरक्षित रखना—और अगला ऑनलाइन काम आसान बनाएं।',signalStatus:'● आपका अगला स्मार्ट कदम तैयार है',
+        projectBadge:'परियोजना सारांश व प्रोफाइल',projectTitle:'हमारी ग्रामीण डिजिटल साक्षरता परियोजना',projectCopy:'स्मार्टफोन आम हैं, पर ऑनलाइन टूल अभी भी उलझन या जोखिम भरे लग सकते हैं। RuralNet सीखने, बातचीत, बैंकिंग, स्वास्थ्य, खेती और सरकारी सेवाओं के रोज़मर्रा के कामों को स्पष्ट और सुरक्षित चरणों में बदलता है।',goalsTitle:'◎ परियोजना के उद्देश्य — व्यावहारिक करें/न करें देखने के लिए कार्ड दबाएं',goalsCopy:'छोटी सुरक्षा गाइड खोलने के लिए कोई भी विषय चुनें। हर गाइड में आज अपनाने योग्य कदम हैं।',
+        objectives:[['इंटरनेट व डिजिटल मूल बातें','डेटा समझदारी से चलाएं, भरोसे से ब्राउज़ करें और फोन को स्वस्थ रखें।'],['ऑनलाइन सेवाएं व संवाद','निजी जानकारी दिए बिना उपयोगी ऐप और संदेश अपनाएं।'],['साइबर सुरक्षा जागरूकता','फ्रॉड, नकली इनाम, असुरक्षित कॉल और लिंक पहचानें।'],['भुगतान व ऑनलाइन शिक्षा','UPI सावधानी से इस्तेमाल करें और भरोसेमंद सीखने के साधन खोजें।'],['सरकारी ऑनलाइन सेवाएं','सत्यापित माध्यम से आवेदन, लाभ और दस्तावेज देखें।'],['जिम्मेदार तकनीक उपयोग','सोच-समझकर साझा करें, तथ्य जांचें और संतुलित स्क्रीन समय रखें।']],
+        stats:[['100%','सामुदायिक सर्वे पूरे'],['450+','ग्रामीणों को मार्गदर्शन'],['12','जागरूकता सत्र'],['4','व्यावहारिक सीखने के मिशन']],safetyBadge:'लाइव सिम्युलेटर',safetyCardTitle:'इंटरैक्टिव साइबर सुरक्षा स्क्रीन',safetyCardCopy:'किसी जरूरी दिखने वाले संदेश पर क्या करना है, इसका सुरक्षित अभ्यास करें। इसमें कोई असली लिंक नहीं खुलता।',problemBadge:'सहायता केंद्र',problemCardTitle:'समस्या व समाधान हब',problemCardCopy:'गांवों की आम इंटरनेट चुनौतियां और उनके शांत, व्यावहारिक समाधान साथ-साथ देखें।',
+        glossEyebrow:'सरल शब्द क्षेत्र',glossTitle:'सरल भाषा <span>शब्दावली टर्मिनल</span>',glossCopy:'किसी शब्द को दबाएं या टाइप करके Enter करें। कठिन ऑनलाइन शब्द रोज़ के उदाहरणों से समझें।',terminalLabel:'शब्दकोश डिकोडर v3.0',termPrompt:'›› शब्द लिखें:',termDefault:'›› सिस्टम तैयार है। ऊपर से शब्द चुनें या OTP, PHISHING, HTTPS, CLOUD अथवा SPAM लिखें।',termUnknown:'›› शब्द नहीं मिला। OTP, Phishing, HTTPS, Cloud या Spam चुनें।',terms:{OTP:'›› OTP = वन-टाइम पासवर्ड। यह ऐसी चाबी है जो एक दरवाज़े पर सिर्फ एक बार काम करती है। इसे किसी को न बताएं—बैंक कर्मचारी होने का दावा करने वाले को भी नहीं।',Phishing:'›› फिशिंग = नकली चारे वाला संदेश। जैसे कांटे पर चारा, यह आपसे पिन, पासवर्ड या निजी जानकारी निकलवाना चाहता है। रुकें, जांचें और रिपोर्ट करें।',HTTPS:'›› HTTPS = सुरक्षित वेबसाइट कनेक्शन। पैडलॉक और https रास्ते में जानकारी बचाने में मदद करते हैं, लेकिन वेबसाइट का असली नाम जांचना फिर भी जरूरी है।',Cloud:'›› क्लाउड = ऑनलाइन स्टोरेज लॉकर। फोटो या दस्तावेज की एक प्रति इंटरनेट के सुरक्षित सर्वर पर रहती है, जिसे दूसरे डिवाइस से भी देखा जा सकता है।',Spam:'›› स्पैम = अनचाहे या भ्रामक संदेश। इसे बिना मांगे पर्चे जैसा समझें: जवाब न दें, अनजान लिंक न खोलें और हटाएं या रिपोर्ट करें।'},
+        faqEyebrow:'त्वरित उत्तर',faqTitle:'गांव के सामान्य <span>इंटरनेट सवाल</span>',faqCopy:'स्पष्ट और रोज़मर्रा का उत्तर देखने के लिए सवाल खोलें।',faqs:[['कैसे जांचूं कि ऑनलाइन लिंक सच में सरकारी है?','किसी सर्च रिजल्ट या संदेश को केवल आधिकारिक दिखने पर न मानें। विभाग के सत्यापित ऐप, आधिकारिक संपर्क या अधिकृत सेवा केंद्र से शुरुआत करें। पूरा पता ध्यान से देखें और “Sponsored” विज्ञापन से बचें। संदेह हो तो विवरण भरने से पहले सेवा केंद्र से पूछें।'],['पैसे भेजने के बाद पेमेंट ऐप रुक जाए तो क्या करूं?','बार-बार “Pay” न दबाएं और दूसरा भुगतान शुरू न करें। थोड़ा रुकें, ट्रांजैक्शन हिस्ट्री देखें और रेफरेंस नंबर सुरक्षित रखें। स्थिति न बदले तो बैंक या ऐप के आधिकारिक सहायता माध्यम से बात करें। मदद मांगते समय भी UPI PIN या OTP कभी न बताएं।'],['क्या 1234 जैसा आसान PIN सुरक्षित है?','नहीं। 1234, 0000, जन्मतिथि या हर खाते में एक जैसा कोड न रखें। पेमेंट ऐप के लिए अलग, अनुमान लगाना कठिन PIN रखें, फोन लॉक/बायोमेट्रिक चालू करें और PIN ऐसी जगह न लिखें जिसे कोई देख सके।']],toProblems:'समस्या व समाधान देखें  →',
+        problemsEyebrow:'असली परिस्थितियों के शांत समाधान',problemsTitle:'ग्राम इंटरनेट <span>समस्या व समाधान हब</span>',problemsCopy:'आम परिस्थितियों के लिए त्वरित साथ-साथ गाइड। जब कुछ बहुत जरूरी लगे, पहले रुकें—फिर ये कदम अपनाएं।',returnHome:'← होम पर वापस जाएं',mitigation:'सरल सुरक्षा कदम',inc:'घटना',problems:[
+          ['सर्च रिजल्ट में नकली वेबसाइट लिंक','राशन, भूमि या लाभ की जानकारी ढूंढते समय कोई व्यक्ति नकली वेबसाइट या पेड विज्ञापन खोल सकता है। वहां निजी जानकारी ली जा सकती है।',['शुरुआत विभाग के आधिकारिक ऐप, सुरक्षित बुकमार्क या अधिकृत सेवा केंद्र से करें।','केवल लोगो या पहले रिजल्ट के बजाय पूरा वेब पता पढ़ें।','अपरिचित पेज पर आधार, बैंक या OTP विवरण न डालें।']],
+          ['बिजली या पंप को लेकर डराने वाले संदेश','संदेश कहता है कि एक घंटे में कनेक्शन कट जाएगा, अगर आप पैसे न दें या लिंक न खोलें। डर और जल्दी कराना फ्रॉड के आम तरीके हैं।',['लिंक न खोलें और संदेश में दिए नंबर पर कॉल न करें।','बिल की जांच केवल प्रदाता के आधिकारिक ऐप, वेबसाइट या स्थानीय कार्यालय से करें।','स्क्रीनशॉट रखें, संदिग्ध संदेश रिपोर्ट करें और उसे आगे न भेजें।']],
+          ['कम नेटवर्क में भुगतान पेंडिंग','स्क्रीन घूमती रहती है, पैसे कटे हुए दिखते हैं, लेकिन दुकानदार को नहीं मिले।',['पहला स्टेटस साफ होने तक दूसरा भुगतान न करें।','ट्रांजैक्शन हिस्ट्री देखें और UTR/रेफरेंस नंबर लिखें।','जरूरत हो तो आधिकारिक बैंक/ऐप सहायता लें; “सपोर्ट” को PIN या OTP न दें।']],
+          ['ब्रोकर की संदिग्ध प्रिंटेड रसीद','अनधिकृत व्यक्ति ज्यादा शुल्क लेकर फॉर्म भरने का दावा करता है और ऐसी रसीद दे सकता है जो असली सिस्टम की न हो।',['अधिकृत केंद्र ही चुनें और सेवा से पहले आधिकारिक शुल्क पूछें।','आवेदन नंबर को आधिकारिक पोर्टल या विभाग में खुद जांचें।','पहचान दस्तावेज की कॉपी या खाते का PIN ब्रोकर को न दें।']],
+          ['हर जगह वही आसान PIN','सरल या दोहराया गया पासवर्ड एक व्यक्ति को कई खातों तक पहुंच दे सकता है।',['पेमेंट, ईमेल और सोशल अकाउंट अलग रखें।','मजबूत अलग पासफ्रेज/PIN रखें और संभव हो तो बायोमेट्रिक लॉक लगाएं।','साझा कंप्यूटर पर पासवर्ड सेव न करें; काम के बाद लॉग आउट करें।']]
+        ],
+        learnEyebrow:'नया · सीखें व अभ्यास करें',learnTitle:'आपकी रोज़मर्रा की <span>डिजिटल सीखने की यात्रा</span>',learnCopy:'चार छोटे मिशन ऑनलाइन सेवाओं को आदत में बदलते हैं। पढ़ें, त्वरित जांच का उत्तर दें और प्रगति खोलें। जल्दी नहीं—समझना गति से अधिक जरूरी है।',progressMessage:'पूरे किए गए मिशन',moduleLabel:'मिशन',stepsLabel:'ये सुरक्षित कदम अपनाएं',smartSignal:'स्मार्ट संकेत',quickCheck:'त्वरित जांच',answerFeedbackGood:'बहुत अच्छा! यह मिशन पूरा हो गया। अपनी सुरक्षित डिजिटल आदतें बनाते रहें।',answerFeedbackTry:'अभी नहीं। चरणों को एक बार फिर पढ़ें और सबसे सुरक्षित विकल्प चुनें।',nextMission:'अगला मिशन →',
+        modules:[
+          {title:'ऑनलाइन शिक्षा',hook:'सही स्रोत चुनकर और छोटी पढ़ाई की दिनचर्या बनाकर फोन एक छोटा कक्षा-कक्ष बन सकता है।',steps:[['भरोसेमंद स्रोत से शुरू करें','शिक्षक, स्कूल या मान्य शिक्षा संस्थान से सही ऐप, क्लास लिंक या चैनल पूछें।'],['विद्यार्थी प्रोफाइल सुरक्षित रखें','अभिभावक की अनुमति वाला खाता उपयोग करें। बच्चे की फोटो, पता, स्कूल ID या क्लास लिंक सार्वजनिक न करें।'],['सीख को यादगार बनाएं','संभव हो तो उपयोगी पाठ ऑफलाइन के लिए सहेजें। रोज़ थोड़ा समय तय करें और परिवार से एक नई बात साझा करें।']],signal:'असली लर्निंग सेवा बताती है कि उसे कौन चलाता है, लागत क्या है और मदद कैसे मिलेगी। “पक्का रोजगार” या “तुरंत सर्टिफिकेट” वाले विज्ञापन से सावधान रहें।',question:'एक संदेश व्यक्तिगत नंबर पर पैसे भेजने पर आज सर्टिफिकेट देने का वादा करता है। सबसे सुरक्षित क्या है?',options:['ऑफर खत्म होने से पहले तुरंत भुगतान करें','शिक्षक से पूछें / संस्था के आधिकारिक संपर्क का उपयोग करें','दोस्तों को आगे भेजें'],correct:1},
+          {title:'सरकारी सेवाएं',hook:'सरकारी सेवाएं यात्रा और समय बचा सकती हैं—पर शुरुआत सत्यापित माध्यम से करें, किसी जरूरी संदेश या विज्ञापन से नहीं।',steps:[['सत्यापित स्रोत से शुरू करें','विभाग का आधिकारिक ऐप, सत्यापित वेबसाइट या अधिकृत सेवा केंद्र अपनाएं। संदेश लिंक के बजाय पता टाइप करें या भरोसेमंद बुकमार्क उपयोग करें।'],['छोटा रिकॉर्ड रखें','आवेदन के बाद रेफरेंस नंबर, तारीख और रसीद सुरक्षित रखें। बाद में स्थिति जांचने में मदद मिलेगी।'],['सुरक्षित ढंग से खत्म करें','साझा कंप्यूटर पर काम के बाद लॉग आउट करें। दस्तावेज DigiLocker या निजी सुरक्षित स्थान पर रखें, पब्लिक चैट में नहीं।']],signal:'कोई असली कार्यालय लाभ “रिलीज” करने के लिए OTP, UPI PIN या स्क्रीन एक्सेस नहीं मांगता। संदेह में विभाग के सार्वजनिक नंबर से सत्यापन करें।',question:'किसी योजना के लिए निजी जानकारी भरने से पहले क्या करें?',options:['पहला Sponsored सर्च रिजल्ट खोलें','आधिकारिक ऐप, कार्यालय या ज्ञात सार्वजनिक संपर्क से सेवा सत्यापित करें','दस्तावेज किसी मददगार दिखने वाले चैट अकाउंट को भेज दें'],correct:1},
+          {title:'डिजिटल स्वास्थ्य सेवा',hook:'ऑनलाइन स्वास्थ्य साधन भरोसेमंद जानकारी और अपॉइंटमेंट दिला सकते हैं—पर निजी स्वास्थ्य विवरण को भी सुरक्षा चाहिए।',steps:[['मान्य स्वास्थ्य सेवा चुनें','अपॉइंटमेंट, टेली-कंसल्टेशन या रिकॉर्ड के लिए जाने-माने अस्पताल, सरकारी स्वास्थ्य सेवा या योग्य व्यक्ति की सुझाई सेवा चुनें।'],['उतनी ही जानकारी साझा करें जितनी जरूरी है','रिपोर्ट, पर्ची और ID निजी हैं। इन्हें केवल सत्यापित क्लिनिक माध्यम से भेजें, किसी अनजान कॉलर या सोशल अकाउंट को नहीं।'],['सीधे इलाज की जरूरत समझें','आपातकाल, गंभीर लक्षण या संदेह में स्थानीय स्वास्थ्य सेवा/योग्य डॉक्टर से मिलें। इंटरनेट संदेश निदान नहीं है।']],signal:'ईमानदार सेवा एक फॉरवर्ड संदेश से हर बीमारी नहीं बता सकती। चमत्कारी इलाज वीडियो, अप्रमाणित दवा विक्रेता और स्पष्ट सलाह से पहले भुगतान मांगने वालों से बचें।',question:'एक अनजान व्यक्ति “मुफ्त दवा” खोलने के लिए चैट पर पर्ची की फोटो मांगता है। सबसे सुरक्षित क्या है?',options:['ऑफर मददगार है, फोटो भेज दें','पहले अपने क्लिनिक या स्वास्थ्य केंद्र से सत्यापित करें','पब्लिक ग्रुप में फोटो डालकर पूछें'],correct:1},
+          {title:'समझदार कृषि',hook:'मौसम, कीमत और खेती की सलाह तब सबसे उपयोगी है जब उसे भरोसेमंद स्रोत, स्थानीय स्थिति और विशेषज्ञ सलाह से मिलाया जाए।',steps:[['स्रोत और तारीख जांचें','सरकारी कृषि चैनल, कृषि विश्वविद्यालय, मान्य मंडी जानकारी या स्थानीय विस्तार अधिकारी देखें। अपडेट की तारीख जरूर देखें।'],['अपनाने से पहले तुलना करें','एक वीडियो के आधार पर बीज, कीटनाशक या खाद न बदलें। स्थानीय अधिकारी और उत्पाद लेबल से सलाह मिलाएं।'],['खेत की जानकारी निजी रखें','भरोसेमंद सलाहकार को जरूरत हो तभी खेत की फोटो भेजें। अचानक अनुदान देने वालों को बैंक जानकारी, भूमि कागज या OTP न भेजें।']],signal:'अच्छी खेती सलाह में फसल, मौसम, जगह और सीमाएं लिखी होती हैं। “एक दिन में दोगुनी उपज” या “सब्सिडी के लिए अभी भुगतान करें” चेतावनी संकेत हैं।',question:'किस संदेश पर सबसे ज्यादा सावधानी जरूरी है?',options:['स्थानीय कृषि अधिकारी से पुष्टि की गई तारीख वाली सलाह','एडवांस भुगतान मांगने वाला “बहुत बड़ी उपज पक्की” पोस्ट','मान्य स्रोत पर जांचा गया मंडी भाव'],correct:1}
+        ],
+        guides:[
+          {title:'इंटरनेट व डिजिटल मूल बातें',sub:'फोन, डेटा और निजता को स्वस्थ रखने वाली छोटी आदतें।',dos:['काम न होने पर मोबाइल डेटा या हॉटस्पॉट बंद करें।','आधिकारिक स्टोर से डिवाइस और ऐप अपडेट लगाएं।','कुछ स्टोरेज खाली रखें और अनावश्यक पुरानी फाइल हटाएं।','स्क्रीन लॉक रखें और जरूरत न हो तो Bluetooth बंद रखें।'],donts:['अनजान फाइल या लिंक से ऐप इंस्टॉल न करें।','पासवर्ड बिना हॉटस्पॉट किसी को न दें।','गर्म होने या अजीब व्यवहार करने वाले फोन को नजरअंदाज न करें।','अनजान व्यक्ति को महत्वपूर्ण फोन सेटिंग बदलने न दें।']},
+          {title:'ऑनलाइन सेवाएं व संवाद',sub:'बातचीत और ऑनलाइन अकाउंट का इस्तेमाल अपनी जानकारी पर नियंत्रण के साथ करें।',dos:['जरूरी अनुरोध मानने से पहले किसी ज्ञात माध्यम से संपर्क की पुष्टि करें।','प्राइवेसी सेटिंग रखें और आधिकारिक समूह संपर्क सेव करें।','डॉक्टर, विक्रेता या सेवा प्रदाता को भरोसेमंद स्रोत से जांचें।','संदेश आगे भेजने से पहले रुकें।'],donts:['मेडिकल रिपोर्ट, पहचान दस्तावेज या भूमि कागज अनजान चैट में न भेजें।','पैसे या निजी जानकारी मांगने वाले इनाम समूह में न जाएं।','अनजान विदेशी नंबर से बार-बार कॉल न उठाएं।','अनजान अटैचमेंट डाउनलोड न करें।']},
+          {title:'साइबर सुरक्षा जागरूकता',sub:'डराने वाले कॉल, नकली इनाम और फ्रॉड संदेशों से बचाव।',dos:['पैसे, OTP या तुरंत कार्रवाई मांगने वाले को रोककर सत्यापित करें।','संदिग्ध नंबर और संदेश ब्लॉक/रिपोर्ट करें।','SIM PIN और मजबूत स्क्रीन लॉक रखें।','फ्रॉड का डर हो तो बैंक के आधिकारिक नंबर से बात करें।'],donts:['OTP, UPI PIN, कार्ड PIN या पासवर्ड किसी को न बताएं।','संदेश के छोटे या अपरिचित लिंक न खोलें।','कॉलर के कहने पर स्क्रीन शेयर या रिमोट कंट्रोल ऐप न लगाएं।','बैंकिंग/निजी दस्तावेज के लिए खुले Wi-Fi का उपयोग न करें।']},
+          {title:'भुगतान व ऑनलाइन शिक्षा',sub:'सुरक्षित ट्रांसफर और भरोसेमंद सीखना—दोनों जांच से शुरू होते हैं।',dos:['भुगतान मंजूर करने से पहले प्राप्तकर्ता का नाम जांचें।','पेमेंट पेंडिंग हो तो ट्रांजैक्शन हिस्ट्री देखें।','शिक्षक या संस्था के सुझाए भरोसेमंद स्रोत चुनें।','पेमेंट ऐप के अलग सुरक्षित लॉक रखें।'],donts:['पैसे पाने के लिए कभी UPI PIN न डालें।','अनजाने सोशल मीडिया विज्ञापन से कोर्स न खरीदें।','बैंकिंग के समय स्क्रीन शेयर न करें।','बच्चों को बिना मार्गदर्शन पेमेंट न करने दें।']},
+          {title:'सरकारी ऑनलाइन सेवाएं',sub:'लाभ, दस्तावेज और आवेदन स्थिति जांचने का सुरक्षित तरीका।',dos:['सत्यापित ऐप, संपर्क या अधिकृत सेवा केंद्र से शुरुआत करें।','आवेदन नंबर और रसीद सुरक्षित रखें।','साझा कंप्यूटर से पूरी तरह लॉग आउट करें।','जहां उपलब्ध हो DigiLocker जैसे सुरक्षित दस्तावेज वॉलेट का उपयोग करें।'],donts:['तेजी से काम कराने का वादा करने वाले अनधिकृत ब्रोकर को भुगतान न करें।','बिना जांचे Sponsored सर्च विज्ञापन पर भरोसा न करें।','पब्लिक कंप्यूटर पर बैंक पासवर्ड सेव न करें।','भूमि कागज या आवेदन नंबर पब्लिक ग्रुप में पोस्ट न करें।']},
+          {title:'जिम्मेदार तकनीक उपयोग',sub:'समुदाय के लिए उपयोगी, दयालु और संतुलित डिजिटल दिनचर्या बनाएं।',dos:['महत्वपूर्ण खबर साझा करने से पहले भरोसेमंद स्थानीय/आधिकारिक स्रोत देखें।','परिवार, काम, आराम और खेती के लिए फोन-रहित समय रखें।','नफरत, गाली या स्कैम सामग्री रिपोर्ट करें।','इंटरनेट से सीखें, सेवाएं पाएं और उपयोगी विचार खोजें।'],donts:['सुरक्षा, स्वास्थ्य या समुदाय को लेकर अफवाह आगे न भेजें।','ऑनलाइन गाली या अपमान न करें।','बिना अनुमति किसी की फोटो/वीडियो साझा न करें।','बिना भरोसेमंद सलाह के चमत्कारी स्वास्थ्य/फसल दावे न मानें।']}
+        ],
+        modalTitle:'खतरा सिमुलेशन मॉड्यूल',modalCopy:'नमूना संदेश पढ़ें और सबसे सुरक्षित अगला कदम चुनें। यह केवल सीखने का उदाहरण है; इसमें कोई असली लिंक नहीं खुलता।',messageContainer:'संदेश जांच',simLive:'[अभ्यास मोड]',reportBtn:'🚨 स्कैम के रूप में रिपोर्ट करें',verifyBtn:'✓ आधिकारिक ऐप से जांचें',simWait:'›› आपके निर्णय की प्रतीक्षा है। जल्दी कराना, अजीब लिंक, इनाम या गुप्त कोड की मांग देखें।',winReport:'›› अच्छा निर्णय। यह स्कैम जैसा लगता है। सबूत रखें, भेजने वाले को ब्लॉक/रिपोर्ट करें और असली सेवा से अलग माध्यम से जांचें।',badReport:'›› ध्यान दें: बिना जांचे हर संदेश रिपोर्ट करने से असली सूचना छिप सकती है। सुरक्षित आदत है—संदेश लिंक से नहीं, आधिकारिक ऐप या संपर्क से जांचना।',winVerify:'›› अच्छा निर्णय। संदेश लिंक न खोलें; प्रदाता का आधिकारिक ऐप खोलें या जाना-पहचाना पता खुद टाइप करके जांचें।',badVerify:'›› खतरे का संकेत मिला। इस संदेश पर आगे न बढ़ें। यह डर या नकली इनाम से जल्दी करवाता है।',scenarios:[{text:'चेतावनी: आपका सब्सिडी खाता 30 मिनट में बंद हो जाएगा। अभी छोटे लिंक से “वेरिफिकेशन शुल्क” भरें।',safe:false},{text:'सूचना: ग्रामीण नेटवर्क अपडेट उपलब्ध है। जानकारी के लिए अपने मोबाइल प्रदाता का आधिकारिक ऐप खोलें या बिल पर दिया कस्टमर केयर नंबर लें।',safe:true},{text:'बधाई! आपने ₹50,000 जीते हैं। इनाम पाने के लिए तुरंत प्रोसेसिंग शुल्क और OTP भेजें।',safe:false}],footer:'© 2026 RURALNET SAFETY CENTER · ग्रामीण डिजिटल जागरूकता पहल'
+      },
+      te: {
+        nav:['1. హోమ్','2. సమస్యలు & పరిష్కారాలు','3. నేర్చుకోండి & సాధన చేయండి','4. భద్రతా గైడ్'],
+        heroPill:'గ్రామీణ డిజిటల్ అవగాహన',heroTitle:'గ్రామాలలో ఇంటర్నెట్ వినియోగం,<br><span class="gradient-text">సురక్షితం మరియు సులభం.</span>',heroCopy:'కుటుంబాల కోసం ఒక స్నేహపూర్వక లెర్నింగ్ సెంటర్—ఆన్‌లైన్ సేవలను ధైర్యంగా వాడండి, మోసాలను ముందే గుర్తించండి మరియు ఫోన్‌ను రోజువారీ ఉపయోగకరమైన సాధనంగా మార్చండి।',heroLearn:'నేర్చుకునే ప్రయాణం మొదలుపెట్టండి',heroSafety:'సేఫ్టీ సిమ్యులేటర్ ప్రయత్నించండి',trust:['✓ సులభమైన భాష','✓ మీ వేగంతో నేర్చుకోండి','✓ కుటుంబంతో కలిసి నేర్చుకోండి'],signalTitle:'ప్రతి సురక్షిత క్లిక్ నమ్మకాన్ని పెంచుతుంది.',signalCopy:'ఈరోజు చిరు చర్య నేర్చుకోండి—అడ్రస్ తనిఖీ చేయడం లేదా ఆరోగ్య రికార్డు భద్రంగా ఉంచడం—తర్వాతి ఆన్‌లైన్ పని సులభమవుతుంది.',signalStatus:'● మీ తదుపరి స్మార్ట్ అడుగు సిద్ధంగా ఉంది',
+        projectBadge:'ప్రాజెక్ట్ సారాంశం & ప్రొఫైల్',projectTitle:'గ్రామీణ డిజిటల్ అక్షరాస్యత ప్రాజెక్ట్',projectCopy:'స్మార్ట్‌ఫోన్‌లు సాధారణమే అయినా, ఆన్‌లైన్ టూల్స్ ఇంకా అయోమయంగా లేదా ప్రమాదకరంగా అనిపించవచ్చు. RuralNet చదువు, కమ్యూనికేషన్, బ్యాంకింగ్, ఆరోగ్యం, వ్యవసాయం మరియు ప్రభుత్వ సేవల రోజువారీ పనులను స్పష్టమైన, సురక్షిత దశలుగా మారుస్తుంది.',goalsTitle:'◎ ప్రాజెక్ట్ లక్ష్యాలు — ఉపయోగకరమైన చేయవలసినవి/చేయకూడనివి చూడటానికి కార్డ్ నొక్కండి',goalsCopy:'చిన్న భద్రతా గైడ్ తెరవడానికి ఏదైనా అంశాన్ని ఎంచుకోండి. ప్రతి గైడ్‌లో ఈరోజే ఆచరించగల అడుగులు ఉంటాయి.',
+        objectives:[['ఇంటర్నెట్ & డిజిటల్ ప్రాథమికాలు','డేటాను తెలివిగా వాడండి, ధైర్యంగా బ్రౌజ్ చేయండి, ఫోన్‌ను ఆరోగ్యంగా ఉంచండి.'],['ఆన్‌లైన్ సేవలు & కమ్యూనికేషన్','వ్యక్తిగత సమాచారం ఇవ్వకుండా ఉపయోగకరమైన యాప్‌లు, మెసేజ్‌లు వాడండి.'],['సైబర్ భద్రత అవగాహన','మోసాలు, నకిలీ బహుమతులు, అసురక్షిత కాల్స్ మరియు లింకులను గుర్తించండి.'],['చెల్లింపులు & ఆన్‌లైన్ విద్య','UPIని జాగ్రత్తగా వాడండి; నమ్మకమైన విద్యా వనరులను కనుగొనండి.'],['ప్రభుత్వ ఆన్‌లైన్ సేవలు','ధృవీకరించిన మార్గాల ద్వారా దరఖాస్తులు, లబ్ధులు, పత్రాలు చూడండి.'],['బాధ్యతాయుత టెక్నాలజీ వినియోగం','ఆలోచించి పంచుకోండి, నిజాలు తనిఖీ చేయండి, స్క్రీన్ సమయాన్ని సమతుల్యం చేయండి.']],
+        stats:[['100%','కమ్యూనిటీ సర్వేలు పూర్తి'],['450+','గ్రామస్థులకు మార్గదర్శనం'],['12','అవగాహన సమావేశాలు'],['4','ప్రాక్టికల్ లెర్నింగ్ మిషన్లు']],safetyBadge:'లైవ్ సిమ్యులేటర్',safetyCardTitle:'ఇంటరాక్టివ్ సైబర్ సేఫ్టీ స్క్రీన్',safetyCardCopy:'అత్యవసరంగా కనిపించే మెసేజ్ వచ్చినప్పుడు ఏమి చేయాలో సురక్షితంగా సాధన చేయండి. ఇందులో నిజమైన లింక్‌లు తెరుచుకోవు.',problemBadge:'సహాయ వేదిక',problemCardTitle:'సమస్యలు & పరిష్కారాల వేదిక',problemCardCopy:'గ్రామాల్లో తరచూ వచ్చే ఇంటర్నెట్ సమస్యలను మరియు ప్రశాంతమైన, ఆచరణాత్మక పరిష్కారాలను పక్కపక్కనే చూడండి.',
+        glossEyebrow:'సరళ పదాల విభాగం',glossTitle:'సరళ భాష <span>నిఘంటువు టెర్మినల్</span>',glossCopy:'ఒక పదం నొక్కండి లేదా టైప్ చేసి Enter నొక్కండి. కష్టమైన ఆన్‌లైన్ పదాలను నిత్య జీవిత ఉదాహరణలతో అర్థం చేసుకోండి.',terminalLabel:'నిఘంటువు డీకోడర్ v3.0',termPrompt:'›› పదం రాయండి:',termDefault:'›› సిస్టమ్ సిద్ధంగా ఉంది. పైన పదాన్ని ఎంచుకోండి లేదా OTP, PHISHING, HTTPS, CLOUD, SPAM టైప్ చేయండి.',termUnknown:'›› పదం తెలియదు. OTP, Phishing, HTTPS, Cloud లేదా Spam ఎంచుకోండి.',terms:{OTP:'›› OTP = వన్-టైమ్ పాస్‌వర్డ్. ఇది ఒక తలుపుకు ఒకసారి మాత్రమే పని చేసే తాళంచెవి లాంటిది. బ్యాంకు వ్యక్తినని చెప్పేవారికీ దీన్ని ఎప్పుడూ చెప్పకండి.',Phishing:'›› ఫిషింగ్ = నకిలీ ఎర వేసే మెసేజ్. చేపను పట్టే ఎరలా, ఇది మీ పిన్, పాస్‌వర్డ్ లేదా వ్యక్తిగత వివరాలు పొందడానికి ప్రయత్నిస్తుంది. ఆగండి, తనిఖీ చేయండి, రిపోర్ట్ చేయండి.',HTTPS:'›› HTTPS = రక్షిత వెబ్‌సైట్ కనెక్షన్. ప్యాడ్‌లాక్ మరియు https సమాచారం ప్రయాణంలో రక్షించడంలో సహాయపడతాయి; అయినా వెబ్‌సైట్ అసలు పేరు తనిఖీ చేయాలి.',Cloud:'›› క్లౌడ్ = ఆన్‌లైన్ స్టోరేజ్ లాకర్. ఫోటోలు లేదా పత్రాల కాపీని సురక్షిత ఇంటర్నెట్ సర్వర్‌లో ఉంచి, మరో పరికరం నుండి కూడా చూడవచ్చు.',Spam:'›› స్పామ్ = అనవసరమైన లేదా తప్పుదోవ పట్టించే సందేశాలు. అడగకుండా వచ్చిన కరపత్రంలా భావించండి: సమాధానం ఇవ్వకండి, లింక్ తెరవకండి, డిలీట్ లేదా రిపోర్ట్ చేయండి.'},
+        faqEyebrow:'త్వరిత సమాధానాలు',faqTitle:'గ్రామంలోని సాధారణ <span>ఇంటర్నెట్ ప్రశ్నలు</span>',faqCopy:'స్పష్టమైన, రోజువారీ సమాధానం కోసం ఒక ప్రశ్న తెరవండి.',faqs:[['ఒక ఆన్‌లైన్ లింక్ నిజంగా ప్రభుత్వానిదేనా అని ఎలా తెలుసుకోవాలి?','సెర్చ్ రిజల్ట్ లేదా మెసేజ్ అధికారికంగా కనిపించినంత మాత్రాన నమ్మకండి. విభాగం ధృవీకరించిన యాప్, అధికారిక సంప్రదింపు లేదా అధీకృత సేవా కేంద్రం నుండి ప్రారంభించండి. పూర్తి అడ్రస్ జాగ్రత్తగా చూడండి; “Sponsored” ప్రకటనలను దూరంగా ఉంచండి. సందేహం ఉంటే వివరాలు ఇవ్వకముందు సేవా కేంద్రంలో అడగండి।'],['డబ్బు పంపిన తర్వాత పేమెంట్ యాప్ ఆగిపోతే ఏమి చేయాలి?','మళ్లీ మళ్లీ “Pay” నొక్కకండి; రెండో పేమెంట్ ప్రారంభించకండి. కొద్దిసేపు ఆగి ట్రాన్సాక్షన్ హిస్టరీ చూడండి; రిఫరెన్స్ నంబర్ భద్రంగా ఉంచండి. స్టేటస్ మారకపోతే బ్యాంకు లేదా యాప్ అధికారిక సహాయ మార్గం ద్వారా సంప్రదించండి. సహాయం అడిగినా UPI PIN లేదా OTP చెప్పకండి।'],['1234 లాంటి సులభమైన PIN సురక్షితమేనా?','కాదు. 1234, 0000, పుట్టిన తేదీ లేదా అన్ని ఖాతాలకు ఒకే కోడ్ వాడకండి. పేమెంట్ యాప్‌కు వేరే ఊహించలేని PIN పెట్టండి, ఫోన్ లాక్/బయోమెట్రిక్ ఆన్ చేయండి మరియు ఇతరులు చూసే చోట PIN రాయకండి।']],toProblems:'సమస్యలు & పరిష్కారాలు చూడండి  →',
+        problemsEyebrow:'నిజ జీవిత పరిస్థితులకు ప్రశాంత పరిష్కారాలు',problemsTitle:'గ్రామ ఇంటర్నెట్ <span>సమస్యలు & పరిష్కారాలు</span>',problemsCopy:'సాధారణ పరిస్థితులకు త్వరిత పక్కపక్క గైడ్. ఏదైనా అత్యవసరంగా అనిపిస్తే ముందుగా ఆగండి—తరువాత ఈ అడుగులు పాటించండి.',returnHome:'← హోమ్‌కు తిరిగి వెళ్ళండి',mitigation:'సులభమైన భద్రతా దశలు',inc:'సంఘటన',problems:[
+          ['సెర్చ్ రిజల్ట్‌లలో నకిలీ వెబ్‌సైట్ లింకులు','రేషన్, భూమి లేదా లబ్ధుల సమాచారం కోసం చూస్తూ నకిలీ వెబ్‌సైట్ లేదా పెయిడ్ యాడ్ తెరవవచ్చు. అక్కడ వ్యక్తిగత వివరాలు తీసుకోవచ్చు.',['విభాగం అధికారిక యాప్, సురక్షిత బుక్‌మార్క్ లేదా అధీకృత సేవా కేంద్రం నుండే మొదలుపెట్టండి.','కేవలం లోగో లేదా మొదటి రిజల్ట్ కాకుండా పూర్తి వెబ్ అడ్రస్ చదవండి.','తెలియని పేజీలో ఆధార్, బ్యాంకు లేదా OTP వివరాలు పెట్టకండి.']],
+          ['కరెంట్ లేదా పంప్ గురించి బెదిరింపు సందేశాలు','లింక్ తెరవకపోతే లేదా చెల్లించకపోతే గంటలో కనెక్షన్ కట్ అవుతుందని మెసేజ్ చెబుతుంది. భయం, తొందరపాటు మోసాల సాధారణ పద్ధతులు.',['లింక్ నొక్కకండి; మెసేజ్‌లోని నంబర్‌కు కాల్ చేయకండి.','బిల్లు కేవలం ప్రొవైడర్ అధికారిక యాప్, వెబ్‌సైట్ లేదా స్థానిక ఆఫీసులోనే తనిఖీ చేయండి.','స్క్రీన్‌షాట్ ఉంచి, సందేహాస్పద మెసేజ్‌ను రిపోర్ట్ చేయండి; ఫార్వర్డ్ చేయకండి.']],
+          ['తక్కువ నెట్‌వర్క్‌లో పేమెంట్ పెండింగ్','స్క్రీన్ తిరుగుతూ ఉంటుంది, డబ్బు కట్ అయినట్టు కనిపిస్తుంది, కానీ దుకాణదారునికి చేరదు.',['మొదటి స్టేటస్ స్పష్టమయ్యే వరకు రెండో పేమెంట్ చేయకండి.','ట్రాన్సాక్షన్ హిస్టరీ చూసి UTR/రిఫరెన్స్ నంబర్ రాసుకోండి.','అవసరమైతే అధికారిక బ్యాంక్/యాప్ సహాయం తీసుకోండి; “సపోర్ట్”కి PIN లేదా OTP చెప్పకండి.']],
+          ['బ్రోకర్ ఇచ్చే అనుమానాస్పద ప్రింటెడ్ రసీదు','అనధికార వ్యక్తి ఎక్కువ ఫీజు తీసుకుని ఫారం వేస్తానని చెబుతూ, అసలు సిస్టమ్‌కు చెందని రసీదు ఇవ్వవచ్చు.',['అధీకృత కేంద్రాలనే ఎంచుకోండి; సేవకు ముందు అధికారిక ఫీజు అడగండి.','అప్లికేషన్ నంబర్‌ను అధికారిక పోర్టల్ లేదా విభాగంలో మీరే తనిఖీ చేయండి.','ID పత్రాల కాపీలు లేదా ఖాతా PIN బ్రోకర్‌కు ఇవ్వకండి.']],
+          ['అన్ని చోట్లా అదే సులభ PIN','సులభంగా లేదా పదేపదే వాడిన పాస్‌వర్డ్‌తో ఒకరు అనేక ఖాతాలకు చేరవచ్చు.',['పేమెంట్, ఈమెయిల్, సోషల్ ఖాతాలను వేర్వేరుగా ఉంచండి.','బలమైన ప్రత్యేక పాస్‌ఫ్రేజ్/PIN పెట్టి, వీలైతే బయోమెట్రిక్ లాక్ వాడండి.','షేర్‌డ్ కంప్యూటర్‌లో పాస్‌వర్డ్ సేవ్ చేయకండి; పూర్తిగా లాగౌట్ అవ్వండి.']]
+        ],
+        learnEyebrow:'కొత్తది · నేర్చుకోండి & సాధన చేయండి',learnTitle:'మీ రోజువారీ <span>డిజిటల్ లెర్నింగ్ ప్రయాణం</span>',learnCopy:'నాలుగు చిన్న మిషన్లు ఆన్‌లైన్ సేవలను అలవాటుగా మారుస్తాయి. చదవండి, చిన్న ప్రశ్నకు సమాధానం ఇవ్వండి, ప్రగతిని అన్‌లాక్ చేయండి. తొందర లేదు—వేగం కంటే అర్థం చేసుకోవడం ముఖ్యం.',progressMessage:'పూర్తి చేసిన మిషన్లు',moduleLabel:'మిషన్',stepsLabel:'ఈ సురక్షిత దశలు పాటించండి',smartSignal:'స్మార్ట్ సంకేతం',quickCheck:'త్వరిత తనిఖీ',answerFeedbackGood:'చాలా బాగుంది! ఈ మిషన్ పూర్తయింది. సురక్షిత డిజిటల్ అలవాట్లను పెంచుకుంటూ ఉండండి.',answerFeedbackTry:'ఇంకా కాదు. దశలను మరోసారి చదివి, అత్యంత సురక్షితమైన ఎంపిక ఎంచుకోండి.',nextMission:'తర్వాతి మిషన్ →',
+        modules:[
+          {title:'ఆన్‌లైన్ విద్య',hook:'సరైన మూలం ఎంచుకుని, చిన్న చదువు దినచర్య పెట్టుకుంటే ఫోన్ ఒక చిన్న తరగతి గదిగా మారుతుంది.',steps:[['నమ్మకమైన మూలంతో ప్రారంభించండి','సరైన యాప్, క్లాస్ లింక్ లేదా ఛానెల్ కోసం ఉపాధ్యాయుడు, స్కూల్ లేదా గుర్తింపు పొందిన విద్యా సంస్థను అడగండి.'],['విద్యార్థి ప్రొఫైల్‌ను రక్షించండి','తల్లిదండ్రుల అనుమతి ఉన్న ఖాతా వాడండి. పిల్లల ఫోటో, అడ్రస్, స్కూల్ ID లేదా క్లాస్ లింక్‌ను పబ్లిక్‌గా పెట్టకండి.'],['నేర్చుకున్నది గుర్తుండేలా చేయండి','వీలైతే పాఠాలను ఆఫ్‌లైన్ కోసం సేవ్ చేయండి. రోజూ చిన్న సమయం నిర్ణయించి, కొత్త విషయం ఒకటి కుటుంబంతో పంచుకోండి.']],signal:'నిజమైన లెర్నింగ్ సర్వీస్ ఎవరు నిర్వహిస్తున్నారో, ఖర్చు ఎంత, సహాయం ఎలా దొరుకుతుందో చెబుతుంది. “ఉద్యోగం గ్యారెంటీ” లేదా “వెంటనే సర్టిఫికేట్” ప్రకటనల పట్ల జాగ్రత్త.',question:'ఒక మెసేజ్ వ్యక్తిగత నంబర్‌కు డబ్బు పంపితే ఈరోజే సర్టిఫికేట్ ఇస్తానంటోంది. అత్యంత సురక్షితం ఏది?',options:['ఆఫర్ ముగిసేలోపు వెంటనే చెల్లించండి','టీచర్‌ను అడగండి / సంస్థ అధికారిక సంప్రదింపును వాడండి','స్నేహితులకు ఫార్వర్డ్ చేయండి'],correct:1},
+          {title:'ప్రభుత్వ సేవలు',hook:'ప్రభుత్వ సేవలు ప్రయాణం, సమయం ఆదా చేయవచ్చు—కానీ అత్యవసర మెసేజ్ లేదా ప్రకటన కాకుండా ధృవీకరించిన మార్గం నుండే మొదలుపెట్టండి.',steps:[['ధృవీకరించిన మూలంతో మొదలుపెట్టండి','విభాగం అధికారిక యాప్, ధృవీకరించిన వెబ్‌సైట్ లేదా అధీకృత సేవా కేంద్రం వాడండి. మెసేజ్ లింక్‌కు బదులు అడ్రస్ టైప్ చేయండి లేదా నమ్మకమైన బుక్‌మార్క్ వాడండి.'],['చిన్న రికార్డ్ ఉంచండి','దరఖాస్తు తర్వాత రిఫరెన్స్ నంబర్, తేదీ, రసీదు భద్రంగా ఉంచండి. తర్వాత స్టేటస్ చూడటానికి ఉపయోగపడుతుంది.'],['సురక్షితంగా ముగించండి','షేర్‌డ్ కంప్యూటర్ వాడితే లాగౌట్ అవ్వండి. పత్రాలను DigiLocker లేదా వ్యక్తిగత సురక్షిత చోట ఉంచండి; పబ్లిక్ చాట్‌లలో కాదు.']],signal:'లబ్ధి “విడుదల” చేయడానికి నిజమైన ఆఫీసు OTP, UPI PIN లేదా స్క్రీన్ యాక్సెస్ అడగదు. అనుమానం ఉంటే విభాగం పబ్లిక్ నంబర్ ద్వారా ధృవీకరించండి.',question:'పథకానికి వ్యక్తిగత వివరాలు పెట్టే ముందు ఏమి చేయాలి?',options:['మొదటి Sponsored సెర్చ్ రిజల్ట్ తెరవండి','అధికారిక యాప్, ఆఫీసు లేదా తెలిసిన పబ్లిక్ కాంటాక్ట్ ద్వారా సేవను ధృవీకరించండి','ఉపయోగపడతారని కనిపించే చాట్ అకౌంట్‌కు పత్రాలు పంపండి'],correct:1},
+          {title:'డిజిటల్ ఆరోగ్య సేవలు',hook:'ఆన్‌లైన్ ఆరోగ్య సాధనాలు నమ్మకమైన సమాచారం, అపాయింట్‌మెంట్ అందించవచ్చు—కానీ మీ ప్రైవేట్ ఆరోగ్య వివరాలకు కూడా భద్రత అవసరం.',steps:[['గుర్తింపు పొందిన ఆరోగ్య సేవ ఎంచుకోండి','అపాయింట్‌మెంట్, టెలి కన్సల్టేషన్ లేదా రికార్డుల కోసం తెలిసిన ఆసుపత్రి, ప్రభుత్వ ఆరోగ్య సేవ లేదా అర్హత కలిగిన వ్యక్తి సూచించిన సేవ ఎంచుకోండి.'],['అవసరమైనంత మాత్రమే పంచుకోండి','రిపోర్టులు, ప్రిస్క్రిప్షన్, ID ప్రైవేట్. ధృవీకరించిన క్లినిక్ ఛానెల్‌లో మాత్రమే పంపండి; తెలియని కాలర్ లేదా సోషల్ అకౌంట్‌కు కాదు.'],['నేరుగా చికిత్స అవసరం ఎప్పుడు తెలుసుకోండి','అత్యవసరం, తీవ్రమైన లక్షణాలు లేదా సందేహం ఉంటే స్థానిక ఆరోగ్య సేవ/అర్హత గల డాక్టర్‌ను కలవండి. ఇంటర్నెట్ మెసేజ్ నిర్ధారణ కాదు.']],signal:'ఒక ఫార్వర్డ్ మెసేజ్‌తో ప్రతీ వ్యాధి చెప్పగల నిజమైన సేవ ఉండదు. అద్భుత చికిత్స వీడియోలు, ధృవీకరించని మందుల విక్రేతలు, స్పష్టమైన సలహా ముందు డబ్బు అడిగేవారిని నివారించండి.',question:'“ఉచిత మందు” కోసం చాట్‌లో ప్రిస్క్రిప్షన్ ఫోటో పంపమని ఒక అపరిచితుడు అడిగాడు. అత్యంత సురక్షితం ఏది?',options:['ఆఫర్ ఉపయోగకరంగా ఉంది, ఫోటో పంపండి','ముందు మీ క్లినిక్ లేదా ఆరోగ్య కేంద్రం ద్వారా ధృవీకరించండి','పబ్లిక్ గ్రూప్‌లో ఫోటో పెట్టి అడగండి'],correct:1},
+          {title:'తెలివైన వ్యవసాయం',hook:'వాతావరణం, ధరలు, వ్యవసాయ సలహా—నమ్మకమైన మూలం, స్థానిక పరిస్థితి, నిపుణుల సలహాతో పోల్చినప్పుడు చాలా ఉపయోగకరం.',steps:[['మూలం, తేదీ తనిఖీ చేయండి','ప్రభుత్వ వ్యవసాయ ఛానెల్స్, వ్యవసాయ విశ్వవిద్యాలయాలు, గుర్తింపు పొందిన మార్కెట్ సమాచారం లేదా స్థానిక విస్తరణ అధికారిని చూడండి. అప్‌డేట్ తేదీ చూడండి.'],['అమలు ముందు పోల్చండి','ఒక వీడియో చూసి విత్తనం, పురుగుమందు లేదా ఎరువు మార్చకండి. స్థానిక అధికారి, ఉత్పత్తి లేబుల్‌తో సలహాను పోల్చండి.'],['పొలం సమాచారం ప్రైవేట్‌గా ఉంచండి','నమ్మకమైన సలహాదారుకు అవసరమైనప్పుడు మాత్రమే పొలం ఫోటోలు పంపండి. ఆశ్చర్యకరమైన గ్రాంట్ ఇస్తామనేవారికి బ్యాంకు వివరాలు, భూమి పత్రాలు, OTP పంపకండి.']],signal:'మంచి వ్యవసాయ సలహాలో పంట, కాలం, ప్రాంతం, పరిమితులు ఉంటాయి. “ఒక్క రోజులో రెండింతల దిగుబడి” లేదా “సబ్సిడీకి ఇప్పుడే చెల్లించండి” హెచ్చరిక సంకేతాలు.',question:'ఏ మెసేజ్ పట్ల ఎక్కువ జాగ్రత్త అవసరం?',options:['స్థానిక వ్యవసాయ అధికారి ధృవీకరించిన తేదీతో సలహా','అడ్వాన్స్ పేమెంట్ కోరే “భారీ దిగుబడి గ్యారెంటీ” పోస్ట్','గుర్తింపు మూలంలో తనిఖీ చేసిన మార్కెట్ ధర'],correct:1}
+        ],
+        guides:[
+          {title:'ఇంటర్నెట్ & డిజిటల్ ప్రాథమికాలు',sub:'ఫోన్, డేటా, గోప్యతను ఆరోగ్యంగా ఉంచే చిన్న అలవాట్లు.',dos:['వాడనప్పుడు మొబైల్ డేటా లేదా హాట్‌స్పాట్ ఆఫ్ చేయండి.','అధికారిక స్టోర్ నుండి డివైస్, యాప్ అప్‌డేట్‌లు పెట్టండి.','కొంత స్టోరేజ్ ఖాళీ ఉంచి, అవసరం లేని పాత ఫైళ్లు తొలగించండి.','స్క్రీన్ లాక్ వాడండి; అవసరం లేనప్పుడు Bluetooth ఆఫ్ చేయండి.'],donts:['తెలియని ఫైల్ లేదా లింక్ నుండి యాప్ ఇన్‌స్టాల్ చేయకండి.','పాస్‌వర్డ్ లేకుండా హాట్‌స్పాట్ ఎవరికీ ఇవ్వకండి.','వేడెక్కే లేదా విచిత్రంగా పనిచేసే ఫోన్‌ను నిర్లక్ష్యం చేయకండి.','తెలియని వారిని ముఖ్యమైన ఫోన్ సెట్టింగ్ మార్చనివ్వకండి.']},
+          {title:'ఆన్‌లైన్ సేవలు & కమ్యూనికేషన్',sub:'మీ సమాచారంపై నియంత్రణతో మెసేజ్‌లు, కాల్‌లు, ఆన్‌లైన్ ఖాతాలను వాడండి.',dos:['అత్యవసర అభ్యర్థన నమ్మేముందు తెలిసిన మరో మార్గంలో కాంటాక్ట్ ధృవీకరించండి.','ప్రైవసీ సెట్టింగ్స్ వాడి, అధికారిక గ్రూప్ కాంటాక్ట్‌లు సేవ్ చేయండి.','డాక్టర్, విక్రేత, సేవా ప్రొవైడర్‌ను నమ్మకమైన మూలం ద్వారా తనిఖీ చేయండి.','మెసేజ్ ఫార్వర్డ్ చేయడానికి ముందు ఆగి ఆలోచించండి.'],donts:['మెడికల్ రిపోర్ట్, ID పత్రాలు, భూమి పేపర్లు తెలియని చాట్‌కు పంపకండి.','డబ్బు లేదా వివరాలు అడిగే రివార్డ్ గ్రూపులో చేరకండి.','తెలియని విదేశీ నంబర్ నుండి మళ్లీ మళ్లీ వచ్చే కాల్ ఎత్తకండి.','తెలియని అటాచ్‌మెంట్ డౌన్‌లోడ్ చేయకండి.']},
+          {title:'సైబర్ భద్రత అవగాహన',sub:'భయపెట్టే కాల్స్, నకిలీ బహుమతులు, మోసపూరిత మెసేజ్‌లకు రక్షణ.',dos:['డబ్బు, OTP లేదా తక్షణ చర్య అడిగితే ఆగి ధృవీకరించండి.','సందేహాస్పద నంబర్లు, మెసేజ్‌లు బ్లాక్ & రిపోర్ట్ చేయండి.','SIM PIN, బలమైన స్క్రీన్ లాక్ పెట్టండి.','మోసం భయం ఉంటే బ్యాంక్ అధికారిక నంబర్ ద్వారా సంప్రదించండి.'],donts:['OTP, UPI PIN, కార్డ్ PIN, పాస్‌వర్డ్ ఎవరికీ చెప్పకండి.','మెసేజ్‌లోని చిన్న లేదా తెలియని లింకులు తెరవకండి.','కాలర్ చెప్పాడని స్క్రీన్ షేరింగ్/రిమోట్ కంట్రోల్ యాప్ పెట్టకండి.','బ్యాంకింగ్ లేదా ప్రైవేట్ పత్రాల కోసం ఓపెన్ Wi‑Fi వాడకండి.']},
+          {title:'చెల్లింపులు & ఆన్‌లైన్ విద్య',sub:'సురక్షిత ట్రాన్స్‌ఫర్, నమ్మకమైన చదువు—రెండూ జాగ్రత్తగా తనిఖీ చేయడం నుండే మొదలవుతాయి.',dos:['పేమెంట్ అంగీకరించే ముందు అందుకునే వ్యక్తి పేరు తనిఖీ చేయండి.','పేమెంట్ పెండింగ్ అయితే ట్రాన్సాక్షన్ హిస్టరీ చూడండి.','టీచర్లు/సంస్థ సూచించిన నమ్మకమైన విద్యా వనరులు ఎంచుకోండి.','పేమెంట్ యాప్‌లకు వేర్వేరు సురక్షిత లాక్‌లు పెట్టండి.'],donts:['డబ్బు పొందడానికి ఎప్పుడూ UPI PIN ఎంటర్ చేయకండి.','తెలియని సోషల్ మీడియా యాడ్ నుండి కోర్సు కొనకండి.','బ్యాంకింగ్ చేస్తున్నప్పుడు స్క్రీన్ షేర్ చేయకండి.','పిల్లలను మార్గదర్శకం లేకుండా పేమెంట్లు చేయనివ్వకండి.']},
+          {title:'ప్రభుత్వ ఆన్‌లైన్ సేవలు',sub:'లబ్ధులు, పత్రాలు, దరఖాస్తు స్థితి తనిఖీకి సురక్షిత మార్గం.',dos:['ధృవీకరించిన యాప్, కాంటాక్ట్ లేదా అధీకృత సేవా కేంద్రం నుండే ప్రారంభించండి.','అప్లికేషన్ నంబర్, రసీదులు భద్రంగా ఉంచండి.','షేర్‌డ్ కంప్యూటర్ నుండి పూర్తిగా లాగౌట్ అవ్వండి.','అందుబాటులో ఉంటే DigiLocker వంటి సురక్షిత డాక్యుమెంట్ వాలెట్ వాడండి.'],donts:['త్వరగా పని చేస్తానని చెప్పే అనధికార బ్రోకర్‌కు డబ్బు ఇవ్వకండి.','తనిఖీ చేయకుండా Sponsored సెర్చ్ యాడ్ నమ్మకండి.','పబ్లిక్ కంప్యూటర్‌లో బ్యాంక్ పాస్‌వర్డ్ సేవ్ చేయకండి.','భూమి పత్రాలు, అప్లికేషన్ నంబర్‌ను పబ్లిక్ గ్రూప్‌లో పెట్టకండి.']},
+          {title:'బాధ్యతాయుత టెక్నాలజీ వినియోగం',sub:'సమాజం కోసం ఉపయోగకరమైన, దయగల, సమతుల్య డిజిటల్ దినచర్య నిర్మించండి.',dos:['ముఖ్యమైన వార్త పంచే ముందు నమ్మకమైన స్థానిక/అధికారిక మూలంలో చూడండి.','కుటుంబం, పని, విశ్రాంతి, వ్యవసాయం కోసం ఫోన్-ఫ్రీ సమయం పెట్టండి.','ద్వేషం, దూషణ లేదా స్కామ్ కంటెంట్ రిపోర్ట్ చేయండి.','ఇంటర్నెట్‌తో నేర్చుకోండి, సేవలు పొందండి, ఉపయోగకరమైన ఆలోచనలు కనుగొనండి.'],donts:['భద్రత, ఆరోగ్యం లేదా కమ్యూనిటీ గురించి పుకార్లు ఫార్వర్డ్ చేయకండి.','ఆన్‌లైన్‌లో దూషణ లేదా అవమానం చేయకండి.','అనుమతి లేకుండా ఇతరుల ఫోటో/వీడియో పంచుకోకండి.','నమ్మకమైన సలహా లేకుండా అద్భుత ఆరోగ్య/పంట వాదనలు నమ్మకండి.']}
+        ],
+        modalTitle:'బెదిరింపు సిమ్యులేషన్ మాడ్యూల్',modalCopy:'నమూనా మెసేజ్ చదివి అత్యంత సురక్షిత తదుపరి అడుగు ఎంచుకోండి. ఇది నేర్చుకోవడానికి మాత్రమే; ఇందులో అసలు లింక్ తెరుచుకోదు.',messageContainer:'మెసేజ్ తనిఖీ',simLive:'[ప్రాక్టీస్ మోడ్]',reportBtn:'🚨 స్కామ్‌గా రిపోర్ట్ చేయి',verifyBtn:'✓ అధికారిక యాప్‌తో తనిఖీ చేయి',simWait:'›› మీ నిర్ణయం కోసం వేచి ఉంది. తొందర, విచిత్రమైన లింక్, బహుమతి లేదా రహస్య కోడ్ అడగడాన్ని గమనించండి.',winReport:'›› మంచి నిర్ణయం. ఇది మోసంలా కనిపిస్తోంది. ఆధారం ఉంచి, పంపినవారిని బ్లాక్/రిపోర్ట్ చేసి, నిజమైన సేవ ద్వారా విడిగా ధృవీకరించండి.',badReport:'›› జాగ్రత్త: తనిఖీ లేకుండా ప్రతీ మెసేజ్ రిపోర్ట్ చేస్తే నిజమైన సమాచారం మిస్ అవుతుంది. మెసేజ్ లింక్ కాకుండా అధికారిక యాప్ లేదా కాంటాక్ట్ ద్వారా ధృవీకరించడం సురక్షిత అలవాటు.',winVerify:'›› మంచి నిర్ణయం. మెసేజ్ లింక్ నొక్కకండి; ప్రొవైడర్ అధికారిక యాప్ తెరవండి లేదా తెలిసిన అడ్రస్ మీరే టైప్ చేసి చూడండి.',badVerify:'›› ప్రమాద సంకేతం కనిపించింది. ఈ మెసేజ్‌ను అనుసరించకండి. ఇది భయం లేదా నకిలీ బహుమతితో తొందర పెడుతోంది.',scenarios:[{text:'హెచ్చరిక: మీ సబ్సిడీ ఖాతా 30 నిమిషాల్లో మూసివేయబడుతుంది. ఇప్పుడే చిన్న లింక్‌లో “వెరిఫికేషన్ ఫీజు” చెల్లించండి.',safe:false},{text:'సమాచారం: గ్రామీణ నెట్‌వర్క్ అప్‌డేట్ అందుబాటులో ఉంది. వివరాల కోసం మీ మొబైల్ ప్రొవైడర్ అధికారిక యాప్ తెరవండి లేదా బిల్లుపై ఉన్న కస్టమర్ కేర్ నంబర్ వాడండి.',safe:true},{text:'అభినందనలు! మీరు ₹50,000 గెలిచారు. బహుమతి కోసం వెంటనే ప్రాసెసింగ్ ఛార్జ్, OTP పంపండి.',safe:false}],footer:'© 2026 RURALNET SAFETY CENTER · గ్రామీణ డిజిటల్ అవగాహన కార్యక్రమం'
+      }
+    };
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-                        <!-- Dos Box -->
-                        <div class="bg-emerald-50/60 rounded-2xl border border-emerald-100 p-6">
-                            <h4 class="text-lg font-bold text-emerald-900 mb-4 flex items-center">
-                                <i class="fas fa-check-circle text-emerald-600 mr-2"></i>
-                                <span class="lang-en">Do's / Best Practices</span>
-                                <span class="lang-te hidden">చేయవలసినవి</span>
-                            </h4>
-                            <ul class="space-y-3 text-sm sm:text-base text-emerald-950">
-                                ${data.dosEn.map((item, idx) => `
-                                    <li class="flex items-start border-b border-emerald-100/40 pb-2">
-                                        <span class="mr-2 font-bold">•</span>
-                                        <div>
-                                            <span class="lang-en">${item}</span>
-                                            <span class="lang-te hidden">${data.dosTe[idx]}</span>
-                                        </div>
-                                    </li>
-                                `).join('')}
-                            </ul>
-                        </div>
 
-                        <!-- Donts Box -->
-                        <div class="bg-red-50/60 rounded-2xl border border-red-100 p-6">
-                            <h4 class="text-lg font-bold text-red-900 mb-4 flex items-center">
-                                <i class="fas fa-times-circle text-red-600 mr-2"></i>
-                                <span class="lang-en">Don'ts / Traps to Avoid</span>
-                                <span class="lang-te hidden">చేయకూడనివి</span>
-                            </h4>
-                            <ul class="space-y-3 text-sm sm:text-base text-red-950">
-                                ${data.dontsEn.map((item, idx) => `
-                                    <li class="flex items-start border-b border-red-100/40 pb-2">
-                                        <span class="mr-2 font-bold">•</span>
-                                        <div>
-                                            <span class="lang-en">${item}</span>
-                                            <span class="lang-te hidden">${data.dontsTe[idx]}</span>
-                                        </div>
-                                    </li>
-                                `).join('')}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            `;
+    /* Detailed, service-focused curriculum added in July 2026. */
+    const detailedCurriculum = {"en":[{"title":"Online education: YouTube, DIKSHA & courses","hook":"A phone becomes a powerful classroom when you choose a reliable teacher, follow one small plan and learn actively—not only by watching videos.","steps":[["Choose the right learning source","For school lessons, ask your teacher for the class, chapter and language. On YouTube, prefer a known school, university, government education channel or teacher whose name and background you can check. On DIKSHA, textbooks can link to curriculum material through QR codes."],["Watch with a purpose","Before pressing play, write one question: “What do I need to learn?” Pause, make two notes, then try one example yourself. Save useful videos into a subject playlist; turn off autoplay when it pulls you away from the lesson."],["Protect time, data and privacy","Use Wi-Fi or download only where a platform legally offers offline viewing. Do not share a child’s name, address, school ID, class link or family phone number in comments, live chat or unknown study groups."]],"signal":"A good lesson clearly names its topic, teacher/source and date. A video that promises “guaranteed marks”, asks for payment to a personal number, or tells you to install an unknown app is a warning sign.","resources":[["DIKSHA — school learning","Digital textbooks, QR-linked material, question banks and learning resources for students, parents and teachers.","diksha.gov.in"],["SWAYAM — structured courses","Courses from recognised Indian institutions; read the course page for schedule, eligibility and any certificate/exam terms.","swayam.gov.in"],["YouTube — use it wisely","Use search filters, check the channel’s About page, date and sources; treat comments and adverts as opinions, not proof.","youtube.com"]],"note":"For a child, watch the first few videos together. Make a “learn, pause, practise, explain” routine: after a video, explain the idea to another person in your own words.","question":"A video claims it can guarantee exam marks if you pay a personal UPI number. What is the safest response?","options":["Pay quickly before the offer ends","Ask a teacher and use only a verified school/institution contact","Post your phone number in the comments"],"correct":1},{"title":"Government online services: start safely","hook":"Online services can save a trip, but the safest shortcut is always a verified starting point—not a sponsored search result or a message that creates fear.","steps":[["Begin at a known official route","Type a known official address yourself, use an official app, or visit an authorised service centre. In Andhra Pradesh, the state MeeSeva portal is a common starting point for many citizen services; check the exact service and fee before applying."],["Keep proof of every step","Before submitting, read the service name, documents requested and payment amount. Save the application/reference number, date, receipt and a screenshot of the final status. These records help if you need to follow up."],["Use shared devices carefully","At a centre or friend’s computer, do not allow the browser to save passwords. Log out, remove downloaded copies if appropriate, and take your papers with you. Never give an OTP, UPI PIN or remote-screen access to a helper."],["Verify a message separately","If a message says a certificate, ration, pension or subsidy will stop today, do not use its link. Open the official app/portal yourself or ask at the responsible local office."]],"signal":"A logo, a green tick, or a result at the top of Google is not enough proof. Fraud pages copy all of them. The full address, official contact route and a calm cross-check matter.","resources":[["AP MeeSeva","A state portal/service route for citizen applications and status checks. Enter the address yourself and compare the service details with an authorised centre if uncertain.","ap.meeseva.gov.in"],["PM-KISAN","Check farmer-benefit status only through the official portal/app or an authorised assistance point. eKYC and eligibility requirements can change, so read the current official notice.","pmkisan.gov.in"],["India portal","A directory for many central government services. Search within the official portal rather than trusting an advertisement.","india.gov.in"]],"note":"No genuine official service should need your UPI PIN or Aadhaar OTP from a random call, WhatsApp chat or screen-sharing app. Pay only after you independently verify the department, service and amount.","question":"You receive a “benefit ends today” WhatsApp link. What should you do first?","options":["Open it immediately to avoid losing the benefit","Use the official portal/app or local office independently to check","Forward it to all family groups"],"correct":1},{"title":"Aadhaar & DigiLocker: documents with care","hook":"Digital identity tools are useful when you understand what they do: verify through official channels, share the minimum needed, and keep OTPs private.","steps":[["Use UIDAI’s official routes only","For Aadhaar services, begin at UIDAI / MyAadhaar or the official mAadhaar app. e-Aadhaar can be downloaded through official UIDAI channels. Some online services need the mobile number already registered with Aadhaar."],["Know what needs a visit","Do not believe an agent who says every Aadhaar change can be made from a link. UIDAI states that mobile-number updates require an Aadhaar Enrolment Centre; check the current official rule for your required update before paying anyone."],["Use DigiLocker intelligently","In DigiLocker, distinguish an issuer-provided document from a file you uploaded yourself. An “Issued” document comes from the issuer; an uploaded image is your stored copy. Check what the receiving service actually accepts."],["Share the smallest necessary proof","Show a document only to a verified service. Never post Aadhaar images on public social media. Keep your phone locked and do not tell anyone your Aadhaar OTP, DigiLocker sign-in OTP, PIN or password."]],"signal":"Aadhaar is an identity document—not a secret password. The secret part is the OTP/PIN and the control of where you share your document. A caller demanding either is a stop sign.","resources":[["UIDAI / MyAadhaar","Official route for Aadhaar-related services, e-Aadhaar information, update guidance and enrolment-centre search.","uidai.gov.in · myaadhaar.uidai.gov.in"],["mAadhaar","UIDAI’s official mobile app. Use the genuine app-store listing; a registered mobile number is needed for many account functions.","mAadhaar (UIDAI app)"],["DigiLocker","A government-backed document wallet. Use it through the official website or official app—not a link sent by a stranger.","digilocker.gov.in"]],"note":"Before a document update or payment, pause and ask: “Which department is this? Why do they need this document? Can I enter the official address myself?” If you are unsure, take a trusted family member to an authorised centre.","question":"A caller says they need your Aadhaar OTP to “keep Aadhaar active.” What is the safest action?","options":["Tell the OTP because the caller knows your name","End the call; independently check through UIDAI or an authorised enrolment centre","Send an Aadhaar photo over WhatsApp first"],"correct":1},{"title":"Digital healthcare: records, appointments & trust","hook":"Online health tools can help with appointments, records and professional advice. They do not replace emergency care, a qualified examination or your own consent.","steps":[["Choose a recognised provider","Use a known hospital, government health service or qualified professional. Before a teleconsultation, confirm the provider’s name, clinic/hospital, consultation fee and how to contact the service again if needed."],["Keep health records private","Reports, prescriptions, health IDs and symptoms are sensitive. Share them only through a verified clinic channel. With ABHA-enabled services, consent to share records should be your choice; read what you are agreeing to and share only what is needed."],["Prepare for a useful consultation","Keep the patient’s age, symptoms, duration, allergies, current medicines and previous report ready. Write down the doctor’s advice, follow-up date and prescription. Do not self-medicate from a video or forwarded message."],["Know the emergency boundary","For severe breathing trouble, chest pain, heavy bleeding, unconsciousness, poisoning or another emergency, seek local emergency medical help immediately. Do not wait for a chat reply or online video."]],"signal":"A genuine clinician does not promise a miracle cure through a random social post. Be especially cautious when someone wants an advance payment, an OTP, your full medical report on social media, or asks you to stop prescribed treatment.","resources":[["eSanjeevani","Government telemedicine service. Availability and pathways may differ by state/facility; use the official site or your health centre to start.","esanjeevani.mohfw.gov.in"],["ABHA / ABDM","Digital-health framework where health-record sharing is based on your consent. Check the official site or a participating facility for current options.","abdm.gov.in"],["Your local health centre","For urgent symptoms, pregnancy care, child illness, vaccinations or medicine questions, a local qualified provider is often the best first contact.","Verified local contact"]],"note":"Online information can support a conversation with a clinician, but it cannot diagnose you. Never use a medicine, dose or treatment merely because it was popular in a video or forwarded in a group.","question":"A stranger requests your prescription in a public chat to arrange “free medicine.” What is safest?","options":["Upload it immediately","Verify the offer directly with your clinic or local health centre","Share it in every group to get more opinions"],"correct":1},{"title":"Smart agriculture: weather, markets & advice","hook":"Digital tools can help farmers compare prices, receive weather information and find schemes. The best decisions combine reliable online information with local conditions and trained advice.","steps":[["Check source, date and location","For weather or crop advice, look for the issuing organisation, the date and the district/crop it applies to. A video made for another climate, season or crop may not suit your field."],["Compare before spending","Before changing seed, fertiliser, pesticide or irrigation, compare information with an agriculture officer, KVK/extension worker, input label and local experience. Never pay a social-media seller because of “double yield guaranteed.”"],["Use market information as one input","e-NAM and recognised mandi information can help compare prices and market activity. Confirm the crop grade, unit, transport cost and local mandi process before making a selling decision."],["Check scheme updates safely","For PM-KISAN or another benefit, use the official portal/app or authorised assistance point. Do not pay an agent who promises to “activate” a benefit, and never share OTP/PIN in the name of eKYC."]],"signal":"Useful farming advice identifies the crop, growth stage, local condition and limits. A message that promises instant subsidy, huge yield or magic medicine while asking for a payment is designed to rush you.","resources":[["e-NAM","National Agriculture Market information and mandi-linked trading ecosystem. Learn the local mandi procedure before relying on an online offer.","enam.gov.in"],["PM-KISAN","Official portal for scheme information/status. Eligibility and eKYC requirements must be checked from the latest official notice.","pmkisan.gov.in"],["Local agriculture support","Your agricultural officer, KVK, recognised cooperative or authorised input adviser can help interpret online advice for your soil and crop.","Verify locally"]],"note":"Never mix pesticides or change dosage from a short video. Follow the product label and qualified local advice, use protective measures, and keep children away from farm chemicals.","question":"Which farming message should make you stop and verify?","options":["A dated advisory that a local agriculture officer confirms","“Pay now—double yield is guaranteed tomorrow”","A local weather update checked on a recognised source"],"correct":1}],"hi":[{"title":"ऑनलाइन शिक्षा: YouTube, DIKSHA और कोर्स","hook":"सही शिक्षक चुनकर, छोटी योजना बनाकर और केवल वीडियो देखने के बजाय अभ्यास करके फोन एक प्रभावी कक्षा बन सकता है।","steps":[["सही सीखने का स्रोत चुनें","स्कूल पाठ के लिए शिक्षक से सही कक्षा, अध्याय और भाषा पूछें। YouTube पर जाने-माने स्कूल, विश्वविद्यालय, सरकारी शिक्षा चैनल या ऐसे शिक्षक को चुनें जिनका परिचय जांच सकें। DIKSHA में किताबों के QR कोड से पाठ्यक्रम सामग्री मिल सकती है।"],["उद्देश्य के साथ देखें","वीडियो चलाने से पहले एक सवाल लिखें—“मुझे क्या सीखना है?” बीच में रोककर दो नोट बनाएं और एक उदाहरण खुद हल करें। उपयोगी वीडियो को विषय प्लेलिस्ट में रखें; पढ़ाई से भटकाने वाला autoplay बंद करें।"],["समय, डेटा और निजता बचाएं","जहां प्लेटफॉर्म कानूनी ऑफलाइन सुविधा दे वहीं डाउनलोड करें। बच्चे का नाम, पता, स्कूल ID, क्लास लिंक या परिवार का फोन नंबर कमेंट, लाइव चैट या अनजान पढ़ाई समूह में न डालें।"]],"signal":"अच्छे पाठ में विषय, शिक्षक/स्रोत और तारीख साफ होती है। “पक्के अंक”, निजी नंबर पर भुगतान, या अनजान ऐप इंस्टॉल कराने वाला वीडियो चेतावनी है।","resources":[["DIKSHA — स्कूल अध्ययन","छात्र, अभिभावक और शिक्षक के लिए डिजिटल किताबें, QR-लिंक सामग्री, प्रश्न बैंक और सीखने के साधन।","diksha.gov.in"],["SWAYAM — व्यवस्थित कोर्स","मान्य भारतीय संस्थानों के कोर्स; समय, योग्यता और सर्टिफिकेट/परीक्षा नियम कोर्स पेज पर पढ़ें।","swayam.gov.in"],["YouTube — समझदारी से उपयोग","चैनल का About पेज, तारीख और स्रोत जांचें; कमेंट और विज्ञापन को प्रमाण न मानें।","youtube.com"]],"note":"बच्चे के साथ शुरुआती वीडियो देखें। “सीखो, रोककर सोचो, अभ्यास करो, समझाओ” नियम अपनाएं: वीडियो के बाद उसे अपने शब्दों में किसी को समझाएं।","question":"एक वीडियो निजी UPI नंबर पर पैसे भेजने पर पक्के अंक दिलाने का दावा करता है। सबसे सुरक्षित क्या है?","options":["ऑफर खत्म होने से पहले भुगतान करें","शिक्षक से पूछें और केवल सत्यापित स्कूल/संस्था संपर्क का उपयोग करें","कमेंट में अपना फोन नंबर डालें"],"correct":1},{"title":"सरकारी ऑनलाइन सेवाएं: सुरक्षित शुरुआत","hook":"ऑनलाइन सेवाएं यात्रा बचा सकती हैं, लेकिन सुरक्षित शॉर्टकट हमेशा सत्यापित शुरुआत है—Sponsored सर्च रिजल्ट या डराने वाले संदेश नहीं।","steps":[["ज्ञात आधिकारिक माध्यम से शुरू करें","सही सरकारी पता खुद टाइप करें, आधिकारिक ऐप इस्तेमाल करें, या अधिकृत सेवा केंद्र जाएं। आंध्र प्रदेश में कई नागरिक सेवाओं के लिए MeeSeva आम माध्यम है; आवेदन से पहले सेवा और शुल्क जांचें।"],["हर चरण का प्रमाण रखें","भेजने से पहले सेवा का नाम, मांगे दस्तावेज और राशि पढ़ें। आवेदन/रेफरेंस नंबर, तारीख, रसीद और अंतिम स्थिति का स्क्रीनशॉट सुरक्षित रखें।"],["साझा डिवाइस सावधानी से चलाएं","केंद्र या किसी अन्य कंप्यूटर पर ब्राउज़र को पासवर्ड सेव न करने दें। लॉग आउट करें, जरूरत हो तो डाउनलोड कॉपी हटाएं और कागज साथ लें। सहायक को OTP, UPI PIN या स्क्रीन एक्सेस न दें।"],["संदेश की अलग से जांच करें","यदि संदेश कहता है कि आज ही पेंशन, राशन, प्रमाणपत्र या सब्सिडी बंद होगी, उसका लिंक न खोलें। खुद आधिकारिक ऐप/पोर्टल खोलें या जिम्मेदार कार्यालय से पूछें।"]],"signal":"लोगो, हरा टिक या Google का सबसे ऊपर दिखता रिजल्ट प्रमाण नहीं है। फ्रॉड पेज इन्हें कॉपी कर सकते हैं। पूरा पता, आधिकारिक संपर्क और शांत जांच जरूरी है।","resources":[["AP MeeSeva","नागरिक आवेदन और स्टेटस जांचने का राज्य माध्यम। पता खुद टाइप करें और संदेह हो तो अधिकृत केंद्र से सेवा विवरण मिलाएं।","ap.meeseva.gov.in"],["PM-KISAN","किसान लाभ स्थिति केवल आधिकारिक पोर्टल/ऐप या अधिकृत सहायता बिंदु से देखें। eKYC और पात्रता नियम बदल सकते हैं।","pmkisan.gov.in"],["India portal","कई केंद्रीय सरकारी सेवाओं की निर्देशिका। विज्ञापन पर भरोसा करने के बजाय आधिकारिक पोर्टल में खोजें।","india.gov.in"]],"note":"कोई असली सरकारी सेवा WhatsApp, अनजान कॉल या स्क्रीन-शेयरिंग ऐप पर आपका UPI PIN या Aadhaar OTP नहीं मांगेगी। विभाग, सेवा और राशि स्वतंत्र रूप से जांचकर ही भुगतान करें।","question":"WhatsApp पर “लाभ आज खत्म” लिंक आए तो पहले क्या करें?","options":["लाभ बचाने के लिए तुरंत खोलें","आधिकारिक पोर्टल/ऐप या स्थानीय कार्यालय से खुद जांचें","सभी परिवार समूहों में आगे भेजें"],"correct":1},{"title":"Aadhaar और DigiLocker: दस्तावेजों की समझदारी","hook":"डिजिटल पहचान टूल तभी उपयोगी हैं जब आप जानें कि क्या साझा करना है: केवल आधिकारिक माध्यम से सत्यापन करें और OTP निजी रखें।","steps":[["केवल UIDAI के आधिकारिक माध्यम अपनाएं","Aadhaar सेवाओं के लिए UIDAI / MyAadhaar या आधिकारिक mAadhaar ऐप से शुरू करें। e-Aadhaar आधिकारिक UIDAI माध्यम से डाउनलोड किया जा सकता है। कई ऑनलाइन सेवाओं के लिए Aadhaar में पहले से दर्ज मोबाइल जरूरी होता है।"],["किस काम के लिए केंद्र जाना है, जानें","उस एजेंट पर भरोसा न करें जो कहे कि हर Aadhaar बदलाव लिंक से हो सकता है। UIDAI के अनुसार मोबाइल नंबर बदलने के लिए Aadhaar Enrolment Centre जाना होता है; भुगतान से पहले अपनी जरूरत का ताजा आधिकारिक नियम देखें।"],["DigiLocker को समझकर चलाएं","DigiLocker में जारी (Issued) दस्तावेज और आपके अपलोड किए हुए दस्तावेज अलग होते हैं। Issued दस्तावेज जारीकर्ता से आता है; अपलोड की हुई फोटो आपकी संग्रहीत कॉपी है। पाने वाली सेवा क्या स्वीकार करती है, जरूर जांचें।"],["कम से कम जरूरी प्रमाण साझा करें","दस्तावेज केवल सत्यापित सेवा को दिखाएं। Aadhaar फोटो सोशल मीडिया पर न डालें। फोन लॉक रखें और Aadhaar OTP, DigiLocker OTP, PIN या पासवर्ड किसी को न बताएं।"]],"signal":"Aadhaar पहचान दस्तावेज है, गुप्त पासवर्ड नहीं। OTP/PIN और आप कहां दस्तावेज साझा करते हैं, यही गोपनीय है। इन्हें मांगने वाला कॉलर रुकने का संकेत है।","resources":[["UIDAI / MyAadhaar","Aadhaar सेवाएं, e-Aadhaar जानकारी, अपडेट मार्गदर्शन और enrolment-centre खोज का आधिकारिक माध्यम।","uidai.gov.in · myaadhaar.uidai.gov.in"],["mAadhaar","UIDAI का आधिकारिक मोबाइल ऐप। असली ऐप-स्टोर लिस्टिंग चुनें; कई कामों के लिए पंजीकृत मोबाइल नंबर जरूरी है।","mAadhaar (UIDAI app)"],["DigiLocker","सरकारी दस्तावेज वॉलेट। केवल आधिकारिक वेबसाइट या ऐप से चलाएं, अनजान के भेजे लिंक से नहीं।","digilocker.gov.in"]],"note":"अपडेट या भुगतान से पहले पूछें: “यह कौन-सा विभाग है? इन्हें यह दस्तावेज क्यों चाहिए? क्या मैं आधिकारिक पता खुद लिख सकता/सकती हूं?” संदेह हो तो भरोसेमंद व्यक्ति के साथ अधिकृत केंद्र जाएं।","question":"कॉलर कहता है Aadhaar चालू रखने के लिए OTP चाहिए। सबसे सुरक्षित क्या है?","options":["उसे OTP दे दें क्योंकि नाम पता है","कॉल बंद करें; UIDAI या अधिकृत enrolment centre से खुद जांचें","पहले WhatsApp पर Aadhaar फोटो भेजें"],"correct":1},{"title":"डिजिटल स्वास्थ्य सेवा: रिकॉर्ड, अपॉइंटमेंट और भरोसा","hook":"ऑनलाइन स्वास्थ्य साधन अपॉइंटमेंट, रिकॉर्ड और पेशेवर सलाह में मदद कर सकते हैं। वे आपातकाल, योग्य जांच या आपकी सहमति का स्थान नहीं लेते।","steps":[["मान्य प्रदाता चुनें","जाने-माने अस्पताल, सरकारी स्वास्थ्य सेवा या योग्य प्रोफेशनल का उपयोग करें। टेली-कंसल्टेशन से पहले प्रदाता/क्लिनिक का नाम, शुल्क और दोबारा संपर्क का तरीका जांचें।"],["स्वास्थ्य रिकॉर्ड निजी रखें","रिपोर्ट, पर्ची, हेल्थ ID और लक्षण संवेदनशील हैं। केवल सत्यापित क्लिनिक माध्यम से साझा करें। ABHA वाली सेवा में रिकॉर्ड साझा करने की सहमति आपकी होनी चाहिए; आप क्या मंजूर कर रहे हैं पढ़ें।"],["उपयोगी कंसल्टेशन की तैयारी करें","उम्र, लक्षण, कितने समय से हैं, एलर्जी, दवाएं और पुरानी रिपोर्ट तैयार रखें। डॉक्टर की सलाह, फॉलो-अप तारीख और पर्ची लिखें। वीडियो/फॉरवर्ड से खुद दवा न लें।"],["आपातकाल की सीमा जानें","सांस की तेज तकलीफ, छाती दर्द, बहुत खून, बेहोशी, जहर या आपातकाल में तुरंत स्थानीय चिकित्सा सहायता लें। चैट जवाब की प्रतीक्षा न करें।"]],"signal":"सच्चा चिकित्सक रैंडम पोस्ट में चमत्कारी इलाज का वादा नहीं करता। एडवांस भुगतान, OTP, सोशल मीडिया पर पूरी रिपोर्ट या निर्धारित इलाज रोकने को कहने वालों से सावधान रहें।","resources":[["eSanjeevani","सरकारी टेलीमेडिसिन सेवा। राज्य/केंद्र के अनुसार उपलब्धता बदल सकती है; आधिकारिक साइट या स्वास्थ्य केंद्र से शुरू करें।","esanjeevani.mohfw.gov.in"],["ABHA / ABDM","सहमति आधारित डिजिटल स्वास्थ्य व्यवस्था। मौजूदा विकल्प के लिए आधिकारिक साइट या भाग लेने वाली सुविधा से जांचें।","abdm.gov.in"],["स्थानीय स्वास्थ्य केंद्र","गंभीर लक्षण, गर्भावस्था, बच्चे की बीमारी, टीकाकरण या दवा प्रश्न में योग्य स्थानीय प्रदाता सबसे अच्छा पहला संपर्क हो सकता है।","सत्यापित स्थानीय संपर्क"]],"note":"ऑनलाइन जानकारी डॉक्टर से बातचीत में मदद करती है, निदान नहीं करती। लोकप्रिय वीडियो या फॉरवर्ड देखकर दवा, खुराक या इलाज न बदलें।","question":"अजनबी “मुफ्त दवा” के लिए पब्लिक चैट में पर्ची मांगता है। क्या करें?","options":["तुरंत अपलोड करें","अपने क्लिनिक या स्वास्थ्य केंद्र से सीधे सत्यापित करें","अधिक राय के लिए हर समूह में भेजें"],"correct":1},{"title":"स्मार्ट कृषि: मौसम, मंडी और सलाह","hook":"डिजिटल साधन कीमत, मौसम और योजना की जानकारी दे सकते हैं। सबसे अच्छा फैसला भरोसेमंद ऑनलाइन जानकारी, स्थानीय स्थिति और प्रशिक्षित सलाह को मिलाकर बनता है।","steps":[["स्रोत, तारीख और जगह जांचें","मौसम या फसल सलाह में जारी करने वाला संगठन, तारीख और जिला/फसल देखें। दूसरे मौसम या क्षेत्र के लिए बना वीडियो आपके खेत पर सही नहीं हो सकता।"],["खर्च से पहले तुलना करें","बीज, खाद, कीटनाशक या सिंचाई बदलने से पहले कृषि अधिकारी, KVK/extension worker, उत्पाद लेबल और स्थानीय अनुभव से जानकारी मिलाएं। “दोगुनी उपज पक्की” सोशल विक्रेता को पैसे न दें।"],["मंडी जानकारी को एक इनपुट की तरह लें","e-NAM और मान्य मंडी जानकारी से कीमत और बाजार गतिविधि तुलना की जा सकती है। बेचने से पहले फसल ग्रेड, इकाई, ढुलाई खर्च और स्थानीय मंडी प्रक्रिया की पुष्टि करें।"],["योजना की जानकारी सुरक्षित तरीके से देखें","PM-KISAN या दूसरी योजना के लिए आधिकारिक पोर्टल/ऐप या अधिकृत सहायता लें। लाभ “चालू” कराने वाले एजेंट को पैसे न दें और eKYC के नाम पर OTP/PIN न बताएं।"]],"signal":"उपयोगी कृषि सलाह में फसल, अवस्था, स्थानीय स्थिति और सीमाएं होती हैं। तुरंत सब्सिडी, बहुत बड़ी उपज या जादुई दवा का दावा करके भुगतान मांगने वाला संदेश जल्दबाजी कराने के लिए है।","resources":[["e-NAM","राष्ट्रीय कृषि बाजार जानकारी व मंडी-आधारित ट्रेडिंग व्यवस्था। ऑनलाइन ऑफर मानने से पहले स्थानीय मंडी प्रक्रिया जानें।","enam.gov.in"],["PM-KISAN","योजना जानकारी/स्टेटस का आधिकारिक पोर्टल। नवीनतम नोटिस में पात्रता और eKYC नियम जांचें।","pmkisan.gov.in"],["स्थानीय कृषि सहायता","कृषि अधिकारी, KVK, मान्य सहकारी संस्था या अधिकृत इनपुट सलाहकार ऑनलाइन सलाह को आपके खेत के अनुसार समझा सकते हैं।","स्थानीय सत्यापन"]],"note":"छोटे वीडियो देखकर कीटनाशक न मिलाएं और न खुराक बदलें। उत्पाद लेबल, योग्य स्थानीय सलाह और सुरक्षा उपाय मानें; बच्चों को रसायनों से दूर रखें।","question":"कौन-सा खेती संदेश रोककर जांचना चाहिए?","options":["स्थानीय कृषि अधिकारी द्वारा पुष्टि की तारीख वाला संदेश","“अभी भुगतान करें—कल दोगुनी उपज पक्की”","मान्य स्रोत पर जांचा गया स्थानीय मौसम अपडेट"],"correct":1}],"te":[{"title":"ఆన్‌లైన్ విద్య: YouTube, DIKSHA & కోర్సులు","hook":"సరైన టీచర్ ఎంచుకుని, చిన్న ప్లాన్ చేసుకుని, వీడియోలు చూడటంతో ఆగకుండా సాధన చేస్తే ఫోన్ శక్తివంతమైన తరగతి గదిగా మారుతుంది.","steps":[["సరైన విద్యా మూలం ఎంచుకోండి","స్కూల్ పాఠానికి సరైన క్లాస్, చాప్టర్, భాషను టీచర్‌ను అడగండి. YouTubeలో తెలిసిన స్కూల్, యూనివర్సిటీ, ప్రభుత్వ విద్యా ఛానల్ లేదా పరిచయాన్ని తనిఖీ చేయగల టీచర్‌ను ఎంచుకోండి. DIKSHAలో పుస్తకాల QR కోడ్‌ల ద్వారా పాఠ్యాంశాలు దొరకవచ్చు."],["లక్ష్యంతో చూడండి","వీడియో ప్రారంభించే ముందు ఒక ప్రశ్న రాయండి—“నేను ఏమి నేర్చుకోవాలి?” మధ్యలో ఆపి రెండు నోట్స్ రాసి, ఒక ఉదాహరణను మీరే ప్రయత్నించండి. ఉపయోగకరమైన వీడియోలను సబ్జెక్ట్ ప్లేలిస్ట్‌లో సేవ్ చేయండి; చదువు నుండి దూరం చేసే autoplay ఆఫ్ చేయండి."],["సమయం, డేటా, గోప్యత కాపాడండి","ప్లాట్‌ఫాం చట్టబద్ధమైన ఆఫ్‌లైన్ సౌకర్యం ఇస్తేనే డౌన్‌లోడ్ చేయండి. పిల్లల పేరు, అడ్రస్, స్కూల్ ID, క్లాస్ లింక్, కుటుంబ ఫోన్ నంబర్‌ను కామెంట్, లైవ్ చాట్ లేదా తెలియని స్టడీ గ్రూప్‌లో పెట్టకండి."]],"signal":"మంచి పాఠంలో టాపిక్, టీచర్/మూలం, తేదీ స్పష్టంగా ఉంటాయి. “మార్కులు గ్యారెంటీ”, వ్యక్తిగత నంబర్‌కు పేమెంట్ లేదా తెలియని యాప్ ఇన్‌స్టాల్ చేయమనే వీడియో హెచ్చరిక.","resources":[["DIKSHA — స్కూల్ లెర్నింగ్","విద్యార్థులు, తల్లిదండ్రులు, టీచర్లకు డిజిటల్ పుస్తకాలు, QR-లింక్ కంటెంట్, ప్రశ్న బ్యాంకులు, లెర్నింగ్ వనరులు.","diksha.gov.in"],["SWAYAM — నిర్మిత కోర్సులు","గుర్తింపు పొందిన భారతీయ సంస్థల కోర్సులు; షెడ్యూల్, అర్హత, సర్టిఫికేట్/పరీక్ష నిబంధనలు చదవండి.","swayam.gov.in"],["YouTube — తెలివిగా వాడండి","చానల్ About పేజీ, తేదీ, మూలాలు చూడండి; కామెంట్లు, యాడ్‌లను సాక్ష్యంగా భావించకండి.","youtube.com"]],"note":"పిల్లలతో మొదటి కొన్ని వీడియోలు కలిసి చూడండి. “నేర్చుకోండి, ఆపి ఆలోచించండి, సాధన చేయండి, వివరించండి” పద్ధతి పాటించండి: వీడియో తర్వాత తన మాటల్లో మరొకరికి చెప్పనివ్వండి.","question":"వ్యక్తిగత UPI నంబర్‌కు డబ్బు పంపితే పక్కా మార్కులు ఇస్తానని వీడియో చెబుతోంది. సురక్షితం ఏది?","options":["ఆఫర్ ముగిసేలోపు చెల్లించండి","టీచర్‌ను అడిగి, ధృవీకరించిన స్కూల్/సంస్థ కాంటాక్ట్ మాత్రమే వాడండి","కామెంట్‌లో మీ ఫోన్ నంబర్ పెట్టండి"],"correct":1},{"title":"ప్రభుత్వ ఆన్‌లైన్ సేవలు: సురక్షిత ప్రారంభం","hook":"ఆన్‌లైన్ సేవలు ప్రయాణం ఆదా చేస్తాయి; కానీ Sponsored సెర్చ్ రిజల్ట్ లేదా భయపెట్టే మెసేజ్ కాకుండా ధృవీకరించిన మార్గం నుండే ప్రారంభించడం సురక్షితం.","steps":[["తెలిసిన అధికారిక మార్గం నుండే ప్రారంభించండి","సరైన ప్రభుత్వ అడ్రస్ మీరే టైప్ చేయండి, అధికారిక యాప్ వాడండి లేదా అధీకృత సేవా కేంద్రానికి వెళ్ళండి. ఆంధ్రప్రదేశ్‌లో అనేక పౌర సేవలకు MeeSeva ఒక సాధారణ మార్గం; దరఖాస్తు ముందు సర్వీస్, ఫీజు తనిఖీ చేయండి."],["ప్రతి దశకు ఆధారం ఉంచండి","సబ్మిట్ చేసే ముందు సర్వీస్ పేరు, కావాల్సిన పత్రాలు, చెల్లింపు మొత్తం చదవండి. అప్లికేషన్/రిఫరెన్స్ నంబర్, తేదీ, రసీదు, చివరి స్టేటస్ స్క్రీన్‌షాట్ సేవ్ చేయండి."],["షేర్‌డ్ డివైస్ జాగ్రత్తగా వాడండి","సెంటర్ లేదా ఇతరుల కంప్యూటర్‌లో బ్రౌజర్ పాస్‌వర్డ్ సేవ్ చేయనివ్వకండి. లాగౌట్ అయి, అవసరమైతే డౌన్‌లోడ్ కాపీలు తొలగించి, పత్రాలు తీసుకెళ్ళండి. సహాయకుడికి OTP, UPI PIN, స్క్రీన్ యాక్సెస్ ఇవ్వకండి."],["మెసేజ్‌ను విడిగా తనిఖీ చేయండి","ఈరోజే రేషన్, పింఛన్, సర్టిఫికేట్ లేదా సబ్సిడీ ఆగిపోతుందని మెసేజ్ చెబితే దాని లింక్ నొక్కకండి. అధికారిక యాప్/పోర్టల్ మీరే తెరవండి లేదా సంబంధిత ఆఫీసులో అడగండి."]],"signal":"లోగో, గ్రీన్ టిక్ లేదా Googleలో పై రిజల్ట్ సాక్ష్యం కాదు. మోసపూరిత పేజీలు వాటిని కాపీ చేస్తాయి. పూర్తి అడ్రస్, అధికారిక కాంటాక్ట్, ప్రశాంత తనిఖీ ముఖ్యం.","resources":[["AP MeeSeva","పౌర దరఖాస్తులు, స్టేటస్ తనిఖీకి రాష్ట్ర మార్గం. అడ్రస్ మీరే టైప్ చేసి, సందేహం ఉంటే అధీకృత కేంద్రంతో సర్వీస్ వివరాలు పోల్చండి.","ap.meeseva.gov.in"],["PM-KISAN","రైతు లబ్ధి స్టేటస్‌ను అధికారిక పోర్టల్/యాప్ లేదా అధీకృత సహాయం ద్వారా మాత్రమే చూడండి. eKYC, అర్హత నియమాలు మారవచ్చు.","pmkisan.gov.in"],["India portal","అనేక కేంద్ర ప్రభుత్వ సేవల డైరెక్టరీ. యాడ్‌ను నమ్మకండి; అధికారిక పోర్టల్‌లోనే వెతకండి.","india.gov.in"]],"note":"ఏ నిజమైన ప్రభుత్వ సర్వీసూ WhatsApp, తెలియని కాల్ లేదా స్క్రీన్ షేరింగ్ యాప్‌లో మీ UPI PIN లేదా Aadhaar OTP అడగదు. డిపార్ట్‌మెంట్, సర్వీస్, మొత్తం స్వతంత్రంగా తనిఖీ చేసి మాత్రమే చెల్లించండి.","question":"WhatsAppలో “లబ్ధి ఈరోజే ముగుస్తుంది” లింక్ వస్తే మొదట ఏమి చేయాలి?","options":["లబ్ధి కోసం వెంటనే తెరవండి","అధికారిక పోర్టల్/యాప్ లేదా స్థానిక ఆఫీసులో మీరే తనిఖీ చేయండి","అన్ని ఫ్యామిలీ గ్రూపులకు ఫార్వర్డ్ చేయండి"],"correct":1},{"title":"Aadhaar & DigiLocker: పత్రాలను జాగ్రత్తగా వాడండి","hook":"డిజిటల్ గుర్తింపు టూల్స్‌లో ఏమి పంచుకోవాలో తెలిసినప్పుడే అవి ఉపయోగకరం: అధికారిక మార్గంలోనే ధృవీకరించండి, OTPని ప్రైవేట్‌గా ఉంచండి.","steps":[["UIDAI అధికారిక మార్గాలనే వాడండి","Aadhaar సేవలకు UIDAI / MyAadhaar లేదా అధికారిక mAadhaar యాప్ ద్వారా మొదలుపెట్టండి. అధికారిక UIDAI మార్గం నుంచి e-Aadhaar డౌన్‌లోడ్ చేయవచ్చు. అనేక ఆన్‌లైన్ సేవలకు Aadhaarలో ఇప్పటికే రిజిస్టర్ అయిన మొబైల్ అవసరం."],["ఏ పనికి సెంటర్‌కు వెళ్ళాలో తెలుసుకోండి","ప్రతి Aadhaar మార్పును లింక్‌లో చేస్తాననే ఏజెంట్‌ను నమ్మకండి. UIDAI ప్రకారం మొబైల్ నంబర్ అప్‌డేట్‌కు Aadhaar Enrolment Centre అవసరం; డబ్బు చెల్లించే ముందు మీ అప్‌డేట్‌కు తాజా అధికారిక నియమం తనిఖీ చేయండి."],["DigiLockerను అర్థం చేసుకుని వాడండి","DigiLockerలో Issued పత్రం, మీరు Upload చేసిన పత్రం వేరేవేరు. Issued పత్రం జారీదారు నుంచి వస్తుంది; అప్లోడ్ చేసిన ఫోటో మీరు దాచుకున్న కాపీ. తీసుకునే సర్వీస్ ఏది అంగీకరిస్తుందో చూడండి."],["అవసరమైనంత మాత్రమే పంచుకోండి","పత్రాన్ని ధృవీకరించిన సర్వీస్‌కే చూపండి. Aadhaar ఇమేజ్‌ను సోషల్ మీడియాలో పెట్టకండి. ఫోన్ లాక్‌లో ఉంచి, Aadhaar OTP, DigiLocker OTP, PIN, పాస్‌వర్డ్ ఎవరికీ చెప్పకండి."]],"signal":"Aadhaar గుర్తింపు పత్రం; రహస్య పాస్‌వర్డ్ కాదు. OTP/PIN, ఎక్కడ పత్రం పంచుతున్నారో రహస్యం. వాటిని అడిగే కాలర్‌కు ఆగండి.","resources":[["UIDAI / MyAadhaar","Aadhaar సేవలు, e-Aadhaar సమాచారం, అప్‌డేట్ గైడెన్స్, enrolment centre వెతకడానికి అధికారిక మార్గం.","uidai.gov.in · myaadhaar.uidai.gov.in"],["mAadhaar","UIDAI అధికారిక మొబైల్ యాప్. నిజమైన యాప్-స్టోర్ లిస్టింగ్ ఎంచుకోండి; అనేక ఫీచర్లకు రిజిస్టర్ మొబైల్ అవసరం.","mAadhaar (UIDAI app)"],["DigiLocker","ప్రభుత్వ డాక్యుమెంట్ వాలెట్. అధికారిక వెబ్‌సైట్ లేదా యాప్ ద్వారా మాత్రమే వాడండి; అపరిచితుడు పంపిన లింక్ ద్వారా కాదు.","digilocker.gov.in"]],"note":"అప్‌డేట్ లేదా పేమెంట్‌కు ముందు అడగండి: “ఇది ఏ డిపార్ట్‌మెంట్? ఈ పత్రం ఎందుకు కావాలి? అధికారిక అడ్రస్ నేనే టైప్ చేయవచ్చా?” సందేహం ఉంటే నమ్మకమైన వ్యక్తితో అధీకృత కేంద్రానికి వెళ్ళండి.","question":"Aadhaar యాక్టివ్‌గా ఉంచడానికి OTP కావాలని కాలర్ చెబితే, సురక్షితం ఏది?","options":["పేరు తెలుసు కాబట్టి OTP చెప్పండి","కాల్ ఆపి, UIDAI లేదా అధీకృత enrolment centre ద్వారా స్వతంత్రంగా తనిఖీ చేయండి","ముందు Aadhaar ఫోటో WhatsAppలో పంపండి"],"correct":1},{"title":"డిజిటల్ ఆరోగ్య సేవలు: రికార్డులు, అపాయింట్‌మెంట్, నమ్మకం","hook":"ఆన్‌లైన్ ఆరోగ్య సాధనాలు అపాయింట్‌మెంట్లు, రికార్డులు, ప్రొఫెషనల్ సలహాకు సహాయపడతాయి. అవి అత్యవసరం, అర్హత గల పరీక్ష లేదా మీ సమ్మతిని భర్తీ చేయవు.","steps":[["గుర్తింపు పొందిన ప్రొవైడర్ ఎంచుకోండి","తెలిసిన ఆసుపత్రి, ప్రభుత్వ ఆరోగ్య సేవ లేదా అర్హత గల ప్రొఫెషనల్‌ను వాడండి. టెలి కన్సల్టేషన్ ముందు ప్రొవైడర్/క్లినిక్ పేరు, ఫీజు, మళ్లీ సంప్రదించే విధానం తనిఖీ చేయండి."],["హెల్త్ రికార్డులు ప్రైవేట్‌గా ఉంచండి","రిపోర్టులు, ప్రిస్క్రిప్షన్, హెల్త్ ID, లక్షణాలు సున్నితమైనవి. ధృవీకరించిన క్లినిక్ ఛానెల్‌లో మాత్రమే పంచుకోండి. ABHA సర్వీస్‌లో రికార్డు పంచడానికి మీ సమ్మతి ఉండాలి; ఏమి అంగీకరిస్తున్నారో చదవండి."],["ఉపయోగకరమైన కన్సల్టేషన్‌కు సిద్ధం అవ్వండి","వయసు, లక్షణాలు, ఎంతకాలం, అలర్జీలు, మందులు, పాత రిపోర్టు సిద్ధంగా ఉంచండి. డాక్టర్ సలహా, ఫాలోఅప్ తేదీ, ప్రిస్క్రిప్షన్ రాసుకోండి. వీడియో లేదా ఫార్వర్డ్ చూసి స్వయంగా మందు వాడకండి."],["ఎమర్జెన్సీ హద్దు తెలుసుకోండి","తీవ్ర శ్వాస ఇబ్బంది, ఛాతీ నొప్పి, ఎక్కువ రక్తస్రావం, స్పృహ లేకపోవడం, విషం లేదా అత్యవసరంలో వెంటనే స్థానిక వైద్య సహాయం పొందండి. చాట్ రిప్లై కోసం వేచి ఉండకండి."]],"signal":"నిజమైన వైద్యుడు ర్యాండమ్ సోషల్ పోస్ట్‌లో అద్భుత చికిత్స హామీ ఇవ్వరు. అడ్వాన్స్ పేమెంట్, OTP, సోషల్ మీడియాలో పూర్తి రిపోర్ట్, మందు ఆపమనే వారి పట్ల జాగ్రత్త.","resources":[["eSanjeevani","ప్రభుత్వ టెలిమెడిసిన్ సేవ. రాష్ట్రం/సౌకర్యం ప్రకారం అందుబాటు మారవచ్చు; అధికారిక సైట్ లేదా ఆరోగ్య కేంద్రం ద్వారా ప్రారంభించండి.","esanjeevani.mohfw.gov.in"],["ABHA / ABDM","సమ్మతి ఆధారిత డిజిటల్ హెల్త్ వ్యవస్థ. ప్రస్తుత ఆప్షన్ల కోసం అధికారిక సైట్ లేదా పాల్గొనే సదుపాయాన్ని అడగండి.","abdm.gov.in"],["స్థానిక ఆరోగ్య కేంద్రం","తీవ్ర లక్షణాలు, గర్భ సంరక్షణ, పిల్లల జబ్బు, టీకా, మందుల ప్రశ్నలకు అర్హత గల స్థానిక ప్రొవైడర్ ఉత్తమ మొదటి కాంటాక్ట్ కావచ్చు.","ధృవీకరించిన స్థానిక కాంటాక్ట్"]],"note":"ఆన్‌లైన్ సమాచారం డాక్టర్‌తో మాట్లాడటానికి సహాయం చేస్తుంది, నిర్ధారణ కాదు. పాపులర్ వీడియో లేదా ఫార్వర్డ్ చూసి మందు, డోస్, చికిత్స మార్చకండి.","question":"“ఉచిత మందు” కోసం పబ్లిక్ చాట్‌లో ప్రిస్క్రిప్షన్ అడిగే అపరిచితుడికి ఏమి చేయాలి?","options":["వెంటనే అప్‌లోడ్ చేయండి","మీ క్లినిక్ లేదా ఆరోగ్య కేంద్రం వద్ద నేరుగా ధృవీకరించండి","ఎక్కువ అభిప్రాయాల కోసం అన్ని గ్రూపుల్లో పెట్టండి"],"correct":1},{"title":"స్మార్ట్ వ్యవసాయం: వాతావరణం, మార్కెట్ & సలహా","hook":"డిజిటల్ సాధనాలు ధర, వాతావరణం, పథకం సమాచారం ఇస్తాయి. నమ్మకమైన ఆన్‌లైన్ సమాచారం, స్థానిక పరిస్థితి, శిక్షణ పొందిన సలహాను కలిపితేనే ఉత్తమ నిర్ణయం వస్తుంది.","steps":[["మూలం, తేదీ, ప్రాంతం చూడండి","వాతావరణం లేదా పంట సలహాలో జారీ సంస్థ, తేదీ, జిల్లా/పంట చూడండి. వేరే సీజన్ లేదా ప్రాంతానికి చేసిన వీడియో మీ పొలానికి సరిపోకపోవచ్చు."],["ఖర్చు ముందు పోల్చండి","విత్తనం, ఎరువు, పురుగుమందు, నీటిపారుదల మార్చే ముందు వ్యవసాయ అధికారి, KVK/extension worker, ఉత్పత్తి లేబుల్, స్థానిక అనుభవంతో పోల్చండి. “రెట్టింపు దిగుబడి గ్యారెంటీ” సోషల్ విక్రేతకు డబ్బు ఇవ్వకండి."],["మార్కెట్ సమాచారం ఒక ఇన్‌పుట్ మాత్రమే","e-NAM, గుర్తింపు పొందిన మండీ సమాచారం ధర, మార్కెట్ యాక్టివిటీ పోల్చడానికి సహాయపడతాయి. అమ్మే ముందు పంట గ్రేడ్, యూనిట్, రవాణా ఖర్చు, స్థానిక మండీ విధానం ధృవీకరించండి."],["పథకం సమాచారం సురక్షితంగా చూడండి","PM-KISAN లేదా ఇతర లబ్ధికి అధికారిక పోర్టల్/యాప్, అధీకృత సహాయం వాడండి. లబ్ధి “ఆక్టివేట్” చేస్తాననే ఏజెంట్‌కు డబ్బు ఇవ్వకండి; eKYC పేరుతో OTP/PIN చెప్పకండి."]],"signal":"ఉపయోగకరమైన వ్యవసాయ సలహాలో పంట, పెరుగుదల దశ, స్థానిక పరిస్థితి, పరిమితులు ఉంటాయి. తక్షణ సబ్సిడీ, భారీ దిగుబడి, మాయ మందు అని చెల్లింపు అడిగే మెసేజ్ తొందర పెడుతుంది.","resources":[["e-NAM","జాతీయ వ్యవసాయ మార్కెట్ సమాచారం, మండీ ఆధారిత ట్రేడింగ్ వ్యవస్థ. ఆన్‌లైన్ ఆఫర్ నమ్మే ముందు స్థానిక మండీ ప్రక్రియ తెలుసుకోండి.","enam.gov.in"],["PM-KISAN","పథకం సమాచారం/స్టేటస్ అధికారిక పోర్టల్. తాజా నోటీసులో అర్హత, eKYC నియమాలు చూడండి.","pmkisan.gov.in"],["స్థానిక వ్యవసాయ సహాయం","వ్యవసాయ అధికారి, KVK, గుర్తింపు పొందిన సహకార సంస్థ, అధీకృత ఇన్‌పుట్ సలహాదారు ఆన్‌లైన్ సలహాను మీ పొలానికి అనుగుణంగా అర్థం చేయడంలో సహాయం చేస్తారు.","స్థానిక ధృవీకరణ"]],"note":"చిన్న వీడియో చూసి పురుగుమందులు కలపకండి లేదా డోస్ మార్చకండి. ఉత్పత్తి లేబుల్, అర్హత గల స్థానిక సలహా, భద్రతా చర్యలు పాటించండి; పిల్లలను రసాయనాల నుండి దూరంగా ఉంచండి.","question":"ఏ వ్యవసాయ మెసేజ్‌ను ఆపి తనిఖీ చేయాలి?","options":["స్థానిక వ్యవసాయ అధికారి ధృవీకరించిన తేదీ ఉన్న సలహా","“ఇప్పుడే చెల్లించండి—రేపు రెట్టింపు దిగుబడి గ్యారెంటీ”","గుర్తింపు పొందిన మూలంలో చూసిన స్థానిక వాతావరణ అప్‌డేట్"],"correct":1}]};
+    const curriculumLabels = {"en":{"officialShelf":"Useful official starting points","importantNote":"Important:"},"hi":{"officialShelf":"उपयोगी आधिकारिक शुरुआत के साधन","importantNote":"महत्वपूर्ण:"},"te":{"officialShelf":"ఉపయోగకరమైన అధికారిక ప్రారంభ మార్గాలు","importantNote":"ముఖ్యమైనది:"}};
+    Object.keys(detailedCurriculum).forEach(lang => Object.assign(DATA[lang], curriculumLabels[lang], {modules:detailedCurriculum[lang]}));
+    Object.keys(DATA).forEach(lang => { if (DATA[lang].stats && DATA[lang].stats[3]) DATA[lang].stats[3][0] = '5'; });
+    const skillHubText = {
+      en:{nav:'4. Digital Skills Hub',eyebrow:'PRACTICAL SAFETY SKILLS',title:'Your <span>digital skills hub</span>',copy:'Choose a topic below. The same practical Do’s and Don’ts from the home objectives are collected here so people can learn one safety habit at a time.',prev:'← Previous',next:'Next question →',counter:'Question {current} of {total}'},
+      hi:{nav:'4. डिजिटल स्किल्स हब',eyebrow:'व्यावहारिक सुरक्षा कौशल',title:'आपका <span>डिजिटल स्किल्स हब</span>',copy:'नीचे कोई विषय चुनें। होम के वही व्यावहारिक करें और न करें यहां एक जगह हैं, ताकि हर व्यक्ति एक-एक सुरक्षा आदत आसानी से सीख सके।',prev:'← पिछला',next:'अगला प्रश्न →',counter:'प्रश्न {current} / {total}'},
+      te:{nav:'4. డిజిటల్ స్కిల్స్ హబ్',eyebrow:'ఆచరణాత్మక భద్రతా నైపుణ్యాలు',title:'మీ <span>డిజిటల్ స్కిల్స్ హబ్</span>',copy:'క్రింది అంశాన్ని ఎంచుకోండి. హోమ్‌లోని అదే ఉపయోగకరమైన చేయవలసినవి, చేయకూడనివి ఇక్కడ ఒకేచోట ఉన్నాయి; ఒక్కో భద్రతా అలవాటును సులభంగా నేర్చుకోవచ్చు.',prev:'← వెనుక ప్రశ్న',next:'తర్వాతి ప్రశ్న →',counter:'ప్రశ్న {current} / {total}'}
+    };
+    Object.keys(skillHubText).forEach(lang => {
+      const h=skillHubText[lang];
+      DATA[lang].nav[3]=h.nav;
+      Object.assign(DATA[lang],{skillHubEyebrow:h.eyebrow,skillHubTitle:h.title,skillHubCopy:h.copy,simPrevious:h.prev,simNext:h.next,simCounter:h.counter});
+    });
+    moduleIcons.splice(0,moduleIcons.length,'📚','🏛️','🪪','🩺','🌾');
+    moduleColours.splice(0,moduleColours.length,'#9c7bff','#49d9ff','#ffad55','#ff6673','#38e38c');
 
-            // Adjust layout presentation switches flags
-            mainView.classList.add('hidden');
-            routeView.classList.remove('hidden');
-            
-            // Adjust global scroll tracking to top index point
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            applyActiveLanguageView();
-        }
+    let language = localStorage.getItem('ruralnet-language') || 'en';
+    let activeLesson = 0, activeGuide = 0, scenario = 0;
+    let completed = new Set(JSON.parse(localStorage.getItem('ruralnet-completed-v2') || '[]'));
+    const $ = id => document.getElementById(id);
+    const text = (id, value, html=false) => { const node=$(id); if(node) html ? node.innerHTML=value : node.textContent=value; };
+    const d = () => DATA[language];
 
-        function navigateToHome() {
-            document.getElementById('dynamicRouteView').classWithRoute = "";
-            document.getElementById('dynamicRouteView').classList.add('hidden');
-            document.getElementById('mainLandingView').classList.remove('hidden');
-        }
+    function setLanguage(lang){ language=lang; localStorage.setItem('ruralnet-language',lang); $('languageSelect').value=lang; scenario=0; renderAll(); }
+    function toggleTheme(){ document.body.classList.toggle('light-mode'); const light=document.body.classList.contains('light-mode'); $('themeButton').textContent=light?'☀':'☾'; localStorage.setItem('ruralnet-theme', light?'light':'dark'); }
+    function toggleMenu(){ $('navLinks').classList.toggle('open'); }
+    function showPage(name){ document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+name)); document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===name)); $('navLinks').classList.remove('open'); window.scrollTo({top:0,behavior:'smooth'}); }
 
-        function toggleLanguage() {
-            currentLang = currentLang === 'en' ? 'te' : 'en';
-            document.getElementById('langLabel').innerText = currentLang === 'en' ? "English" : "తెలుగు";
-            applyActiveLanguageView();
-        }
+    function renderAll(){
+      const x=d(); document.documentElement.lang=language; document.title='RuralNet AI — '+(language==='te'?'గ్రామ డిజిటల్ అవగాహన కేంద్రం':language==='hi'?'ग्रामीण डिजिटल जागरूकता केंद्र':'Village Digital Awareness Center');
+      ['navHome','navProblems','navLearn','navGuide'].forEach((id,i)=>text(id,x.nav[i]));
+      text('heroPill',x.heroPill); text('heroTitle',x.heroTitle,true); text('heroCopy',x.heroCopy); text('heroLearn',x.heroLearn+' →'); text('heroSafety',x.heroSafety+' ⌁');
+      $('trustRow').innerHTML=x.trust.map(v=>`<span class="trust">${v}</span>`).join(''); text('signalTitle',x.signalTitle); text('signalCopy',x.signalCopy); text('signalStatus',x.signalStatus);
+      text('projectBadge',x.projectBadge);text('projectTitle',x.projectTitle);text('projectCopy',x.projectCopy);text('goalsTitle',x.goalsTitle);text('goalsCopy',x.goalsCopy);
+      $('objectiveGrid').innerHTML=x.objectives.map((o,i)=>`<button class="objective" style="--card-color:${colours[i]}" onclick="openGuide(${i})"><span class="objective-icon">${icons[i]}</span><h4>${o[0]}</h4><p>${o[1]}</p><span class="arrow">→</span></button>`).join('');
+      $('statGrid').innerHTML=x.stats.map(s=>`<div class="stat"><b>${s[0]}</b><span>${s[1]}</span></div>`).join('');
+      text('safetyBadge',x.safetyBadge);text('safetyCardTitle',x.safetyCardTitle);text('safetyCardCopy',x.safetyCardCopy);text('problemBadge',x.problemBadge);text('problemCardTitle',x.problemCardTitle);text('problemCardCopy',x.problemCardCopy);
+      text('glossEyebrow',x.glossEyebrow);text('glossTitle',x.glossTitle,true);text('glossCopy',x.glossCopy);text('terminalLabel',x.terminalLabel);text('termPrompt',x.termPrompt); $('termInput').placeholder=language==='te'?'ఉదా: OTP':language==='hi'?'जैसे: OTP':'e.g. OTP'; $('termChips').innerHTML=Object.keys(x.terms).map(k=>`<button class="chip" onclick="explainTerm('${k}')">${k}</button>`).join('');text('termResult',x.termDefault);
+      text('faqEyebrow',x.faqEyebrow);text('faqTitle',x.faqTitle,true);text('faqCopy',x.faqCopy);$('faqList').innerHTML=x.faqs.map((f,i)=>`<article class="faq"><button class="faq-q" onclick="toggleFaq(${i})"><span>${f[0]}</span><span class="chev">⌄</span></button><div class="faq-a"><p>${f[1]}</p></div></article>`).join('');text('toProblems',x.toProblems);
+      text('problemsEyebrow',x.problemsEyebrow);text('problemsTitle',x.problemsTitle,true);text('problemsCopy',x.problemsCopy);text('returnHome',x.returnHome);renderProblems();
+      text('learnEyebrow',x.learnEyebrow);text('learnTitle',x.learnTitle,true);text('learnCopy',x.learnCopy); renderLearning(); renderGuide();
+      text('modalTitle',x.modalTitle);text('modalCopy',x.modalCopy);text('messageContainer',x.messageContainer);text('simLive',x.simLive);text('reportBtn',x.reportBtn);text('verifyBtn',x.verifyBtn);text('simPrev',x.simPrevious);text('simNext',x.simNext);text('footerText',x.footer); loadScenario();
+    }
+    function renderProblems(){const x=d();$('problemList').innerHTML=x.problems.map((p,i)=>`<article class="problem"><div class="problem-side"><div class="incident">${x.inc} #0${i+1}</div><h3>⚠ ${p[0]}</h3><p>${p[1]}</p></div><div class="solution"><h3>✓ ${x.mitigation}</h3><ul>${p[2].map(s=>`<li>${s}</li>`).join('')}</ul></div></article>`).join('');}
+    function toggleFaq(index){ const cards=[...document.querySelectorAll('.faq')]; const was=cards[index].classList.contains('open');cards.forEach(c=>c.classList.remove('open'));if(!was)cards[index].classList.add('open');}
+    function explainTerm(token){$('termInput').value=token; const out=d().terms[token];const result=$('termResult');result.style.color='var(--cyan)';result.textContent=out||d().termUnknown;}
+    function termKey(event){if(event.key==='Enter'){const raw=$('termInput').value.trim().toLowerCase();const token=Object.keys(d().terms).find(k=>k.toLowerCase()===raw);if(token)explainTerm(token);else{const result=$('termResult');result.style.color='var(--orange)';result.textContent=d().termUnknown;}}}
+    function openGuide(id){ activeGuide=id; renderGuide(); showPage('guide'); }
+    function chooseSkill(id){ activeGuide=id; renderGuide(); }
+    function renderGuide(){
+      const x=d(), g=x.guides[activeGuide]||x.guides[0];
+      text('skillHubEyebrow',x.skillHubEyebrow); text('skillHubTitle',x.skillHubTitle,true); text('skillHubCopy',x.skillHubCopy);
+      $('skillSwitcher').innerHTML=x.guides.map((item,i)=>`<button class="skill-switch ${i===activeGuide?'active':''}" style="--switch-color:${colours[i]}" onclick="chooseSkill(${i})"><span class="skill-switch-icon">${icons[i]}</span>${item.title}<span class="skill-done">${i===activeGuide?'●':'›'}</span></button>`).join('');
+      $('guideIcon').textContent=icons[activeGuide]; text('guideTitle',g.title);text('guideCopy',g.sub);
+      text('doTitle','✓ '+(language==='te'?'చేయవలసిన స్మార్ట్ విషయాలు':language==='hi'?'स्मार्ट करें':'Smart guidelines — what to do'));
+      text('dontTitle','⚠ '+(language==='te'?'నివారించాల్సినవి':language==='hi'?'इन बातों से बचें':'Warnings — what to avoid'));
+      $('doList').innerHTML=g.dos.map(v=>`<li><span class="check">●</span><span>${v}</span></li>`).join('');
+      $('dontList').innerHTML=g.donts.map(v=>`<li><span class="cross">●</span><span>${v}</span></li>`).join('');
+      text('guideBack',language==='te'?'← హోమ్‌కు వెనక్కి':language==='hi'?'← होम पर वापस':'← Back to home');
+    }
 
-        function applyActiveLanguageView() {
-            const englishElements = document.querySelectorAll('.lang-en');
-            const teluguElements = document.querySelectorAll('.lang-te');
+    function renderLearning(){const x=d();const total=x.modules.length; const count=[...completed].filter(i=>i>=0&&i<total).length; text('progressMessage',x.progressMessage);text('progressNumber',`${count} / ${total}`);$('progressFill').style.width=(count/total*100)+'%';$('pathGrid').innerHTML=x.modules.map((m,i)=>`<button class="path-card ${i===activeLesson?'active':''} ${completed.has(i)?'done':''}" style="--module-color:${moduleColours[i]}" onclick="openLesson(${i})"><span class="path-number">${x.moduleLabel} 0${i+1}</span><span class="tick">✓</span><span class="path-icon">${moduleIcons[i]}</span><b>${m.title}</b></button>`).join('');renderLesson();}
+    function openLesson(index){activeLesson=index;renderLearning();document.querySelector('.lesson').scrollIntoView({behavior:'smooth',block:'start'});}
+    function renderLesson(){
+      const x=d(),m=x.modules[activeLesson];
+      const resourceCards=(m.resources||[]).map(r=>`<article class="resource-card"><b>${r[0]}</b><p>${r[1]}</p>${r[2]?`<code>${r[2]}</code>`:''}</article>`).join('');
+      const shelf=resourceCards?`<section class="resource-shelf"><h3>⌁ ${x.officialShelf}</h3><div class="resource-grid">${resourceCards}</div>${m.note?`<div class="service-note"><b>✦ ${x.importantNote}</b> ${m.note}</div>`:''}</section>`:'';
+      $('lessonBox').style.setProperty('--module-color',moduleColours[activeLesson]);
+      $('lessonBox').innerHTML=`<div class="lesson-top"><div><p class="lesson-tag">${x.moduleLabel} 0${activeLesson+1} · ${completed.has(activeLesson)?'✓ '+(language==='te'?'పూర్తయింది':language==='hi'?'पूरा':'COMPLETED'):''}</p><h2>${m.title}</h2></div><div class="lesson-icon">${moduleIcons[activeLesson]}</div></div><p class="lesson-hook">${m.hook}</p><div class="lesson-grid"><div><h3 style="font-family:var(--display);font-size:1rem;margin:0 0 14px">${x.stepsLabel}</h3><div class="steps">${m.steps.map((item,i)=>`<div class="step"><span class="step-no">0${i+1}</span><div><h4>${item[0]}</h4><p>${item[1]}</p></div></div>`).join('')}</div></div><aside class="insight"><h3>✦ ${x.smartSignal}</h3><p>${m.signal}</p></aside></div>${shelf}<div class="quiz"><h3>${x.quickCheck}</h3><p>${m.question}</p><div class="quiz-options">${m.options.map((o,i)=>`<button class="quiz-option" onclick="answerLesson(${i},this)">${o}</button>`).join('')}</div><p class="quiz-feedback" id="quizFeedback"></p></div><div class="lesson-next">${activeLesson<x.modules.length-1?`<button class="small-btn" onclick="openLesson(${activeLesson+1})">${x.nextMission}</button>`:''}</div>`;
+    }
+    function answerLesson(choice,button){const m=d().modules[activeLesson],out=$('quizFeedback');if(choice===m.correct){button.classList.add('correct');completed.add(activeLesson);localStorage.setItem('ruralnet-completed-v2',JSON.stringify([...completed]));out.style.color='var(--green)';out.textContent=d().answerFeedbackGood;setTimeout(renderLearning,600);}else{button.classList.add('wrong');out.style.color='var(--red)';out.textContent=d().answerFeedbackTry;}}
 
-            if (currentLang === 'te') {
-                englishElements.forEach(el => el.classList.add('hidden'));
-                teluguElements.forEach(el => el.classList.remove('hidden'));
-            } else {
-                teluguElements.forEach(el => el.classList.add('hidden'));
-                englishElements.forEach(el => el.classList.remove('hidden'));
-            }
-        }
-
-        // STATIC INTERACTIVE EVALUATION STATE ENGINE LOGIC
-        function checkAnswer(selectedButton) {
-            const parentBlock = selectedButton.closest('.question-block');
-            const allOptions = parentBlock.querySelectorAll('button');
-            const feedbackBox = parentBlock.querySelector('.feedback-box');
-            const feedbackTitle = parentBlock.querySelector('.feedback-title');
-            const feedbackText = parentBlock.querySelector('.feedback-text');
-            
-            const isCorrect = selectedButton.getAttribute('data-correct') === 'true';
-            const targetQuestionId = parentBlock.getAttribute('data-q-id');
-
-            allOptions.forEach(opt => {
-                opt.className = "w-full text-left px-5 py-4 border border-gray-200 rounded-xl text-sm sm:text-base bg-white opacity-50 pointer-events-none transition-all";
-            });
-
-            const explanations = {
-                1: {
-                    en: "Official financial entities, bank staff, or credit service teams will never ask for your private verification numbers via phone calls.",
-                    te: "బ్యాంకు అధికారులు ఎప్పుడు కూడా ఫోన్ ద్వారా మీ పాస్‌వర్డ్‌లు లేదా ఓటీపీ (OTP) నంబర్లను అడగరని గుర్తుంచుకోండి."
-                },
-                2: {
-                    en: "Malicious tracking loops send lottery alerts to steal user account authentication parameters via unsecured data inputs.",
-                    te: "లాటరీల పేరిట వచ్చే నకిలీ లింకులు మీ ఫోన్ లోని డేటాను లేదా బ్యాంకు వివరాలను దొంగిలించడానికి పంపే మోసాలు."
-                },
-                3: {
-                    en: "Strong operational code sequences prevent simple brute force attacks. Avoid consecutive repetitions like 1234 or matching birth elements.",
-                    te: "సులభమైన నంబర్లు ఎవరైనా సులువుగా కనిపెట్టగలరు, కావున ఇతరులకు తెలియని విధంగా కష్టమైన నంబర్ సెట్ చేసుకోవడం సురక్షితం."
-                }
-            };
-
-            if (isCorrect) {
-                selectedButton.className = "w-full text-left px-5 py-4 border-2 border-green-500 bg-green-50 text-green-900 rounded-xl font-bold text-sm sm:text-base pointer-events-none flex items-center justify-between shadow-sm";
-                selectedButton.innerHTML += ` <i class="fas fa-check-circle text-green-600 text-lg"></i>`;
-                feedbackBox.className = "feedback-box mt-4 sm:ml-12 p-4 rounded-xl bg-green-50 border border-green-200 text-green-950";
-                feedbackTitle.innerText = currentLang === 'en' ? "✅ Brilliant! That is absolutely correct." : "✅ అద్భుతం! మీరు సరైన సమాధానం ఎంచుకున్నారు.";
-            } else {
-                selectedButton.className = "w-full text-left px-5 py-4 border-2 border-red-500 bg-red-50 text-red-900 rounded-xl font-bold text-sm sm:text-base pointer-events-none flex items-center justify-between shadow-sm";
-                selectedButton.innerHTML += ` <i class="fas fa-times-circle text-red-600 text-lg"></i>`;
-                feedbackBox.className = "feedback-box mt-4 sm:ml-12 p-4 rounded-xl bg-red-50 border border-red-200 text-red-950";
-                feedbackTitle.innerText = currentLang === 'en' ? "❌ Incorrect / Safe protocol warning" : "❌ తప్పు సమాధానం / భద్రతా హెచ్చరిక";
-            }
-
-            feedbackText.innerText = currentLang === 'en' ? explanations[targetQuestionId].en : explanations[targetQuestionId].te;
-            feedbackBox.classList.remove('hidden');
-        }
-    </script>
-</body>
+    function openSafetyModal(){scenario=0;$('safetyModal').classList.add('active');loadScenario();}
+    function closeSafetyModal(){$('safetyModal').classList.remove('active');}
+    function modalBackdrop(e){if(e.target===$('safetyModal'))closeSafetyModal();}
+    function loadScenario(){
+      const x=d(), list=x.scenarios, current=list[scenario];
+      $('simMessage').textContent=current.text;
+      $('simOutput').style.color='#afc5d1'; $('simOutput').textContent=x.simWait;
+      $('simCounter').textContent=x.simCounter.replace('{current}',scenario+1).replace('{total}',list.length);
+      $('simPrev').disabled=scenario===0; $('simNext').disabled=scenario===list.length-1;
+    }
+    function changeScenario(step){
+      const last=d().scenarios.length-1;
+      scenario=Math.max(0,Math.min(last,scenario+step));
+      loadScenario();
+    }
+    function chooseScenario(action){
+      const x=d(), current=x.scenarios[scenario], out=$('simOutput');
+      const good=(action==='report'&&!current.safe)||(action==='verify'&&current.safe);
+      out.style.color=good?'var(--green)':'var(--orange)';
+      out.textContent=good?(action==='report'?x.winReport:x.winVerify):(action==='report'?x.badReport:x.badVerify);
+    }
+    document.addEventListener('keydown' ,e=>{if(e.key==='Escape')closeSafetyModal();});
+    if(localStorage.getItem('ruralnet-theme')==='light')document.body.classList.add('light-mode');
+    $('themeButton').textContent=document.body.classList.contains('light-mode')?'☀':'☾'; $('languageSelect').value=language;renderAll();
+  </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1e639e9cf8954a9',t:'MTc4NDU5NTE4MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
